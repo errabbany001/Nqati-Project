@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -9,14 +10,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 
-public class Home extends JPanel {
+public class Acceuille extends JPanel {
 
     private Image backgroundImage;
-
+    JLabel cader2,cader1;
 
     private JButton creerMenu(String text, int x , int y , Color co){
         // had fonction back sawebt le menu dyal aceuille, contact w propos
@@ -36,7 +36,7 @@ public class Home extends JPanel {
         button_shape_1.setFocusPainted(false);
         button_shape_1.setForeground(co); 
         button_shape_1.setFont(new Font("Arial", Font.BOLD, 14)); 
-
+        button_shape_1.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button_shape_1.setBounds(x, y, 160, 40);
 
         button_shape_1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -54,7 +54,7 @@ public class Home extends JPanel {
     }
 
     
-    public Home() {
+    public Acceuille() {
 
         try {
             backgroundImage = ImageIO.read(new File("data/pg_home.png"));
@@ -66,6 +66,8 @@ public class Home extends JPanel {
         
 
         Color perpul = new Color(87, 107, 194);
+        Color ciel = new Color(166, 177, 235);
+       
 
         JLabel seconnecter = new JLabel("Se connecter");
         seconnecter.setForeground(perpul);
@@ -93,41 +95,73 @@ public class Home extends JPanel {
         this.add(text3);
 
 
-
-        JLabel cader1 = new JLabel();
+        cader1 = new JLabel();
         cader1.setBackground(perpul);
         cader1.setOpaque(true);
         cader1.setBounds(580,290,10,50);
         this.add(cader1);
 
 
-        JLabel cader2 = new JLabel();
+        cader2 = new JLabel();
         cader2.setBackground(perpul);
         cader2.setOpaque(true);
         cader2.setBounds(580,380,10,50);
         this.add(cader2);
+    
 
-
-        JLabel etudiant = new JLabel("etudiant");
-        etudiant.setFont(new Font("Arial" , Font.BOLD , 18));
+    
+        JButton etudiant = new JButton("etudiant");
+        etudiant.setFont(new Font("Arial", Font.BOLD, 18));
         etudiant.setForeground(perpul);
         etudiant.setBackground(Color.white);
         etudiant.setOpaque(true);
         etudiant.setBorder(new LineBorder(perpul, 2, true));
         etudiant.setBounds(580, 290, 250, 50);
-        etudiant.setHorizontalAlignment(SwingConstants.CENTER);
-        this.add(etudiant);
+        etudiant.setFocusPainted(false); 
+        etudiant.setContentAreaFilled(true); 
+        etudiant.setCursor(new Cursor(Cursor.HAND_CURSOR)); 
+
+    
+    etudiant.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseEntered(java.awt.event.MouseEvent e) {
+            etudiant.setBackground(ciel);   
+            etudiant.setForeground(Color.white);
+            cader1.setBounds(580,290,30,50);   
+        }
+        public void mouseExited(java.awt.event.MouseEvent e) {
+            etudiant.setBackground(Color.white);   
+            etudiant.setForeground(perpul);
+            cader1.setBounds(580,290,10,50);
+        }
+    });
+    this.add(etudiant);
+
+    
+    JButton enseignement = new JButton("enseignement");
+    enseignement.setFont(new Font("Arial", Font.BOLD, 18));
+    enseignement.setForeground(perpul);
+    enseignement.setBackground(Color.white);
+    enseignement.setOpaque(true);
+    enseignement.setBorder(new LineBorder(perpul, 2, true));
+    enseignement.setBounds(580, 380, 250, 50);
+    enseignement.setFocusPainted(false);
+    enseignement.setContentAreaFilled(true);
+    enseignement.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 
-        JLabel enseignement = new JLabel("enseignement");
-        enseignement.setFont(new Font("Arial" , Font.BOLD , 18));
-        enseignement.setForeground(perpul);
-        enseignement.setBackground(Color.white);
-        enseignement.setOpaque(true);
-        enseignement.setBorder(new LineBorder(perpul, 2, true));
-        enseignement.setBounds(580, 380, 250, 50);
-        enseignement.setHorizontalAlignment(SwingConstants.CENTER);
-        this.add(enseignement);
+    enseignement.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseEntered(java.awt.event.MouseEvent e) {
+            enseignement.setBackground(ciel);
+            enseignement.setForeground(Color.white);
+            cader2.setBounds(580,380,30,50);
+        }
+        public void mouseExited(java.awt.event.MouseEvent e) {
+            enseignement.setBackground(Color.white);
+            enseignement.setForeground(perpul);
+            cader2.setBounds(580,380,10,50);
+        }
+    });
+    this.add(enseignement);
 
 
 
@@ -149,3 +183,4 @@ public class Home extends JPanel {
         }
     }
 }
+

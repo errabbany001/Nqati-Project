@@ -10,7 +10,7 @@ public class Main {
         frame.setResizable(false);
 
         
-        Home homePanel = new Home();
+        Acceuille homePanel = new Acceuille();
         frame.setContentPane(homePanel); 
 
         frame.setVisible(true);
