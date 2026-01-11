@@ -1,14 +1,19 @@
-import javax.swing.SwingUtilities;
+import javax.swing.JFrame;
 
 public class Main {
     public static void main(String[] args) {
-        // Use invokeLater to ensure GUI updates happen on the Event Dispatch Thread
-        SwingUtilities.invokeLater(() -> {
-            // Create an instance of your Home class
-            Home homeFrame = new Home();
-            
-            // Make the frame visible
-            homeFrame.setVisible(true);
-        });
+
+        JFrame frame = new JFrame("Nqati Student Marks");
+        frame.setSize(1000, 697);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
+
+        
+        Home homePanel = new Home();
+        frame.setContentPane(homePanel); 
+
+        frame.setVisible(true);
+
     }
 }
