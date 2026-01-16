@@ -11,7 +11,7 @@ public class Main {
 
         
         Acceuille homePanel = new Acceuille();
-        frame.setContentPane(homePanel); 
+        frame.add(homePanel);
 
         frame.setVisible(true);
 

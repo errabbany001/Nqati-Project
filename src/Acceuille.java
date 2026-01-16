@@ -10,6 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
 
@@ -62,7 +63,7 @@ public class Acceuille extends JPanel {
             System.err.println("Error: Could not load pg_home.png");
         }
 
-        this.setLayout(null); 
+        this.setLayout(null);
         
 
         Color perpul = new Color(87, 107, 194);
@@ -133,6 +134,19 @@ public class Acceuille extends JPanel {
             etudiant.setForeground(perpul);
             cader1.setBounds(580,290,10,50);
         }
+	    public void mouseClicked(java.awt.event.MouseEvent e) { 
+	        // this = panel actuel (login)
+	        java.awt.Window window = SwingUtilities.getWindowAncestor(Acceuille.this); 
+	        if (window instanceof javax.swing.JFrame) {
+	            javax.swing.JFrame frame = (javax.swing.JFrame) window;
+
+	            // changer le contenu de la fenêtre par le nouveau panel
+	            LoginEtudient panelMdp = new LoginEtudient(); 
+	            frame.setContentPane(panelMdp);
+	            frame.revalidate();
+	            frame.repaint();
+	        }
+	    }
     });
     this.add(etudiant);
 
