@@ -24,11 +24,11 @@ import javax.swing.border.LineBorder
 
 
 ;
-public class motDePasseOublier extends JPanel{
+public final class motDePasseOublier extends JPanel{
     
     private Image backgroundImage;
 
-    private JLabel line1 , line2 , line3 , line4;
+    private final JLabel line1 , line2 , line3 , line4;
 
     private JButton creerMenu(String text, int x , int y , Color co){
         // had fonction back sawebt le menu dyal aceuille, contact w propos

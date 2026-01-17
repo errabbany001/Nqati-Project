@@ -5,24 +5,23 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class LoginEtudient extends JPanel{
+
+public class LoginEtudient extends JPanel { 
+
+    private Image backgroundImage;
     
 
-        private Image backgroundImage;
 
     private JButton creerMenu(String text, int x , int y , Color co){
         // had fonction back sawebt le menu dyal aceuille, contact w propos
-        ImageIcon icon_1  = new ImageIcon(new ImageIcon("data/shape_1.png").getImage().getScaledInstance(160, 40, Image.SCALE_SMOOTH));
+    	ImageIcon icon_1  = new ImageIcon(new ImageIcon("data/shape_1.png").getImage().getScaledInstance(160, 40, Image.SCALE_SMOOTH));
         ImageIcon icon_2 = new ImageIcon(new ImageIcon("data/shape_2.png").getImage().getScaledInstance(160, 40, Image.SCALE_SMOOTH));
 
-
-        
         JButton button_shape_1 = new JButton(text, icon_1);
 
         button_shape_1.setHorizontalTextPosition(JButton.CENTER); 
@@ -38,10 +37,12 @@ public class LoginEtudient extends JPanel{
         button_shape_1.setBounds(x, y, 160, 40);
 
         button_shape_1.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
             public void mouseEntered(java.awt.event.MouseEvent e){
                 button_shape_1.setIcon(icon_2);
                 button_shape_1.setForeground(Color.white); 
             }
+			@Override
             public void mouseExited(java.awt.event.MouseEvent e){
                 button_shape_1.setIcon(icon_1);
                 button_shape_1.setForeground(co);
@@ -64,7 +65,7 @@ public class LoginEtudient extends JPanel{
         
 
         Color perpul = new Color(87, 107, 194);
-        Color ciel = new Color(166, 177, 235);
+        //Color ciel = new Color(166, 177, 235);
        
 
 
@@ -95,3 +96,4 @@ public class LoginEtudient extends JPanel{
         }
     }
 }
+
