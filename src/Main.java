@@ -9,9 +9,9 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
-        
-        Acceuille homePanel = new Acceuille();
-        frame.setContentPane(homePanel); 
+        Acceuille lge = new Acceuille();
+        ////motDePasseOublier lge = new motDePasseOublier();
+        frame.setContentPane(lge); 
 
         frame.setVisible(true);
 

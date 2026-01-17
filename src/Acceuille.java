@@ -20,8 +20,8 @@ public class Acceuille extends JPanel {
 
     private JButton creerMenu(String text, int x , int y , Color co){
         // had fonction back sawebt le menu dyal aceuille, contact w propos
-        ImageIcon icon_1  = new ImageIcon(new ImageIcon("data/shape_1.png").getImage().getScaledInstance(160, 40, Image.SCALE_SMOOTH));
-        ImageIcon icon_2 = new ImageIcon(new ImageIcon("data/shape_2.png").getImage().getScaledInstance(160, 40, Image.SCALE_SMOOTH));
+        ImageIcon icon_1  = new ImageIcon(new ImageIcon("data/shape_1.png").getImage().getScaledInstance(120, 40, Image.SCALE_SMOOTH));
+        ImageIcon icon_2 = new ImageIcon(new ImageIcon("data/shape_2.png").getImage().getScaledInstance(120, 40, Image.SCALE_SMOOTH));
 
 
         
@@ -37,13 +37,15 @@ public class Acceuille extends JPanel {
         button_shape_1.setForeground(co); 
         button_shape_1.setFont(new Font("Arial", Font.BOLD, 14)); 
         button_shape_1.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button_shape_1.setBounds(x, y, 160, 40);
+        button_shape_1.setBounds(x, y, 120, 40);
 
         button_shape_1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent e){
                 button_shape_1.setIcon(icon_2);
                 button_shape_1.setForeground(Color.white); 
             }
+            @Override
             public void mouseExited(java.awt.event.MouseEvent e){
                 button_shape_1.setIcon(icon_1);
                 button_shape_1.setForeground(co);
@@ -66,7 +68,7 @@ public class Acceuille extends JPanel {
         
 
         Color perpul = new Color(87, 107, 194);
-        Color ciel = new Color(166, 177, 235);
+        Color ciel = new Color(150, 16, 235);
        
 
         JLabel seconnecter = new JLabel("Se connecter");
@@ -123,11 +125,13 @@ public class Acceuille extends JPanel {
 
     
     etudiant.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
         public void mouseEntered(java.awt.event.MouseEvent e) {
             etudiant.setBackground(ciel);   
             etudiant.setForeground(Color.white);
             cader1.setBounds(580,290,30,50);   
         }
+        @Override
         public void mouseExited(java.awt.event.MouseEvent e) {
             etudiant.setBackground(Color.white);   
             etudiant.setForeground(perpul);
@@ -150,11 +154,14 @@ public class Acceuille extends JPanel {
 
 
     enseignement.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
         public void mouseEntered(java.awt.event.MouseEvent e) {
             enseignement.setBackground(ciel);
             enseignement.setForeground(Color.white);
             cader2.setBounds(580,380,30,50);
         }
+        
+        @Override
         public void mouseExited(java.awt.event.MouseEvent e) {
             enseignement.setBackground(Color.white);
             enseignement.setForeground(perpul);
@@ -165,9 +172,9 @@ public class Acceuille extends JPanel {
 
 
 
-        JButton acceuille = creerMenu("Acceuille", 400, 50, perpul);
-        JButton contact = creerMenu("Contact", 600, 50, perpul);
-        JButton propos = creerMenu("A propos", 800, 50, perpul);
+        JButton acceuille = creerMenu("Acceuille", 330, 50, perpul);
+        JButton contact = creerMenu("Contact", 460, 50, perpul);
+        JButton propos = creerMenu("A propos", 590, 50, perpul);
 
         this.add(acceuille);
         this.add(contact);

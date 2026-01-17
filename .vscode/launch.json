@@ -10,12 +10,6 @@
             "request": "launch",
             "mainClass": "Main",
             "projectName": "project_notes_fa3060ac"
-        },
-        {
-            "type": "java",
-            "name": "Current File",
-            "request": "launch",
-            "mainClass": "${file}"
         }
     ]
 }
