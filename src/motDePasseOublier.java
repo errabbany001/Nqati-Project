@@ -187,7 +187,7 @@ public static boolean isValidEmail(String email) {
 
         JLabel erur = new JLabel();
         erur.setForeground(Color.red);
-        erur.setFont(new Font("Arial", Font.BOLD, 15));
+        erur.setFont(new Font("Arial", Font.BOLD, 12));
         erur.setBounds(369, 560, 260, 30);
         erur.setHorizontalAlignment(JLabel.CENTER);
         this.add(erur);
