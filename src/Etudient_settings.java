@@ -81,8 +81,8 @@ public final class Etudient_settings extends JPanel{
 
 
 
-        JButton contact = Functions.creerMenu("Contact", 330, 50, perpul);
-        JButton propos = Functions.creerMenu("A propos", 460, 50, perpul);
+        JButton contact = Functions.creerMenu("Contact", 330, 50, perpul, contact.class, this);
+        JButton propos = Functions.creerMenu("A propos", 460, 50, perpul, propos.class, this);
 
 
         this.add(contact);

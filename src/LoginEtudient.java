@@ -8,7 +8,6 @@ import java.awt.event.FocusListener;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -21,45 +20,18 @@ import javax.swing.SwingUtilities;
 public class LoginEtudient extends JPanel { 
 
     private Image backgroundImage;
-    JLabel cader2,cader1;
+    private JLabel line1 , line2;
+    private char defaultEchoChar;
     
     ImageIcon icon_1  = new ImageIcon(new ImageIcon("data/shape_1.png").getImage().getScaledInstance(350, 100, Image.SCALE_SMOOTH));
     ImageIcon icon_2 = new ImageIcon(new ImageIcon("data/shape_2.png").getImage().getScaledInstance(350, 100, Image.SCALE_SMOOTH));
-
-    private JButton creerMenu(String text, int x , int y , Color co){
-        // had fonction back sawebt le menu dyal aceuille, contact w propos
-    	ImageIcon icon_1  = new ImageIcon(new ImageIcon("data/shape_1.png").getImage().getScaledInstance(160, 40, Image.SCALE_SMOOTH));
-        ImageIcon icon_2 = new ImageIcon(new ImageIcon("data/shape_2.png").getImage().getScaledInstance(160, 40, Image.SCALE_SMOOTH));
-
-        JButton button_shape_1 = new JButton(text, icon_1);
-
-        button_shape_1.setHorizontalTextPosition(JButton.CENTER); 
-        button_shape_1.setVerticalTextPosition(JButton.CENTER);  
-
-        
-        button_shape_1.setContentAreaFilled(false); 
-        button_shape_1.setBorderPainted(false);     
-        button_shape_1.setFocusPainted(false);
-        button_shape_1.setForeground(co); 
-        button_shape_1.setFont(new Font("Arial", Font.BOLD, 14)); 
-        button_shape_1.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button_shape_1.setBounds(x, y, 160, 40);
-
-        button_shape_1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent e){
-                button_shape_1.setIcon(icon_2);
-                button_shape_1.setForeground(Color.white); 
-            }
-            public void mouseExited(java.awt.event.MouseEvent e){
-                button_shape_1.setIcon(icon_1);
-                button_shape_1.setForeground(co);
-            }
-        });
-
-        return button_shape_1;
-    }
-
     
+    public JLabel creetLine(int x , int y , Color c){
+    	JLabel line = new JLabel();
+    	line.setBackground(c); line.setOpaque(true);
+    	line.setBounds(x,y,260,4); return line;
+    }
+ 
     public LoginEtudient() {
 
         try {
@@ -70,124 +42,160 @@ public class LoginEtudient extends JPanel {
 
         this.setLayout(null); 
         
-        Color perpul = new Color(87, 107, 194);
-        
-        JTextField cneEtud = new JTextField();
-		cneEtud.setBounds(400, 345, 250, 30);
-		cneEtud.setFont(new Font("Arial", Font.PLAIN, 14));
-		cneEtud.setOpaque(false);
-		cneEtud.setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, new Color(120, 140, 255)));
-		cneEtud.addFocusListener(new FocusListener() {
-			@Override
-            public void focusGained(FocusEvent e) { 
-			   String text = "Entrez votre CNE";
-			   Color befor = new Color(150, 150, 150);
-			   Color after = new Color(87, 107, 194);
-			   JLabel line = new JLabel();
-			   line.setBackground(befor);
-			   line.setOpaque(true);
-			   line.setBounds(400,375,250,4);
-			   if (cneEtud.getText().equals(text)){
-				   cneEtud.setText("");
-				   cneEtud.setForeground(after);
-				line.setBackground(after);
-			   }
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-							   String text = "Entrez votre CNE";
-			   Color befor = new Color(150, 150, 150);
-			   Color after = new Color(87, 107, 194);
-			   JLabel line = new JLabel();
-			   line.setBackground(befor);
-			   line.setOpaque(true);
-			   line.setBounds(400,375,250,4);
-			   if (cneEtud.getText().isEmpty()){
-				   cneEtud.setText(text);
-				   cneEtud.setForeground(befor);
-				line.setBackground(befor);
-			   }
-			}
+        this.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                requestFocusInWindow();
+            }
         });
 
-		this.add(cneEtud);
-		
-		JPasswordField passEtud = new JPasswordField();
-		passEtud.setBounds(400, 420, 250, 30);
-		passEtud.setFont(new Font("Arial", Font.PLAIN, 14));
-		passEtud.setOpaque(false);
-		passEtud.setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, new Color(120, 140, 255)));
-		this.add(passEtud);
-		
-		JButton loginBtn = new JButton("se connecter", icon_1);
-		loginBtn.setBounds(340, 480, 340, 55);
-		loginBtn.setHorizontalTextPosition(JButton.CENTER); 
-		loginBtn.setVerticalTextPosition(JButton.CENTER);  
-		loginBtn.setContentAreaFilled(false); 
-		loginBtn.setBorderPainted(false);     
-		loginBtn.setFocusPainted(false);
-		loginBtn.setForeground(perpul); 
-		loginBtn.setFont(new Font("Arial", Font.BOLD, 14)); 
-		loginBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		loginBtn.addMouseListener(new java.awt.event.MouseAdapter() {
-			public void mouseEntered(java.awt.event.MouseEvent e){
-				loginBtn.setIcon(icon_2);
-				loginBtn.setForeground(Color.white); 
-			}
-			public void mouseExited(java.awt.event.MouseEvent e){
-				loginBtn.setIcon(icon_1);
-				loginBtn.setForeground(perpul); 
-			}
-		});
-		this.add(loginBtn);
-		
-		
-		JLabel forgotLabel = new JLabel("<HTML><U>Mot de passe oublié</U></HTML>");
-		forgotLabel.setBounds(440, 550, 200, 25);
-		forgotLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-		forgotLabel.setForeground(perpul);
-		forgotLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		forgotLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-		    @Override
-		    public void mouseClicked(java.awt.event.MouseEvent e) { 
-		        // this = panel actuel (login)
-		        java.awt.Window window = SwingUtilities.getWindowAncestor(LoginEtudient.this); 
-		        if (window instanceof javax.swing.JFrame) {
-		            javax.swing.JFrame frame = (javax.swing.JFrame) window;
+        Color perpul = new Color(87, 107, 194);
+        Color bleu = new Color(19, 43, 149);
+        Font font = new Font("Calibri", Font.BOLD, 15);
 
-		            // changer le contenu de la fenêtre par le nouveau panel
-		            motDePasseOublier panelMdp = new motDePasseOublier();
-		            frame.setContentPane(panelMdp);
-		            frame.revalidate();
-		            frame.repaint();
-		        }
-		    }
-		});
-		this.add(forgotLabel);
+        line1 = creetLine(400, 368, perpul);
+        line2 = creetLine(400, 446, perpul);
+        this.add(line1);
+        this.add(line2);
+
+        // ================== Champ Email ==================
+        JTextField cneEtud = new JTextField();
+        cneEtud.setBounds(400, 340, 250, 30);
+        cneEtud.setOpaque(false);
+        cneEtud.setBorder(null);
+        cneEtud.setHorizontalAlignment(JTextField.CENTER);
+        cneEtud.setForeground(perpul);
+        cneEtud.setFont(font);
+        cneEtud.setText("Email");
+
+        cneEtud.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if ("Email".equals(cneEtud.getText())) {
+                    cneEtud.setText("");
+                }
+                cneEtud.setForeground(bleu);
+                line1.setBackground(bleu);
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (cneEtud.getText().replace(" ", "").equals("")) {
+                    cneEtud.setText("Email");
+                    cneEtud.setForeground(perpul);
+                    line1.setBackground(perpul);
+                }
+            }
+        });
+
+        this.add(cneEtud);
+
+        // ================== Champ Mot de passe ==================
+        JPasswordField passEtud = new JPasswordField();
+        passEtud.setBounds(400, 420, 250, 30);
+        passEtud.setOpaque(false);
+        passEtud.setBorder(null);
+        passEtud.setHorizontalAlignment(JTextField.CENTER);
+        passEtud.setForeground(perpul);
+        passEtud.setFont(font);
+        defaultEchoChar = passEtud.getEchoChar(); // n7efdou
+        passEtud.setEchoChar((char) 0);           // bach "Mot de passe" yban normal
+        passEtud.setText("Mot de passe");
+
+        passEtud.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if ("Mot de passe".equals(String.valueOf(passEtud.getPassword()))) {
+                    passEtud.setText("");
+                    passEtud.setEchoChar(defaultEchoChar); // rja3 étoiles
+                }
+                passEtud.setForeground(bleu);
+                line2.setBackground(bleu);
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (String.valueOf(passEtud.getPassword()).trim().isEmpty()) {
+                    passEtud.setText("Mot de passe");
+                    passEtud.setForeground(perpul);
+                    line2.setBackground(perpul);
+                    passEtud.setEchoChar((char) 0); // ma b9ach étoiles m3a placeholder
+                }
+            }
+        });
+        this.add(passEtud);
+
+        // ================== Bouton se connecter ==================
+        JButton loginBtn = new JButton("se connecter", icon_1);
+        loginBtn.setBounds(340, 480, 340, 55);
+        loginBtn.setHorizontalTextPosition(JButton.CENTER);
+        loginBtn.setVerticalTextPosition(JButton.CENTER);
+        loginBtn.setContentAreaFilled(false);
+        loginBtn.setBorderPainted(false);
+        loginBtn.setFocusPainted(false);
+        loginBtn.setForeground(perpul);
+        loginBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        loginBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        loginBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                loginBtn.setIcon(icon_2);
+                loginBtn.setForeground(Color.white);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                loginBtn.setIcon(icon_1);
+                loginBtn.setForeground(perpul);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                // this = panel actuel (login)
+                java.awt.Window window = SwingUtilities.getWindowAncestor(LoginEtudient.this);
+                if (window instanceof javax.swing.JFrame) {
+                    javax.swing.JFrame frame = (javax.swing.JFrame) window;
+
+                    // changer le contenu de la fenêtre par le nouveau panel
+                    Etudient_notes panelMdp = new Etudient_notes();
+                    frame.setContentPane(panelMdp);
+                    frame.revalidate();
+                    frame.repaint();
+                }
+            }
+        });
+
+        this.add(loginBtn);
+
+        // ================== Label Mot de passe oublié ==================
+        JLabel forgotLabel = new JLabel("<HTML><U>Mot de passe oublié</U></HTML>");
+        forgotLabel.setBounds(440, 550, 200, 25);
+        forgotLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        forgotLabel.setForeground(perpul);
+        forgotLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        forgotLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                // this = panel actuel (login)
+                java.awt.Window window = SwingUtilities.getWindowAncestor(LoginEtudient.this);
+                if (window instanceof javax.swing.JFrame) {
+                    javax.swing.JFrame frame = (javax.swing.JFrame) window;
+
+                    // changer le contenu de la fenêtre par le nouveau panel
+                    motDePasseOublier panelMdp = new motDePasseOublier();
+                    frame.setContentPane(panelMdp);
+                    frame.revalidate();
+                    frame.repaint();
+                }
+            }
+        });
+
+        this.add(forgotLabel);
+
 		
        
-        JButton acceuille = creerMenu("Acceuille", 280, 50, perpul);
-        JButton contact = creerMenu("Contact", 480, 50, perpul);
-        JButton propos = creerMenu("A propos", 680, 50, perpul);
+        JButton acceuille = Functions.creerMenu("Acceuille", 280, 50, perpul, Acceuille.class, this);
+        JButton contact = Functions.creerMenu("Contact", 480, 50, perpul, contact.class, this);
+        JButton propos = Functions.creerMenu("A propos", 680, 50, perpul, propos.class, this);
         
-        acceuille.addMouseListener(new java.awt.event.MouseAdapter() {
-		    @Override
-		    public void mouseClicked(java.awt.event.MouseEvent e) { 
-		        // this = panel actuel (login)
-		        java.awt.Window window = SwingUtilities.getWindowAncestor(LoginEtudient.this); 
-		        if (window instanceof javax.swing.JFrame) {
-		            javax.swing.JFrame frame = (javax.swing.JFrame) window;
-
-		            // changer le contenu de la fenêtre par le nouveau panel
-		            Acceuille panelMdp = new Acceuille();
-		            frame.setContentPane(panelMdp);
-		            frame.revalidate();
-		            frame.repaint();
-		        }
-		    }
-		});
-
         this.add(acceuille);
         this.add(contact);
         this.add(propos);

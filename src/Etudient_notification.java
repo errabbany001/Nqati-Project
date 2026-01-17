@@ -11,14 +11,7 @@ import javax.swing.JPanel;
 
 public final class Etudient_notification extends JPanel {
         private Image backgroundImage;
-    
 
-
-
-
-
-
-    
     public Etudient_notification() {
 
         try {
@@ -74,17 +67,8 @@ public final class Etudient_notification extends JPanel {
         this.add(Settings);
         this.add(Notes);
 
-
-       
-
-
-    
-  
-
-
-
-        JButton contact = Functions.creerMenu("Contact", 330, 50, perpul);
-        JButton propos = Functions.creerMenu("A propos", 460, 50, perpul);
+        JButton contact = Functions.creerMenu("Contact", 330, 50, perpul, contact.class, this);
+        JButton propos = Functions.creerMenu("A propos", 460, 50, perpul, propos.class, this);
 
 
         this.add(contact);

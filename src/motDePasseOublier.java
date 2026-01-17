@@ -10,67 +10,23 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
-
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.border.LineBorder
+import javax.swing.border.LineBorder;
 
 
-
-;
 public final class motDePasseOublier extends JPanel{
     
     private Image backgroundImage;
 
     private final JLabel line1 , line2 , line3 , line4;
 
-    private JButton creerMenu(String text, int x , int y , Color co){
-        // had fonction back sawebt le menu dyal aceuille, contact w propos
-        ImageIcon icon_1  = new ImageIcon(new ImageIcon("data/shape_1.png").getImage().getScaledInstance(120, 40, Image.SCALE_SMOOTH));
-        ImageIcon icon_2 = new ImageIcon(new ImageIcon("data/shape_2.png").getImage().getScaledInstance(120, 40, Image.SCALE_SMOOTH));
-
-
-        
-        JButton button_shape_1 = new JButton(text, icon_1);
-
-        button_shape_1.setHorizontalTextPosition(JButton.CENTER); 
-        button_shape_1.setVerticalTextPosition(JButton.CENTER);  
-
-        
-        button_shape_1.setContentAreaFilled(false); 
-        button_shape_1.setBorderPainted(false);     
-        button_shape_1.setFocusPainted(false);
-        button_shape_1.setForeground(co); 
-        button_shape_1.setFont(new Font("Arial", Font.BOLD, 14)); 
-        button_shape_1.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button_shape_1.setBounds(x, y, 120, 40);
-
-        button_shape_1.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e){
-                button_shape_1.setIcon(icon_2);
-                button_shape_1.setForeground(Color.white); 
-            }
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent e){
-                button_shape_1.setIcon(icon_1);
-                button_shape_1.setForeground(co);
-            }
-        });
-
-        return button_shape_1;
-    }
-
-
-
-
-
+    
     public JLabel creetLine(int x , int y , Color c){
         JLabel line = new JLabel();
         line.setBackground(c);
@@ -241,57 +197,39 @@ public static boolean isValidEmail(String email) {
 
         this.add(Valider);
 
-
-
-
-
-this.addHierarchyListener(new java.awt.event.HierarchyListener() {
-    @Override
-    public void hierarchyChanged(java.awt.event.HierarchyEvent e) {
-        if ((e.getChangeFlags() & java.awt.event.HierarchyEvent.SHOWING_CHANGED) != 0) {
-            if (isShowing()) {
-                // Now we are 100% sure the RootPane exists
-                JRootPane root = SwingUtilities.getRootPane(Valider);
-                if (root != null) {
-                    root.setDefaultButton(Valider);
-                }
-            }
-        }
-    }
-});
-       
-
-  
-
-
-
-
-
-
-    
-
-    
-
-
-
-
-        JButton acceuille = creerMenu("Acceuille", 330, 50, perpul);
-        JButton contact = creerMenu("Contact", 460, 50, perpul);
-        JButton propos = creerMenu("A propos", 590, 50, perpul);
-
-        this.add(acceuille);
-        this.add(contact);
-        this.add(propos);
-
-    }
-
-        @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (backgroundImage != null) {
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-        }
-    }
+		this.addHierarchyListener(new java.awt.event.HierarchyListener() {
+		    @Override
+		    public void hierarchyChanged(java.awt.event.HierarchyEvent e) {
+		        if ((e.getChangeFlags() & java.awt.event.HierarchyEvent.SHOWING_CHANGED) != 0) {
+		            if (isShowing()) {
+		                // Now we are 100% sure the RootPane exists
+		                JRootPane root = SwingUtilities.getRootPane(Valider);
+		                if (root != null) {
+		                    root.setDefaultButton(Valider);
+		                }
+		            }
+		        }
+		    }
+		});
+		       
+		
+		        JButton acceuille = Functions.creerMenu("Acceuille", 330, 50, perpul, Acceuille.class, this);
+		        JButton contact = Functions.creerMenu("Contact", 460, 50, perpul, contact.class, this);
+		        JButton propos = Functions.creerMenu("A propos", 590, 50, perpul, propos.class, this);
+		
+		        this.add(acceuille);
+		        this.add(contact);
+		        this.add(propos);
+		
+		    }
+		
+		        @Override
+		    protected void paintComponent(Graphics g) {
+		        super.paintComponent(g);
+		        if (backgroundImage != null) {
+		            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+		        }
+		    }
 
 
 }

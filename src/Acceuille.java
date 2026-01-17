@@ -152,9 +152,9 @@ public final class Acceuille extends JPanel {
 
 
 
-        JButton acceuille = Functions.creerMenu("Acceuille", 330, 50, perpul);
-        JButton contact = Functions.creerMenu("Contact", 460, 50, perpul);
-        JButton propos = Functions.creerMenu("A propos", 590, 50, perpul);
+    JButton acceuille = Functions.creerMenu("Acceuille", 280, 50, perpul, Acceuille.class, this);
+    JButton contact = Functions.creerMenu("Contact", 480, 50, perpul, contact.class, this);
+    JButton propos = Functions.creerMenu("A propos", 680, 50, perpul, propos.class, this);
 
         this.add(acceuille);
         this.add(contact);
