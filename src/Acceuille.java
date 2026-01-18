@@ -33,7 +33,7 @@ public final class Acceuille extends JPanel {
         
 
         Color perpul = new Color(87, 107, 194);
-        Color ciel = new Color(68, 199, 218);
+        Color ciel = new Color(144, 159, 250);
        
 
         JLabel seconnecter = new JLabel("Se connecter");
@@ -147,15 +147,28 @@ public final class Acceuille extends JPanel {
             enseignement.setForeground(perpul);
             cader2.setBounds(580,380,10,50);
         }
+        @Override
+        public void mouseClicked(java.awt.event.MouseEvent e) { 
+        // this = panel actuel (login)
+        java.awt.Window window = SwingUtilities.getWindowAncestor(Acceuille.this); 
+        if (window instanceof javax.swing.JFrame) {
+            javax.swing.JFrame frame = (javax.swing.JFrame) window;
+
+            // changer le contenu de la fenêtre par le nouveau panel
+            LoginEnseignement panelMdp = new LoginEnseignement(); 
+            frame.setContentPane(panelMdp);
+            frame.revalidate();
+            frame.repaint();
+        }
+    }
     });
     this.add(enseignement);
 
 
-
-    JButton acceuille = Functions.creerMenu("Acceuille", 280, 50, perpul, Acceuille.class, this);
-    JButton contact = Functions.creerMenu("Contact", 480, 50, perpul, contact.class, this);
-    JButton propos = Functions.creerMenu("A propos", 680, 50, perpul, propos.class, this);
-
+        JButton acceuille = Functions.creerMenu("Acceuille", 300, 60, perpul, Acceuille.class, this);
+        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, contact.class, this);
+        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, propos.class, this);
+        
         this.add(acceuille);
         this.add(contact);
         this.add(propos);

@@ -3,21 +3,18 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.border.LineBorder;
 
 
 public final class motDePasseOublier extends JPanel{
@@ -25,6 +22,9 @@ public final class motDePasseOublier extends JPanel{
     private Image backgroundImage;
 
     private final JLabel line1 , line2 , line3 , line4;
+
+    ImageIcon icon_1  = new ImageIcon(new ImageIcon("data/icon1.png").getImage().getScaledInstance(260, 30, Image.SCALE_SMOOTH));
+    ImageIcon icon_2  = new ImageIcon(new ImageIcon("data/icon2.png").getImage().getScaledInstance(260, 30, Image.SCALE_SMOOTH));
 
     
     public JLabel creetLine(int x , int y , Color c){
@@ -77,18 +77,6 @@ public final class motDePasseOublier extends JPanel{
 
 
 
-
-public static boolean isValidEmail(String email) {
-    if (email == null) {
-        return false;
-    }
-
-   
-        String emailRegex = "^[^@]+@[^@]+\\.[^@]+$";
-
-    Pattern pattern = Pattern.compile(emailRegex);
-    return pattern.matcher(email).matches();
-}
 
     
 
@@ -149,77 +137,100 @@ public static boolean isValidEmail(String email) {
         this.add(erur);
 
 
+        // ================== Bouton se valider ==================
+        JButton vld = new JButton("Valide" , icon_1);
+        vld.setBounds(363, 520, 260, 30);
+        vld.setHorizontalTextPosition(JButton.CENTER);
+        vld.setVerticalTextPosition(JButton.CENTER);
+        vld.setContentAreaFilled(false);
+        vld.setBorderPainted(false);
+        vld.setFocusPainted(false);
+        vld.setForeground(perpul);
+        vld.setFont(new Font("Arial", Font.BOLD, 14));
+        vld.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        vld.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseEntered(java.awt.event.MouseEvent e) {
+            vld.setIcon(icon_2);
+            vld.setForeground(Color.white);
+        }
+        @Override
+        public void mouseExited(java.awt.event.MouseEvent e) {
+            vld.setIcon(icon_1);
+            vld.setForeground(perpul);
+        }});
+        vld.addActionListener(e -> {
+            String email = Email.getText();
+            String nom = Nom.getText();
+            String prenom = Prenom.getText();
+            String cne = Cne.getText();
+            erur.setText("");
 
-        JButton Valider = new JButton("Valider");
-        Valider.setFont(new Font("Arial", Font.BOLD, 16));
-        Valider.setForeground(perpul);
-        Valider.setBackground(Color.white);
-        Valider.setOpaque(true);
-        Valider.setBorder(new LineBorder(perpul, 2, true));
-        Valider.setBounds(363, 520, 260, 30);
-        Valider.setFocusPainted(false);
-        Valider.setContentAreaFilled(true);
-        Valider.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        Valider.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                Valider.setBackground(new Color(196, 205, 250));
-            }
+            if (email.trim().equalsIgnoreCase("Email") || 
+                nom.trim().equalsIgnoreCase("Nom") || 
+                prenom.trim().equalsIgnoreCase("Prenom") || 
+                cne.trim().equalsIgnoreCase("CNE")) {
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                Valider.setBackground(Color.white);
-            }
-        });
-        
-        Valider.addActionListener(new java.awt.event.ActionListener(){ 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                
-                String email = Email.getText();
-                String nom = Nom.getText();
-                String prenom = Prenom.getText();
-                String cne = Cne.getText();
-                erur.setText("");
+                erur.setText("Veuillez remplir tous les champs !");
+            } else if (!Functions.isValidEmail(email)) {
+                erur.setText("Format d'email invalide");
+            } else {
+                java.awt.Window window = SwingUtilities.getWindowAncestor(motDePasseOublier.this); 
+                if (window instanceof javax.swing.JFrame) {
+                    javax.swing.JFrame frame = (javax.swing.JFrame) window;
 
-                if(email.equals("Email") || nom.equals("Nom") || prenom.equals("Prenom") || cne.equals("CNE")){
-
-                    erur.setText("Veuillez remplir tous les champs !");
-                }else if(!isValidEmail(email)){
-                    erur.setText("Format d'email invalide");
+                    // changer le contenu de la fenêtre par le nouveau panel
+                    Etudient_profil panelMdp = new Etudient_profil(); 
+                    frame.setContentPane(panelMdp);
+                    frame.revalidate();
+                    frame.repaint();
+                    }
                 }
-             
+             } );
+        
 
 
-            }
-        });
 
-        this.add(Valider);
 
-		this.addHierarchyListener(new java.awt.event.HierarchyListener() {
+        
+        
+
+        this.add(vld);
+
+
+
+
+    
+
+
+
+  
+       
+
+	    this.addHierarchyListener(new java.awt.event.HierarchyListener() {
 		    @Override
 		    public void hierarchyChanged(java.awt.event.HierarchyEvent e) {
 		        if ((e.getChangeFlags() & java.awt.event.HierarchyEvent.SHOWING_CHANGED) != 0) {
 		            if (isShowing()) {
 		                // Now we are 100% sure the RootPane exists
-		                JRootPane root = SwingUtilities.getRootPane(Valider);
+		                JRootPane root = SwingUtilities.getRootPane(vld);
 		                if (root != null) {
-		                    root.setDefaultButton(Valider);
+		                    root.setDefaultButton(vld);
 		                }
 		            }
 		        }
 		    }
-		});
+		}); 
 		       
 		
-		        JButton acceuille = Functions.creerMenu("Acceuille", 330, 50, perpul, Acceuille.class, this);
-		        JButton contact = Functions.creerMenu("Contact", 460, 50, perpul, contact.class, this);
-		        JButton propos = Functions.creerMenu("A propos", 590, 50, perpul, propos.class, this);
-		
-		        this.add(acceuille);
-		        this.add(contact);
-		        this.add(propos);
+        JButton acceuille = Functions.creerMenu("Acceuille", 300, 60, perpul, Acceuille.class, this);
+        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, contact.class, this);
+        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, propos.class, this);
+        
+        this.add(acceuille);
+        this.add(contact);
+        this.add(propos);
 		
 		    }
 		
