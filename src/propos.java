@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
@@ -22,7 +21,7 @@ public final class propos extends JPanel {
     public propos() {
 
         try {
-            backgroundImage = ImageIO.read(new File("data/pg_home.png"));
+            backgroundImage = ImageIO.read(new File("data/pg_propos.png"));
         } catch (IOException e) {
             System.err.println("Error: Could not load pg_home.png");
         }
@@ -33,18 +32,6 @@ public final class propos extends JPanel {
         Color perpul = new Color(87, 107, 194);
        
 
-        JLabel seconnecter = new JLabel("Se connecter");
-        seconnecter.setForeground(perpul);
-        seconnecter.setFont(new Font("Arial", Font.BOLD, 18));
-        seconnecter.setBounds(640, 220, 230, 30);
-        this.add(seconnecter); 
-
-
-        JLabel text1 = new JLabel("<html><body style=' text-align: center;'> Cettrme est un système de gestion des notes conçu pour faciliter le suivi académique.</body></html>");
-        text1.setForeground(perpul);
-        text1.setFont(new Font("Arial" , Font.BOLD, 14));
-        text1.setBounds(90 , 320 , 350, 50);
-        this.add(text1);
 
         JButton acceuille = Functions.creerMenu("Acceuille", 300, 60, perpul, Acceuille.class, this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, contact.class, this);

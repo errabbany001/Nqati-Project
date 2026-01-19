@@ -23,6 +23,8 @@ public final class motDePasseOublier extends JPanel{
 
     private final JLabel line1 , line2 , line3 , line4;
 
+
+
     ImageIcon icon_1  = new ImageIcon(new ImageIcon("data/icon1.png").getImage().getScaledInstance(260, 30, Image.SCALE_SMOOTH));
     ImageIcon icon_2  = new ImageIcon(new ImageIcon("data/icon2.png").getImage().getScaledInstance(260, 30, Image.SCALE_SMOOTH));
 
@@ -191,12 +193,12 @@ public final class motDePasseOublier extends JPanel{
         
 
 
-
-
-        
-        
-
         this.add(vld);
+
+
+
+
+  
 
 
 
