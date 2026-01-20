@@ -1,6 +1,10 @@
 import javax.swing.JFrame;
 
+
 public class Main {
+
+    private static Etudient etudient;
+    
     public static void main(String[] args) {
 
         JFrame frame = new JFrame("Nqati Student Marks");
@@ -9,11 +13,13 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
-        Acceuille lge = new Acceuille();
+        //Accueil lge = new Accueil();
         //motDePasseOublier lge = new motDePasseOublier();
-        //Etudient_notes lge = new Etudient_notes();
+        Etudient_notes lge = new Etudient_notes();
         //LoginEtudient lge = new LoginEtudient();
         //Etudient_notes lge = new Etudient_notes();
+
+        
 
 
  
@@ -24,5 +30,13 @@ public class Main {
 
         frame.setVisible(true);
 
+    }
+
+    public static Etudient getEtudient() {
+        return etudient;
+    }
+
+    public static void setEtudient(Etudient etudient) {
+        Main.etudient = etudient;
     }
 }

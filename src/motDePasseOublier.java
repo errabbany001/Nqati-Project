@@ -1,3 +1,4 @@
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -17,7 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 
-public final class motDePasseOublier extends JPanel{
+public final class MotDePasseOublier extends JPanel{
     
     private Image backgroundImage;
 
@@ -83,7 +84,7 @@ public final class motDePasseOublier extends JPanel{
     
 
     @SuppressWarnings("Convert2Lambda")
-    public motDePasseOublier() {
+    public MotDePasseOublier() {
 
         try {
             backgroundImage = ImageIO.read(new File("data/pg_PasseOublier.png"));
@@ -178,7 +179,7 @@ public final class motDePasseOublier extends JPanel{
             } else if (!Functions.isValidEmail(email)) {
                 erur.setText("Format d'email invalide");
             } else {
-                java.awt.Window window = SwingUtilities.getWindowAncestor(motDePasseOublier.this); 
+                java.awt.Window window = SwingUtilities.getWindowAncestor(MotDePasseOublier.this); 
                 if (window instanceof javax.swing.JFrame) {
                     javax.swing.JFrame frame = (javax.swing.JFrame) window;
 
@@ -226,9 +227,9 @@ public final class motDePasseOublier extends JPanel{
 		}); 
 		       
 		
-        JButton acceuille = Functions.creerMenu("Acceuille", 300, 60, perpul, Acceuille.class, this);
-        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, contact.class, this);
-        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, propos.class, this);
+        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Accueil.class, this);
+        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
+        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
         
         this.add(acceuille);
         this.add(contact);

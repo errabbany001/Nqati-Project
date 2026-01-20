@@ -1,3 +1,4 @@
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -10,15 +11,14 @@ import javax.swing.JPanel;
 
 
 
-public final class contact extends JPanel {
+public final class Contact extends JPanel {
 
     private Image backgroundImage;
-    JLabel cader2,cader1;
 
 
 
     
-    public contact() {
+    public Contact() {
 
         try {
             backgroundImage = ImageIO.read(new File("data/pg_home.png"));
@@ -31,9 +31,9 @@ public final class contact extends JPanel {
 
         Color perpul = new Color(87, 107, 194);
         
-        JButton acceuille = Functions.creerMenu("Acceuille", 300, 60, perpul, Acceuille.class, this);
-        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, contact.class, this);
-        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, propos.class, this);
+        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Accueil.class, this);
+        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
+        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
         
         this.add(acceuille);
         this.add(contact);

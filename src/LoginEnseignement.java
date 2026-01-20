@@ -1,3 +1,4 @@
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -249,7 +250,7 @@ public final  class LoginEnseignement extends JPanel{
                     javax.swing.JFrame frame = (javax.swing.JFrame) window;
 
                     // changer le contenu de la fenêtre par le nouveau panel
-                    motDePasseOublier panelMdp = new motDePasseOublier();
+                    MotDePasseOublier panelMdp = new MotDePasseOublier();
                     frame.setContentPane(panelMdp);
                     frame.revalidate();
                     frame.repaint();
@@ -276,9 +277,9 @@ public final  class LoginEnseignement extends JPanel{
 
 		
        
-        JButton acceuille = Functions.creerMenu("Acceuille", 300, 60, perpul, Acceuille.class, this);
-        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, contact.class, this);
-        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, propos.class, this);
+        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Accueil.class, this);
+        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
+        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
         
         this.add(acceuille);
         this.add(contact);

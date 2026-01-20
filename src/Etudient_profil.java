@@ -1,8 +1,10 @@
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -43,9 +45,9 @@ public final class Etudient_profil extends JPanel {
 
        
 
-        JButton acceuille = Functions.creerMenu("Acceuille", 300, 60, perpul, Acceuille.class, this);
-        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, contact.class, this);
-        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, propos.class, this);
+        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Accueil.class, this);
+        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
+        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
         
         this.add(acceuille);
         this.add(contact);

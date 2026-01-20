@@ -207,7 +207,7 @@ public final class LoginEtudient extends JPanel {
             if (window instanceof javax.swing.JFrame) {
                 javax.swing.JFrame frame = (javax.swing.JFrame) window;
 
-                Etudient_notes panelMdp = new Etudient_notes();
+                Etudient_profil panelMdp = new Etudient_profil();
                 frame.setContentPane(panelMdp);
                 frame.revalidate();
                 frame.repaint();
@@ -234,7 +234,7 @@ public final class LoginEtudient extends JPanel {
                     javax.swing.JFrame frame = (javax.swing.JFrame) window;
 
                     // changer le contenu de la fenêtre par le nouveau panel
-                    motDePasseOublier panelMdp = new motDePasseOublier();
+                    MotDePasseOublier panelMdp = new MotDePasseOublier();
                     frame.setContentPane(panelMdp);
                     frame.revalidate();
                     frame.repaint();
@@ -261,10 +261,10 @@ public final class LoginEtudient extends JPanel {
 
 		
        
-        JButton acceuille = Functions.creerMenu("Acceuille", 300, 60, perpul, Acceuille.class, this);
-        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, contact.class, this);
-        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, propos.class, this);
-        
+        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Accueil.class, this);
+        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
+        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
+         
         this.add(acceuille);
         this.add(contact);
         this.add(propos);

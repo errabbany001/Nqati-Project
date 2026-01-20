@@ -1,3 +1,4 @@
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -5,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -13,7 +15,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
 
-public final class Acceuille extends JPanel {
+
+
+public final class Accueil extends JPanel {
 
     private Image backgroundImage;
     JLabel cader2,cader1;
@@ -21,7 +25,7 @@ public final class Acceuille extends JPanel {
 
 
     
-    public Acceuille() {
+    public Accueil() {
 
         try {
             backgroundImage = ImageIO.read(new File("data/pg_home.png"));
@@ -106,7 +110,7 @@ public final class Acceuille extends JPanel {
 
 	    public void mouseClicked(java.awt.event.MouseEvent e) { 
 	        // this = panel actuel (login)
-	        java.awt.Window window = SwingUtilities.getWindowAncestor(Acceuille.this); 
+	        java.awt.Window window = SwingUtilities.getWindowAncestor(Accueil.this); 
 	        if (window instanceof javax.swing.JFrame) {
 	            javax.swing.JFrame frame = (javax.swing.JFrame) window;
 
@@ -150,7 +154,7 @@ public final class Acceuille extends JPanel {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent e) { 
         // this = panel actuel (login)
-        java.awt.Window window = SwingUtilities.getWindowAncestor(Acceuille.this); 
+        java.awt.Window window = SwingUtilities.getWindowAncestor(Accueil.this); 
         if (window instanceof javax.swing.JFrame) {
             javax.swing.JFrame frame = (javax.swing.JFrame) window;
 
@@ -165,9 +169,9 @@ public final class Acceuille extends JPanel {
     this.add(enseignement);
 
 
-        JButton acceuille = Functions.creerMenu("Acceuille", 300, 60, perpul, Acceuille.class, this);
-        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, contact.class, this);
-        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, propos.class, this);
+        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Accueil.class, this);
+        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
+        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
         
         this.add(acceuille);
         this.add(contact);

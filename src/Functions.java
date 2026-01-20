@@ -1,3 +1,4 @@
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -15,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
+
 
 public class Functions {
 
@@ -189,7 +192,7 @@ public static void logoutWithConfirm(JPanel currentPanel) {
     if (answer == JOptionPane.YES_OPTION) {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(currentPanel);
         if (frame != null) {
-            frame.setContentPane(new Acceuille());
+            frame.setContentPane(new Accueil());
             frame.revalidate();
             frame.repaint();
         }
