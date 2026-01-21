@@ -1,4 +1,3 @@
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -16,8 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-
-
 
 public class Functions {
 
@@ -101,7 +98,7 @@ public class Functions {
             }
         });
 
-        return btn;
+        return btn; 
     }
 
 
