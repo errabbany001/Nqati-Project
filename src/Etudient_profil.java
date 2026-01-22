@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -25,6 +26,7 @@ public final class Etudient_profil extends JPanel {
     
     
     public Etudient_profil() {
+        Main.setLastClass(this.getClass());
 
         try {
             backgroundImage = ImageIO.read(new File("data/pg_Etudient_profil.png"));
@@ -97,7 +99,7 @@ public final class Etudient_profil extends JPanel {
 
        
 
-        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Accueil.class, this);
+        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Main.getLastClass() , this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
         

@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -38,6 +37,9 @@ public final class Accueil extends JPanel {
 
         Color perpul = new Color(87, 107, 194);
         Color ciel = new Color(144, 159, 250);
+        
+
+        this.add(Functions.cretBackBtn());
        
 
         JLabel seconnecter = new JLabel("Se connecter");
@@ -80,7 +82,7 @@ public final class Accueil extends JPanel {
         this.add(cader2);
     
 
-    
+ //==============================================   
         JButton etudiant = new JButton("etudiant");
         etudiant.setFont(new Font("Arial", Font.BOLD, 18));
         etudiant.setForeground(perpul);
@@ -113,9 +115,12 @@ public final class Accueil extends JPanel {
 	        java.awt.Window window = SwingUtilities.getWindowAncestor(Accueil.this); 
 	        if (window instanceof javax.swing.JFrame) {
 	            javax.swing.JFrame frame = (javax.swing.JFrame) window;
-
+               
+                Main.addPageToHistory(Accueil.class);
 	            // changer le contenu de la fenêtre par le nouveau panel
 	            LoginEtudient panelMdp = new LoginEtudient(); 
+                
+                System.err.println();
 	            frame.setContentPane(panelMdp);
 	            frame.revalidate();
 	            frame.repaint();
@@ -123,7 +128,8 @@ public final class Accueil extends JPanel {
 	    }
     });
     this.add(etudiant);
-
+    
+//=========================================
     
     JButton enseignement = new JButton("enseignement");
     enseignement.setFont(new Font("Arial", Font.BOLD, 18));
@@ -157,9 +163,10 @@ public final class Accueil extends JPanel {
         java.awt.Window window = SwingUtilities.getWindowAncestor(Accueil.this); 
         if (window instanceof javax.swing.JFrame) {
             javax.swing.JFrame frame = (javax.swing.JFrame) window;
-
+            Main.addPageToHistory(Accueil.class);
             // changer le contenu de la fenêtre par le nouveau panel
             LoginEnseignement panelMdp = new LoginEnseignement(); 
+            
             frame.setContentPane(panelMdp);
             frame.revalidate();
             frame.repaint();
@@ -167,15 +174,17 @@ public final class Accueil extends JPanel {
     }
     });
     this.add(enseignement);
+    //==============================================
 
 
-        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Accueil.class, this);
+        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Main.getLastClass() , this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
         
         this.add(acceuille);
         this.add(contact);
         this.add(propos);
+        
 
     }
 

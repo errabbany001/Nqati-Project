@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.MouseEvent;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -19,7 +20,7 @@ import javax.swing.UIManager;
 public class Functions {
 
 
-
+    //==========================================================
     public static JButton LogOutIcon(javax.swing.JPanel currentFrame){
         ImageIcon logOutIcon1 = new ImageIcon(new ImageIcon("data/logOut_icon_1.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
         ImageIcon logOutIcon2 = new ImageIcon(new ImageIcon("data/logOut_icon_2.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
@@ -48,18 +49,17 @@ public class Functions {
         return LogOut;
     }
 
-
+    //==========================================================
     public static boolean isValidEmail(String email) {
     if (email == null) {
         return false;
     }
-
-   
         String emailRegex = "^[^@]+@[^@]+\\.[^@]+$";
 
     Pattern pattern = Pattern.compile(emailRegex);
     return pattern.matcher(email).matches();
     }
+    //==========================================================
   
     public static JButton createNavButton(int x, int y, String target, JPanel currentPanel) {
         JButton btn = new JButton();
@@ -101,13 +101,20 @@ public class Functions {
         return btn; 
     }
 
+     //==========================================================
 
     public static JButton creerMenu(String text, int x , int y , Color co , Class<? extends JPanel> panelClass, JPanel parent){
         // had fonction back sawebt le menu dyal aceuille, contact w propos
     	ImageIcon icon_1  = new ImageIcon(new ImageIcon("data/shape_1.png").getImage().getScaledInstance(120, 20, Image.SCALE_SMOOTH));
         ImageIcon icon_2 = new ImageIcon(new ImageIcon("data/shape_2.png").getImage().getScaledInstance(120, 20, Image.SCALE_SMOOTH));
+        ImageIcon icon_3 = new ImageIcon(new ImageIcon("data/shape_3.png").getImage().getScaledInstance(120, 20, Image.SCALE_SMOOTH));
 
-        JButton button_shape_1 = new JButton(text, icon_1);
+        boolean verf = (parent.getClass() != panelClass) ;
+        Color col = (verf) ? co : Color.white;
+        ImageIcon icn = (verf) ? icon_1 : icon_3;
+
+
+        JButton button_shape_1 = new JButton(text, icn);
 
         button_shape_1.setHorizontalTextPosition(JButton.CENTER); 
         button_shape_1.setVerticalTextPosition(JButton.CENTER);  
@@ -116,25 +123,30 @@ public class Functions {
         button_shape_1.setContentAreaFilled(false); 
         button_shape_1.setBorderPainted(false);     
         button_shape_1.setFocusPainted(false);
-        button_shape_1.setForeground(co); 
+        button_shape_1.setForeground(col); 
         button_shape_1.setFont(new Font("Arial", Font.BOLD, 14)); 
-        button_shape_1.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        if (verf){
+            button_shape_1.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        }
+        
         button_shape_1.setBounds(x, y, 120, 20);
 
         button_shape_1.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e){
-                button_shape_1.setIcon(icon_2);
-                button_shape_1.setForeground(Color.white); 
+                if(verf)
+                {button_shape_1.setIcon(icon_2);
+                button_shape_1.setForeground(Color.white); }
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e){
-                button_shape_1.setIcon(icon_1);
-                button_shape_1.setForeground(co);
+                if (verf)
+                {button_shape_1.setIcon(icon_1);
+                button_shape_1.setForeground(co);}
             }    
             @Override      
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (panelClass != null) {
+                if (panelClass != null && verf) {
                     java.awt.Window window = SwingUtilities.getWindowAncestor(parent);
                     
                     if (window instanceof javax.swing.JFrame) {
@@ -159,40 +171,106 @@ public class Functions {
         return button_shape_1;
     }
     
+    //==========================================================
 
+    public static void logoutWithConfirm(JPanel currentPanel) {
+        Color ciel = new Color(193, 221, 240);
+        
+        
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.setBackground(ciel);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(2, 20, 20, 20)); 
 
-public static void logoutWithConfirm(JPanel currentPanel) {
-    Color ciel = new Color(193, 221, 240);
-    
-    
-    JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
-    mainPanel.setBackground(ciel);
-    mainPanel.setBorder(BorderFactory.createEmptyBorder(2, 20, 20, 20)); 
+        JLabel label = new JLabel("Êtes-vous sûr de vouloir vous déconnecter ?");
+        label.setFont(new Font("Arial", Font.BOLD, 14));
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        mainPanel.add(label, BorderLayout.CENTER);
 
-    JLabel label = new JLabel("Êtes-vous sûr de vouloir vous déconnecter ?");
-    label.setFont(new Font("Arial", Font.BOLD, 14));
-    label.setHorizontalAlignment(SwingConstants.CENTER);
-    
-    mainPanel.add(label, BorderLayout.CENTER);
+        UIManager.put("OptionPane.background", ciel);
+        UIManager.put("Panel.background", ciel);
 
-    UIManager.put("OptionPane.background", ciel);
-    UIManager.put("Panel.background", ciel);
+        int answer = JOptionPane.showConfirmDialog(
+            currentPanel, 
+            mainPanel, 
+            "Confirmation", 
+            JOptionPane.YES_NO_OPTION, 
+            JOptionPane.PLAIN_MESSAGE
+        );
 
-    int answer = JOptionPane.showConfirmDialog(
-        currentPanel, 
-        mainPanel, 
-        "Confirmation", 
-        JOptionPane.YES_NO_OPTION, 
-        JOptionPane.PLAIN_MESSAGE
-    );
-
-    if (answer == JOptionPane.YES_OPTION) {
-        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(currentPanel);
-        if (frame != null) {
-            frame.setContentPane(new Accueil());
-            frame.revalidate();
-            frame.repaint();
+        if (answer == JOptionPane.YES_OPTION) {
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(currentPanel);
+            if (frame != null) {
+                frame.setContentPane(new Accueil());
+                frame.revalidate();
+                frame.repaint();
+            }
         }
     }
-}
+    //================================================================
+    public static  JButton cretBackBtn (){
+        ImageIcon icon_1 = new ImageIcon(new ImageIcon("data/icon_back_2.png").getImage().getScaledInstance(26, 20, Image.SCALE_SMOOTH));
+        ImageIcon icon_2 = new ImageIcon(new ImageIcon("data/icon_back_1.png").getImage().getScaledInstance(26, 20, Image.SCALE_SMOOTH));
+        ImageIcon icon_3 = new ImageIcon(new ImageIcon("data/icon_back_3.png").getImage().getScaledInstance(26, 20, Image.SCALE_SMOOTH));
+
+        boolean check = (Main.getLisOfCls().isEmpty());
+        ImageIcon ic = check ? icon_3 : icon_1;
+        JButton btn = new JButton(ic);
+        btn.setBounds(30,60,26,20);
+        btn.setOpaque(false);
+        btn.setContentAreaFilled(false);
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (!check)
+                {btn.setIcon(icon_2);}
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (!check)
+                {btn.setIcon(icon_1);}
+            }
+
+            @Override
+
+            public void mouseClicked(MouseEvent e) {
+                // 1. كنتأكدو بلي كاين فين نرجعو
+                if (!Main.getLisOfCls().isEmpty()) {
+                    
+                    java.awt.Window window = SwingUtilities.getWindowAncestor(btn);
+                    
+                    if (window instanceof javax.swing.JFrame) {
+                        javax.swing.JFrame frame = (javax.swing.JFrame) window;
+
+                        try {
+                            // 2. كنجبدو آخر صفحة تسجلات فـ التاريخ ونمسحوها (Pop)
+                            Class<? extends JPanel> prevClass = Main.getLisOfCls().remove(Main.getLisOfCls().size() - 1);
+
+                            // 3. كنفتحو هاد الصفحة
+                            JPanel panelBack = prevClass.getDeclaredConstructor().newInstance();
+
+                            frame.setContentPane(panelBack);
+                            frame.revalidate();
+                            frame.repaint();
+                            
+                            // (اختياري) طبع التاريخ باش تأكد
+                            // Main.printHistory();
+
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            }
+            
+        });
+              
+
+          
+        return btn;
+    }
 }

@@ -36,7 +36,8 @@ public final  class LoginEnseignement extends JPanel{
     }
  
     public LoginEnseignement() {
-
+        Main.printHistory();
+        Main.setLastClass(this.getClass());
         try {
             backgroundImage = ImageIO.read(new File("data/Login_Enseignement.png"));
         } catch (IOException e) {
@@ -52,9 +53,12 @@ public final  class LoginEnseignement extends JPanel{
             }
         });
 
+
         Color perpul = new Color(87, 107, 194);
         Color bleu = new Color(19, 43, 149);
         Font font = new Font("Calibri", Font.BOLD, 15);
+
+        this.add(Functions.cretBackBtn());
 
         line1 = creetLine(330, 368, perpul);
         line2 = creetLine(330, 447, perpul);
@@ -200,18 +204,21 @@ public final  class LoginEnseignement extends JPanel{
             }
 
         });
+        
 
         loginBtn.addActionListener(e -> {
-        java.awt.Window window = SwingUtilities.getWindowAncestor(LoginEnseignement.this);
-        if (window instanceof javax.swing.JFrame) {
-            javax.swing.JFrame frame = (javax.swing.JFrame) window;
+            java.awt.Window window = SwingUtilities.getWindowAncestor(LoginEnseignement.this);
+            if (window instanceof javax.swing.JFrame) {
+                javax.swing.JFrame frame = (javax.swing.JFrame) window;
+                
+                Main.addPageToHistory(LoginEnseignement.class);
 
-            Etudient_notes panelMdp = new Etudient_notes();
-            frame.setContentPane(panelMdp);
-            frame.revalidate();
-            frame.repaint();
-        }
-    });
+                Etudient_notes panelMdp = new Etudient_notes();
+                frame.setContentPane(panelMdp);
+                frame.revalidate();
+                frame.repaint();
+            }
+        });
 
         this.add(loginBtn);
 
@@ -222,22 +229,7 @@ public final  class LoginEnseignement extends JPanel{
         forgotLabel.setForeground(perpul);
         forgotLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        loginBtn.addMouseListener(new java.awt.event.MouseAdapter() {
-        @Override
-        public void mouseEntered(java.awt.event.MouseEvent e) {
-            loginBtn.setIcon(icon_2);
-            loginBtn.setForeground(Color.white);
-        }
-        @Override
-        public void mouseExited(java.awt.event.MouseEvent e) {
-            loginBtn.setIcon(icon_1);
-            loginBtn.setForeground(perpul);
-        }
-        @Override
-        public void mouseClicked(java.awt.event.MouseEvent e) {
-
-        }
-        });
+    
         
  
 
@@ -251,6 +243,7 @@ public final  class LoginEnseignement extends JPanel{
 
                     // changer le contenu de la fenêtre par le nouveau panel
                     MotDePasseOublier panelMdp = new MotDePasseOublier();
+                    Main.addPageToHistory(LoginEnseignement.class);
                     frame.setContentPane(panelMdp);
                     frame.revalidate();
                     frame.repaint();
@@ -277,7 +270,7 @@ public final  class LoginEnseignement extends JPanel{
 
 		
        
-        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Accueil.class, this);
+        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Main.getLastClass() , this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
         

@@ -40,6 +40,7 @@ public final class LoginEtudient extends JPanel {
     }
  
     public LoginEtudient() {
+        Main.setLastClass(this.getClass());
 
         try {
             backgroundImage = ImageIO.read(new File("data/Login_Etudiant.png"));
@@ -59,6 +60,9 @@ public final class LoginEtudient extends JPanel {
         Color perpul = new Color(87, 107, 194);
         Color bleu = new Color(19, 43, 149);
         Font font = new Font("Calibri", Font.BOLD, 15);
+
+        this.add(Functions.cretBackBtn());
+       
 
         line1 = creetLine(330, 368, perpul);
         line2 = creetLine(330, 447, perpul);
@@ -207,12 +211,14 @@ public final class LoginEtudient extends JPanel {
             if (window instanceof javax.swing.JFrame) {
                 javax.swing.JFrame frame = (javax.swing.JFrame) window;
 
+                Main.addPageToHistory(LoginEtudient.class); 
+
                 Etudient_profil panelMdp = new Etudient_profil();
                 frame.setContentPane(panelMdp);
                 frame.revalidate();
                 frame.repaint();
             }
-        });
+            });
 
         this.add(loginBtn);
 
@@ -235,6 +241,7 @@ public final class LoginEtudient extends JPanel {
 
                     // changer le contenu de la fenêtre par le nouveau panel
                     MotDePasseOublier panelMdp = new MotDePasseOublier();
+                    Main.addPageToHistory(LoginEtudient.class);
                     frame.setContentPane(panelMdp);
                     frame.revalidate();
                     frame.repaint();
@@ -261,13 +268,14 @@ public final class LoginEtudient extends JPanel {
 
 		
        
-        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Accueil.class, this);
+        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Main.getLastClass() , this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
          
         this.add(acceuille);
         this.add(contact);
         this.add(propos);
+        
 
     }
 

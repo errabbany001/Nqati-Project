@@ -13,6 +13,7 @@ public final class Etudient_notification extends JPanel {
         private Image backgroundImage;
 
     public Etudient_notification() {
+        Main.setLastClass(this.getClass());
 
         try {
             backgroundImage = ImageIO.read(new File("data/pg_Etudient_notification.png"));
@@ -41,7 +42,7 @@ public final class Etudient_notification extends JPanel {
         this.add(Profil);
         this.add(Settings);
         this.add(Notes);
-        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Accueil.class, this);
+        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Main.getLastClass() , this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
         

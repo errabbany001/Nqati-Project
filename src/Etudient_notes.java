@@ -231,6 +231,7 @@ public void createLine(int y, String codeText, String modul, double nn, double n
     // =========================================================
     public Etudient_notes() {
         FillTherSemsInfo();
+        Main.setLastClass(this.getClass());
         nb_sem = semsInfo.size();
 
         try {
@@ -268,7 +269,7 @@ public void createLine(int y, String codeText, String modul, double nn, double n
 
         this.add(Functions.LogOutIcon(this));
 
-        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Accueil.class, this);
+        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Main.getLastClass() , this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
 
