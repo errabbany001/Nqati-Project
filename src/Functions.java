@@ -238,7 +238,6 @@ public class Functions {
             @Override
 
             public void mouseClicked(MouseEvent e) {
-                // 1. كنتأكدو بلي كاين فين نرجعو
                 if (!Main.getLisOfCls().isEmpty()) {
                     
                     java.awt.Window window = SwingUtilities.getWindowAncestor(btn);
@@ -247,18 +246,15 @@ public class Functions {
                         javax.swing.JFrame frame = (javax.swing.JFrame) window;
 
                         try {
-                            // 2. كنجبدو آخر صفحة تسجلات فـ التاريخ ونمسحوها (Pop)
                             Class<? extends JPanel> prevClass = Main.getLisOfCls().remove(Main.getLisOfCls().size() - 1);
 
-                            // 3. كنفتحو هاد الصفحة
                             JPanel panelBack = prevClass.getDeclaredConstructor().newInstance();
 
                             frame.setContentPane(panelBack);
                             frame.revalidate();
                             frame.repaint();
                             
-                            // (اختياري) طبع التاريخ باش تأكد
-                            // Main.printHistory();
+                            
 
                         } catch (Exception ex) {
                             ex.printStackTrace();

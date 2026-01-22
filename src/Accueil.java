@@ -31,6 +31,7 @@ public final class Accueil extends JPanel {
         } catch (IOException e) {
             System.err.println("Error: Could not load pg_home.png");
         }
+        Main.setLastClass(Accueil.class);
 
         this.setLayout(null);
         
