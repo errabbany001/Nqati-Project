@@ -201,6 +201,7 @@ public class Functions {
         if (answer == JOptionPane.YES_OPTION) {
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(currentPanel);
             if (frame != null) {
+                Main.getLisOfCls().clear();
                 frame.setContentPane(new Accueil());
                 frame.revalidate();
                 frame.repaint();
