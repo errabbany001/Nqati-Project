@@ -40,7 +40,6 @@ public final class Accueil extends JPanel {
         Color ciel = new Color(144, 159, 250);
         
 
-        this.add(Functions.cretBackBtn());
        
 
         JLabel seconnecter = new JLabel("Se connecter");

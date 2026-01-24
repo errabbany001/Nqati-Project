@@ -95,7 +95,6 @@ public final class MotDePasseOublier extends JPanel{
         }
 
         this.setLayout(null); 
-        Main.printHistory();
 
         this.add(Functions.cretBackBtn());
 

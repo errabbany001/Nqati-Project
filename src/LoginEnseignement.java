@@ -36,7 +36,6 @@ public final  class LoginEnseignement extends JPanel{
     }
  
     public LoginEnseignement() {
-        Main.printHistory();
         Main.setLastClass(this.getClass());
         try {
             backgroundImage = ImageIO.read(new File("data/Login_Enseignement.png"));

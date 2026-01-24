@@ -3,8 +3,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -212,11 +214,9 @@ public class Functions {
     public static  JButton cretBackBtn (){
         ImageIcon icon_1 = new ImageIcon(new ImageIcon("data/icon_back_2.png").getImage().getScaledInstance(26, 20, Image.SCALE_SMOOTH));
         ImageIcon icon_2 = new ImageIcon(new ImageIcon("data/icon_back_1.png").getImage().getScaledInstance(26, 20, Image.SCALE_SMOOTH));
-        ImageIcon icon_3 = new ImageIcon(new ImageIcon("data/icon_back_3.png").getImage().getScaledInstance(26, 20, Image.SCALE_SMOOTH));
 
-        boolean check = (Main.getLisOfCls().isEmpty());
-        ImageIcon ic = check ? icon_3 : icon_1;
-        JButton btn = new JButton(ic);
+        
+        JButton btn = new JButton(icon_1);
         btn.setBounds(30,60,26,20);
         btn.setOpaque(false);
         btn.setContentAreaFilled(false);
@@ -226,14 +226,14 @@ public class Functions {
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (!check)
-                {btn.setIcon(icon_2);}
+               
+                btn.setIcon(icon_2);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if (!check)
-                {btn.setIcon(icon_1);}
+               
+                btn.setIcon(icon_1);
             }
 
             @Override
@@ -269,5 +269,21 @@ public class Functions {
 
           
         return btn;
+    }
+
+    //====================================================================
+    public static Font getMyFont(String path , int style, float size) {
+        try {
+            File fontFile = new File(path);
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+            
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            
+            return customFont.deriveFont(style, size);
+            
+        } catch (Exception e) {
+            return new Font("Arial", style, (int)size);
+        }
     }
 }

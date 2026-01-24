@@ -16,11 +16,12 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
-        Accueil lge = new Accueil();
+        //Accueil lge = new Accueil();
         //motDePasseOublier lge = new motDePasseOublier();
         //Etudient_notes lge = new Etudient_notes();
         //LoginEtudient lge = new LoginEtudient();
         //Etudient_notes lge = new Etudient_notes();
+        Propos lge = new Propos();
 
         
 
@@ -56,20 +57,7 @@ public class Main {
 
 
 
-        //========================================
-        public static void printHistory() {
-    System.out.println("---------- History List ----------");
-    if (LisOfCls.isEmpty()) {
-        System.out.println("History is empty!");
-    } else {
-        for (int i = 0; i < LisOfCls.size(); i++) {
-            // كنجبدو السمية ديال الكلاص باش تبان مقروءة
-            String className = LisOfCls.get(i).getSimpleName();
-            System.out.println((i + 1) + " : " + className);
-        }
-    }
-    System.out.println("----------------------------------");
-}
+
 
     public static Etudient getEtudient() {
         return etudient;
