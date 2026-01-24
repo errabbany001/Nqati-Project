@@ -19,12 +19,7 @@ public final class Propos extends JPanel {
 
     private Image backgroundImage;
 
-    private ImageIcon logo  = new ImageIcon(new ImageIcon("data/logo.png").getImage().getScaledInstance(100, 87, Image.SCALE_SMOOTH));
-    private ImageIcon ph_1  = new ImageIcon(new ImageIcon("data/photo_1.png").getImage().getScaledInstance(860, 416, Image.SCALE_SMOOTH));
-    private ImageIcon ph_2  = new ImageIcon(new ImageIcon("data/photo_2.png").getImage().getScaledInstance(400, 320, Image.SCALE_SMOOTH));
-    private ImageIcon ph_3  = new ImageIcon(new ImageIcon("data/photo_3.png").getImage().getScaledInstance(300, 400, Image.SCALE_SMOOTH));
-    private ImageIcon ph_4  = new ImageIcon(new ImageIcon("data/photo_4.png").getImage().getScaledInstance(560, 400, Image.SCALE_SMOOTH));
-    private ImageIcon ph_5  = new ImageIcon(new ImageIcon("data/photo_5.png").getImage().getScaledInstance(860, 400, Image.SCALE_SMOOTH));
+ 
    
     
     public Propos() {
@@ -59,7 +54,7 @@ public final class Propos extends JPanel {
         contentPanel.setPreferredSize(new Dimension(876,2200));
 
 
-        JLabel lg = new JLabel(logo);
+        JLabel lg = new JLabel(Main.getLogo());
         lg.setBounds(380,20,100,87);
         contentPanel.add(lg);
 
@@ -113,12 +108,12 @@ public final class Propos extends JPanel {
 
 
 
-        JLabel photo1 = new JLabel(ph_1);
+        JLabel photo1 = new JLabel(Main.getPh_1());
         photo1.setBounds(4,150,874,416);
         contentPanel.add(photo1);
 
 
-        JLabel photo2 = new JLabel(ph_2);
+        JLabel photo2 = new JLabel(Main.getPh_2());
         photo2.setBounds(0,668 , 400,320);
         contentPanel.add(photo2);
 
@@ -175,7 +170,7 @@ public final class Propos extends JPanel {
         text9.setBounds(30, 1250, 240,80);
         contentPanel.add(text9);
 
-        JLabel photo3 = new JLabel(ph_3);
+        JLabel photo3 = new JLabel(Main.getPh_3());
         photo3.setBounds(4, 1160, 300,400);
         contentPanel.add(photo3);
 
@@ -201,7 +196,7 @@ public final class Propos extends JPanel {
         text11.setBounds(340, 1345, 240,80);
         contentPanel.add(text11);
 
-        JLabel photo4 = new JLabel(ph_4);
+        JLabel photo4 = new JLabel(Main.getPh_4());
         photo4.setBounds(310, 1160, 560,400);
         contentPanel.add(photo4);
 
@@ -236,7 +231,7 @@ public final class Propos extends JPanel {
         text13.setVerticalAlignment(JLabel.CENTER);
         contentPanel.add(text13);
 
-        JLabel photo5 = new JLabel(ph_5);
+        JLabel photo5 = new JLabel(Main.getPh_5());
         photo5.setBounds(4,1780,874,400);
         contentPanel.add(photo5);
 

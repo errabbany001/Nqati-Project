@@ -25,7 +25,7 @@ import javax.swing.text.DocumentFilter;
 public final class Contact extends JPanel {
 
     private Image backgroundImage;
-    private ImageIcon cdr1  = new ImageIcon(new ImageIcon("data/contact_cader_1.png").getImage().getScaledInstance(500, 450, Image.SCALE_SMOOTH));
+    private ImageIcon cdr1  = new ImageIcon(new ImageIcon("data/contact_cader_1.png").getImage().getScaledInstance(200, 75, Image.SCALE_SMOOTH));
     private ImageIcon inp1  = new ImageIcon(new ImageIcon("data/contact_input1.png").getImage().getScaledInstance(150, 31, Image.SCALE_SMOOTH));
     private ImageIcon inp2  = new ImageIcon(new ImageIcon("data/contact_input2.png").getImage().getScaledInstance(200, 31, Image.SCALE_SMOOTH));
     private ImageIcon inp3  = new ImageIcon(new ImageIcon("data/contact_input3.png").getImage().getScaledInstance(365, 31, Image.SCALE_SMOOTH));
@@ -211,9 +211,6 @@ public final class Contact extends JPanel {
         this.add(vld);
 
 
-        JLabel cader1 = new JLabel(cdr1);
-        cader1.setBounds(140,160, 500 , 450);
-        this.add(cader1);
 
 
 
@@ -225,6 +222,17 @@ public final class Contact extends JPanel {
         this.add(cretTextCont("FSTE, Er-rachidia", 657, 462));
 
 
+        JLabel cader1 = new JLabel(cdr1);
+        cader1.setBounds(658,260, 200 , 75);
+        this.add(cader1);
+
+        JLabel cader2 = new JLabel(cdr1);
+        cader2.setBounds(658,340, 200 , 75);
+        this.add(cader2);
+
+        JLabel cader3 = new JLabel(cdr1);
+        cader3.setBounds(658,420, 200 , 75);
+        this.add(cader3);
 
 
         

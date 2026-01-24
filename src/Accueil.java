@@ -120,7 +120,6 @@ public final class Accueil extends JPanel {
 	            // changer le contenu de la fenêtre par le nouveau panel
 	            LoginEtudient panelMdp = new LoginEtudient(); 
                 
-                System.err.println();
 	            frame.setContentPane(panelMdp);
 	            frame.revalidate();
 	            frame.repaint();
