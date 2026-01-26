@@ -1,6 +1,5 @@
 import java.awt.Image;
 import java.util.ArrayList;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -29,8 +28,7 @@ public class Main {
         //motDePasseOublier lge = new motDePasseOublier();
         //Etudient_notes lge = new Etudient_notes();
         //LoginEtudient lge = new LoginEtudient();
-        //Etudient_notes lge = new Etudient_notes();
-        Contact lge = new Contact();
+        Etudient_profil lge = new Etudient_profil();
 
         
 

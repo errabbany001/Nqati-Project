@@ -54,7 +54,7 @@ public final class Contact extends JPanel {
     private JLabel cretText(String text , int x , int y){
         JLabel myText = new JLabel(text);
         myText.setBounds(x,y,200,20);
-        myText.setFont(Functions.getMyFont("", Font.BOLD, 12f));
+        myText.setFont(Functions.getMyFont("data/Raleway-Regular.ttf", Font.BOLD , 16f));
         myText.setForeground(new Color(22, 31, 112));
         return myText;
     }
