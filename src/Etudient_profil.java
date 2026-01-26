@@ -24,7 +24,7 @@ public final class Etudient_profil extends JPanel {
     static String fullName , Cne , ddn , option , niveau , semester , note , admis;
 
 
-    JLabel creetLabel(int x , int y , String text ){
+    static JLabel creetLabel(int x , int y , String text ){
         JLabel myText = new JLabel(text);
         myText.setBounds(x,y,200,20);
         myText.setFont(Functions.getMyFont("", Font.BOLD, 14f));

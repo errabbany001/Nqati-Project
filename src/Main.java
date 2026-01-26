@@ -16,6 +16,7 @@ public class Main {
     private static ImageIcon ph_3  = new ImageIcon(new ImageIcon("data/photo_3.png").getImage().getScaledInstance(300, 400, Image.SCALE_SMOOTH));
     private static ImageIcon ph_4  = new ImageIcon(new ImageIcon("data/photo_4.png").getImage().getScaledInstance(560, 400, Image.SCALE_SMOOTH));
     private static ImageIcon ph_5  = new ImageIcon(new ImageIcon("data/photo_5.png").getImage().getScaledInstance(860, 400, Image.SCALE_SMOOTH));
+    private static int logedIn = 0;
     
     public static void main(String[] args) {
         JFrame frame = new JFrame("Nqati Student Marks");
@@ -138,6 +139,16 @@ public class Main {
     public static void setPh_5(ImageIcon ph_5) {
         Main.ph_5 = ph_5;
     }
+
+    public static int getLogedIn() {
+        return logedIn;
+    }
+
+    public static void setLogedIn(int logedIn) {
+        Main.logedIn = logedIn;
+    }
+    
+
     
 
     

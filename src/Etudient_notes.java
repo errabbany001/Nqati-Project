@@ -240,6 +240,14 @@ public void createLine(int y, String codeText, String modul, double nn, double n
             System.err.println("Error: Could not load data/pg_Etudient_notes.png");
         }
 
+        JLabel profilIconMini = new JLabel(Etudient_profil.icon_2);
+        profilIconMini.setBounds(920,48 , 40, 40);
+        this.add(profilIconMini);
+    
+        JLabel myname = Etudient_profil.creetLabel(710, 60, Etudient_profil.fullName);
+        myname.setHorizontalAlignment(JLabel.RIGHT);
+        this.add(myname);
+
         def = readImage("data/sem_icon_def.png", 200, 31);
         click = readImage("data/sem_icon_click.png", 200, 31);
         light = readImage("data/sem_icon_lighter.png", 200, 31);

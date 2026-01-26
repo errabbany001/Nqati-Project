@@ -159,6 +159,15 @@ public final class Etudient_notification extends JPanel {
 
         this.setLayout(null); 
 
+        JLabel profilIconMini = new JLabel(Etudient_profil.icon_2);
+        profilIconMini.setBounds(920,48 , 40, 40);
+        this.add(profilIconMini);
+    
+        JLabel myname = Etudient_profil.creetLabel(710, 60, Etudient_profil.fullName);
+        myname.setHorizontalAlignment(JLabel.RIGHT);
+        this.add(myname);
+      
+    
 
         if(notificationList.isEmpty())
         { 

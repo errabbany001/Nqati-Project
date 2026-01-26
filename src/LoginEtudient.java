@@ -210,7 +210,7 @@ public final class LoginEtudient extends JPanel {
             java.awt.Window window = SwingUtilities.getWindowAncestor(LoginEtudient.this);
             if (window instanceof javax.swing.JFrame) {
                 javax.swing.JFrame frame = (javax.swing.JFrame) window;
-
+                Main.setLogedIn(1);
                 Main.addPageToHistory(LoginEtudient.class); 
 
                 Etudient_profil panelMdp = new Etudient_profil();

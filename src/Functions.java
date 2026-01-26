@@ -8,6 +8,7 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.regex.Pattern;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -53,13 +54,13 @@ public class Functions {
 
     //==========================================================
     public static boolean isValidEmail(String email) {
-    if (email == null) {
-        return false;
-    }
+        if (email == null) {
+            return false;
+        }
         String emailRegex = "^[^@]+@[^@]+\\.[^@]+$";
 
-    Pattern pattern = Pattern.compile(emailRegex);
-    return pattern.matcher(email).matches();
+        Pattern pattern = Pattern.compile(emailRegex);
+        return pattern.matcher(email).matches();
     }
     //==========================================================
   
@@ -81,14 +82,13 @@ public class Functions {
             }
 
             JPanel nextPanel = null;
-            System.out.println("Button clicked! Target: " + target); 
 
            
             switch (target.toLowerCase()) {
                 case "notes": nextPanel = new Etudient_notes(); break;
                 case "profil": nextPanel = new Etudient_profil(); break;
                 case "settings": nextPanel = new Etudient_settings(); break;
-                case "notification": nextPanel = new Etudient_notification();   break;
+                case "notification": nextPanel = new Etudient_notification(); break;
             }
 
             if (nextPanel != null) {
@@ -167,7 +167,7 @@ public class Functions {
                         }
                     }
                 }
-}
+            }
         });
 
         return button_shape_1;
@@ -211,7 +211,7 @@ public class Functions {
         }
     }
     //================================================================
-    public static  JButton cretBackBtn (){
+    public static JButton cretBackBtn(){
         ImageIcon icon_1 = new ImageIcon(new ImageIcon("data/icon_back_2.png").getImage().getScaledInstance(26, 20, Image.SCALE_SMOOTH));
         ImageIcon icon_2 = new ImageIcon(new ImageIcon("data/icon_back_1.png").getImage().getScaledInstance(26, 20, Image.SCALE_SMOOTH));
 
@@ -272,9 +272,17 @@ public class Functions {
     }
 
     //====================================================================
-    public static Font getMyFont(String path , int style, float size) {
+    public static Font getMyFont(String path, int style, float size) {
         try {
+            if (path == null || path.trim().isEmpty()) {
+                return new Font("Arial", style, (int)size);
+            }
+            
             File fontFile = new File(path);
+            if (!fontFile.exists()) {
+                return new Font("Arial", style, (int)size);
+            }
+            
             Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
             
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();

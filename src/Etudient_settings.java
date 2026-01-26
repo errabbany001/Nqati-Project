@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public final class Etudient_settings extends JPanel{
@@ -27,10 +28,17 @@ public final class Etudient_settings extends JPanel{
         }
 
         this.setLayout(null); 
+
+        JLabel profilIconMini = new JLabel(Etudient_profil.icon_2);
+        profilIconMini.setBounds(920,48 , 40, 40);
+        this.add(profilIconMini);
+    
+        JLabel myname = Etudient_profil.creetLabel(710, 60, Etudient_profil.fullName);
+        myname.setHorizontalAlignment(JLabel.RIGHT);
+        this.add(myname);
         
 
         Color perpul = new Color(87, 107, 194);
-        //Color ciel = new Color(166, 177, 235);
 
 
        
