@@ -69,7 +69,7 @@ public final class Etudient_notification extends JPanel {
         for (int i = 0; i < notificationList.size(); i++) {
             conPan.add(addDelet(710, 47 + i * 90 , i , conPan) , 0);
             conPan.add(addButton(7, 32 + i * 90  , i));
-            JLabel check = (addNewNet(10, 38 + i * 90 , i));
+            JLabel check = (addNewNet(10, 55 + i * 90 , i));
             if(!notificationList.get(i)[2].equals("new")){
                 check.setVisible(false);
             }
@@ -280,7 +280,7 @@ public final class Etudient_notification extends JPanel {
         for (int i = 0 ; i < numNet ; i++){
             conPan.add(addDelet(710, 47 + i * 90 , i , conPan) , 0);
             conPan.add(addButton(7, 32 + i * 90  , i));
-            JLabel check = (addNewNet(10, 38 + i * 90 , i));
+            JLabel check = (addNewNet(10, 55 + i * 90 , i));
             if(!notificationList.get(i)[2].equals("new")){
                 check.setVisible(false);
             }

@@ -203,6 +203,7 @@ public class Functions {
         if (answer == JOptionPane.YES_OPTION) {
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(currentPanel);
             if (frame != null) {
+                Main.setLogedIn(0);
                 Main.getLisOfCls().clear();
                 frame.setContentPane(new Accueil());
                 frame.revalidate();

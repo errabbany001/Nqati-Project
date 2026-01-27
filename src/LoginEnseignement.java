@@ -273,6 +273,8 @@ public final  class LoginEnseignement extends JPanel{
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
         
+        
+
         this.add(acceuille);
         this.add(contact);
         this.add(propos);

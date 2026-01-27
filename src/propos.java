@@ -38,7 +38,7 @@ public final class Propos extends JPanel {
     
         JLabel myname = Etudient_profil.creetLabel(710, 60, Etudient_profil.fullName);
         myname.setHorizontalAlignment(JLabel.RIGHT);
-        this.add(myname);
+        
 
 
         if(Main.getLogedIn() == 0){

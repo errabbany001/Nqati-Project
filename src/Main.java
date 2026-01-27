@@ -25,12 +25,12 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
-        Accueil lge = new Accueil();
+        //Accueil lge = new Accueil();
         //motDePasseOublier lge = new motDePasseOublier();
-        //Etudient_notes lge = new Etudient_notes();
+       // Etudient_notes lge = new Etudient_notes();
         //LoginEtudient lge = new LoginEtudient();
         //Etudient_profil lge = new Etudient_profil();
-        //Etudient_notification lge = new Etudient_notification();
+        Etudient_notification lge = new Etudient_notification();
 
         
 

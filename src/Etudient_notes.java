@@ -1,36 +1,37 @@
-import static java.awt.Cursor.HAND_CURSOR;
-
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Path2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 public final class Etudient_notes extends JPanel {
 
     private Image backgroundImage;
-    private ImageIcon def, click, light, dark, light2, dark2, mousIN1, mousIN2, conf1, conf2, tab1, tab4, tab6;
-
-    private JButton sems;
-    private int nb_sem, swt = 0;
+    private int nb_sem;
+    private JPanel caderPan;
 
     // Each item = one semester array of module names
     private final ArrayList<String[]> semsInfo = new ArrayList<>();
     // Each item = one semester array of codes
     private final ArrayList<String[]> codes = new ArrayList<>();
 
-    private final ArrayList<JButton> myBtns = new ArrayList<>();
-    private final ArrayList<JLabel[]> lines = new ArrayList<>();
+    private final ArrayList<JLabel> BleuLines = new ArrayList<>();
+    private final ArrayList<JLabel> semesters = new ArrayList<>();
+
 
     // =========================================================
     public void FillTherSemsInfo() {
@@ -109,128 +110,231 @@ public ImageIcon readImage(String path, int l, int h) {
     }
 }
 
-    // =========================================================
-public void createLine(int y, String codeText, String modul, double nn, double nr, double nf) {
-    // We add components at index 0 to ensure they stay on top of the background images
+//====================================================================
+private JLabel createCustomLabelWithBorder(String text, int x, int y, int width, int height, 
+                                           int topLeft, int topRight, int bottomRight, int bottomLeft, 
+                                           Color color) {
     
-    JLabel bt = new JLabel(codeText, JLabel.CENTER);
-    bt.setBounds(202, y, 50, 29);
-    bt.setForeground(Color.BLACK); // Ensure color is visible
-    this.add(bt, 1); 
+    JLabel label = new JLabel(text) {
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            // Lissage des bords pour l'arrondi et la ligne
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-    JLabel bt2 = new JLabel("  " + modul);
-    bt2.setBounds(254, y, 454, 29);
-    bt2.setForeground(Color.BLACK);
-    this.add(bt2, 1);
+            // Pour éviter que la bordure de 2px soit coupée, on réduit légèrement la zone de dessin
+            // 1px de marge (moitié de l'épaisseur de 2px)
+            int borderThickness = 1;
+            int inset = 1; 
+            int w = getWidth() - (inset * 2);
+            int h = getHeight() - (inset * 2);
 
-    JLabel bt3 = new JLabel(String.valueOf(nn), JLabel.CENTER);
-    bt3.setBounds(710, y, 43, 29);
-    bt3.setForeground(Color.BLACK);
-    this.add(bt3, 1);
+            // On déplace le crayon pour commencer à (1,1) au lieu de (0,0)
+            g2.translate(inset, inset);
 
-    JLabel bt4 = new JLabel(String.valueOf(nr), JLabel.CENTER);
-    bt4.setBounds(756, y, 43, 29);
-    bt4.setForeground(Color.BLACK);
-    this.add(bt4, 1);
+            // --- Création de la forme (Path) ---
+            Path2D.Float path = new Path2D.Float();
 
-    JLabel bt5 = new JLabel(String.valueOf(nf), JLabel.CENTER);
-    bt5.setBounds(804, y, 43, 29);
-    bt5.setFont(new Font("Arial", Font.BOLD, 12));
-    bt5.setForeground(Color.BLACK);
-    this.add(bt5, 1);
+            // 1. Coin Haut-Gauche
+            path.moveTo(0, topLeft);
+            if (topLeft > 0) path.quadTo(0, 0, topLeft, 0);
+            else path.lineTo(0, 0);
 
-    lines.add(new JLabel[]{bt, bt2, bt3, bt4, bt5});
-    
-    this.revalidate();
-    this.repaint();
+            // 2. Coin Haut-Droit
+            path.lineTo(w - topRight, 0);
+            if (topRight > 0) path.quadTo(w, 0, w, topRight);
+            else path.lineTo(w, 0);
+
+            // 3. Coin Bas-Droit
+            path.lineTo(w, h - bottomRight);
+            if (bottomRight > 0) path.quadTo(w, h, w - bottomRight, h);
+            else path.lineTo(w, h);
+
+            // 4. Coin Bas-Gauche
+            path.lineTo(bottomLeft, h);
+            if (bottomLeft > 0) path.quadTo(0, h, 0, h - bottomLeft);
+            else path.lineTo(0, h);
+
+            path.closePath();
+
+            // --- Remplissage (Fond) ---
+            g2.setColor(getBackground());
+            g2.fill(path);
+
+            // --- Bordure (Contour Noir) ---
+            g2.setColor(Color.BLACK); // Couleur de la bordure
+            g2.setStroke(new BasicStroke(borderThickness)); // Épaisseur 2px
+            g2.draw(path);
+
+            g2.dispose();
+            
+            // On remet la translation à 0 pour que le texte soit bien centré par rapport au composant global
+            super.paintComponent(g); 
+        }
+    };
+
+    // Configuration
+    label.setOpaque(false);
+    label.setBackground(color);
+    label.setForeground(Color.WHITE); // Couleur du texte
+    label.setHorizontalAlignment(SwingConstants.CENTER);
+    label.setBounds(x, y, width, height);
+    label.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+
+    return label;
 }
 
+  
+    //==========================================================
+    private JLabel createSemester(int i, int x) {
+        int num = i + 1;
+        JLabel semester = new JLabel("Semester " + num);
+        semester.setBounds(x, 195, 95, 20);
+        semester.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 17)); 
+        semester.setForeground(new Color(87, 107, 194)); // Couleur inactive par défaut
+        semester.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-    // =========================================================
-    public void clearLines() {
-        for (JLabel[] line : lines) {
-            for (JLabel lbl : line) {
-                this.remove(lbl);
-            }
+        if (i == 0){
+            semester.setForeground(new Color(78, 94, 241));
         }
-        lines.clear();
-        revalidate();
-        repaint();
-    }
 
-    // =========================================================
-    public JButton CreerBTN(int x, int y, int l, int h, ImageIcon icon, String text, int act) {
-        JButton btn = new JButton(text, icon);
-
-        btn.setBounds(x, y, l, h);
-        btn.setHorizontalTextPosition(JButton.CENTER);
-        btn.setVerticalTextPosition(JButton.CENTER);
-        btn.setContentAreaFilled(false);
-        btn.setBorderPainted(false);
-        btn.setFocusPainted(false);
-        btn.setForeground(Color.white);
-        btn.setFont(new Font("Arial", Font.BOLD, 14));
-        btn.setCursor(new Cursor(HAND_CURSOR));
-
-        btn.addMouseListener(new java.awt.event.MouseAdapter() {
-
+        semester.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (act == 0) {
-                    if (swt == 0) {
-                        sems.setIcon(click);
-                        swt = 1;
-                        for (JButton bt : myBtns) bt.setVisible(true);
-                    } else {
-                        sems.setIcon(def);
-                        swt = 0;
-                        for (JButton bt : myBtns) bt.setVisible(false);
-                    }
-                } else {
-                    JButton clickedBtn = (JButton) e.getSource();
-                    sems.setText(clickedBtn.getText());
-                    for (JButton bt : myBtns) bt.setVisible(false);
-                    sems.setIcon(def);
-                    swt = 0;
+                // 1. Activer l'élément cliqué
+                semester.setForeground(new Color(78, 94, 241)); // Couleur active
+                if (i < BleuLines.size()) {
+                    BleuLines.get(i).setVisible(true);
                 }
-            }
 
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if (act != 0) {
-                    JButton clickedBtn = (JButton) e.getSource();
-                    int indx = myBtns.indexOf(clickedBtn);
-                    if (indx > 0) {
-                        ImageIcon icn = (indx != myBtns.size() - 1) ? mousIN1 : mousIN2;
-                        clickedBtn.setIcon(icn);
-                    }
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (act != 0) {
-                    JButton clickedBtn = (JButton) e.getSource();
-                    int indx = myBtns.indexOf(clickedBtn);
-                    if (indx >= 0) {
-                        ImageIcon icn;
-                        if (indx != myBtns.size() - 1) {
-                            icn = ((indx + 2) % 2 == 0) ? light : dark;
-                        } else {
-                            icn = ((indx + 2) % 2 == 0) ? light2 : dark2;
+                // 2. Désactiver tous les autres (Boucle corrigée)
+                for (int j = 0; j < semesters.size(); j++) {
+                    // On vérifie que ce n'est pas l'élément actuel
+                    if (j != i) { 
+                        semesters.get(j).setForeground(new Color(87, 107, 194)); // Remettre en gris/bleu pâle
+                        if (j < BleuLines.size()) {
+                            BleuLines.get(j).setVisible(false); // Cacher la ligne
                         }
-                        clickedBtn.setIcon(icn);
                     }
                 }
+
+                caderPan.removeAll();
+                
+                // 2. Recalculates the layout (tells Java "the space is empty now")
+                caderPan.revalidate();
+                
+                // 3. Redraws the caderPan (clears the visual pixels on screen)
+                caderPan.repaint();
+
+                String text = semester.getText();
+
+                String lastChar = text.substring(text.length() - 1);
+
+                // 2. Convert to int
+                int number = Integer.parseInt(lastChar);
+
+                caderPan = creatMarksTable(caderPan, number -1);
             }
         });
 
-        return btn;
+        semesters.add(semester);
+        return semester;
+    }
+
+
+
+    
+
+    public JLabel createLine( int i){
+        JLabel line = new JLabel();
+        line.setOpaque(true);
+        line.setBackground(new Color(78,94,241));
+        line.setBounds(156 + i * 127,225 , 126 , 5);
+        line.setVisible(false);
+        BleuLines.add(line);
+        
+        return (line);
+    }
+    // ==========================================================
+
+    private JLabel verticalLine(int x, int y , int h){
+        JLabel leb = new JLabel();
+        leb.setBounds(x, y , 1 , h);
+        leb.setOpaque(true);
+        leb.setBackground(Color.black);
+        return leb;
+    }
+
+
+
+    private JLabel WriteText(String text , int x , int y , int l , int h, Color col){
+        JLabel lab = new JLabel(text);
+        lab.setBounds(x , y , l ,h);
+        lab.setHorizontalAlignment(JLabel.CENTER);
+        lab.setForeground(col);
+        lab.setFont(Functions.getMyFont("", Font.BOLD, 12f));
+        return lab;
+
+    }
+
+    private JPanel WriteALine(JPanel pan ,String cd, String nam, String nn , String nr , String nf, String valid  , int i){
+        Color myCol = (i == 0) ? Color.white : new Color(49,54,154);
+        JLabel code = WriteText(cd, 12, 12 + i * 36, 54, 34, myCol);
+        JLabel name = WriteText(nam, 72, 12 + i * 36, 394, 34, myCol);
+        JLabel notNor = WriteText(nn, 472, 12 + i * 36, 54, 34, myCol);
+        JLabel notRat = WriteText(nr, 532, 12 + i * 36, 54, 34, myCol);
+        JLabel notFin = WriteText(nf, 592, 12 + i * 36, 54, 34, myCol);
+        JLabel val = WriteText(valid, 652, 12 + i * 36, 54, 34, myCol);
+
+
+        pan.add(code);
+        pan.add(name);
+        pan.add(notNor);
+        pan.add(notRat);
+        pan.add(notFin);
+        pan.add(val);
+
+
+        return pan;
+    }
+    
+
+    //=====================================================
+
+    public JPanel creatMarksTable(JPanel pan , int semes){
+
+
+        pan = WriteALine(pan, "Code", "Module", "NN", "NR", "NF", "Statu",  0);
+
+        pan.add(createCustomLabelWithBorder("", 10, 10, 700, 38, 10, 10, 0, 0, new Color(87, 107, 194)));
+
+        int a = semsInfo.get(semes).length;
+        for ( int j = 1 ; j <= a ; j++){
+            pan = WriteALine(pan, codes.get(semes)[j-1], semsInfo.get(semes)[j-1], "00.00", "00.00", "00.00", "V", j);
+            if (j != a)
+         {pan.add(createCustomLabelWithBorder("", 10, 10 + j * 36, 700, 38, 0, 0, 0, 0, Color.white));  } 
+            else {
+           pan.add(createCustomLabelWithBorder("", 10, 10 + j * 36, 700, 38, 0, 0, 10, 10, Color.white));     
+            }
+        }
+        a += 1;
+        pan.add(verticalLine(70, 11, a * 36) , 0);
+        pan.add(verticalLine(470, 11, a * 36) , 0);
+        pan.add(verticalLine(530, 11, a * 36) , 0);
+        pan.add(verticalLine(590, 11, a * 36), 0);
+        pan.add(verticalLine(650, 11, a * 36) , 0);
+
+        
+        return pan;
     }
 
     // =========================================================
     public Etudient_notes() {
-        FillTherSemsInfo();
+
+        if (semsInfo.isEmpty()){
+            FillTherSemsInfo();
+        }
+        
         Main.setLastClass(this.getClass());
         nb_sem = semsInfo.size();
 
@@ -248,21 +352,7 @@ public void createLine(int y, String codeText, String modul, double nn, double n
         myname.setHorizontalAlignment(JLabel.RIGHT);
         this.add(myname);
 
-        def = readImage("data/sem_icon_def.png", 200, 31);
-        click = readImage("data/sem_icon_click.png", 200, 31);
-        light = readImage("data/sem_icon_lighter.png", 200, 31);
-        dark = readImage("data/sem_icon_darker.png", 200, 31);
-        light2 = readImage("data/sem_icon_lighter2.png", 200, 31);
-        dark2 = readImage("data/sem_icon_darker2.png", 200, 31);
-        mousIN1 = readImage("data/sem_icon_mousIN1.png", 200, 31);
-        mousIN2 = readImage("data/sem_icon_mousIN2.png", 200, 31);
-        conf1 = readImage("data/icon_confirm_def.png", 131, 31);
-        conf2 = readImage("data/icon_confirm_mous.png", 131, 31);
-
-        tab1 = readImage("data/tableu_1.png", 650, 60);
-        tab4 = readImage("data/tableu_4.png", 650, 148);
-        tab6 = readImage("data/tableu_6.png", 650, 207);
-
+        //================================================================
         this.setLayout(null);
 
         Color perpul = new Color(87, 107, 194);
@@ -276,6 +366,7 @@ public void createLine(int y, String codeText, String modul, double nn, double n
         this.add(Notification);
 
         this.add(Functions.LogOutIcon(this));
+        
 
         JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Main.getLastClass() , this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
@@ -284,120 +375,28 @@ public void createLine(int y, String codeText, String modul, double nn, double n
         this.add(acceuille);
         this.add(contact);
         this.add(propos);
-
-        sems = CreerBTN(300, 160, 200, 31, def, "Semester", 0);
-        this.add(sems);
-
-        int firstY = 160;
-        for (int i = 1; i <= nb_sem; i++) {
-            firstY += 29;
-            String name = "Semester " + i;
-
-            ImageIcon L = (i == nb_sem) ? light2 : light;
-            ImageIcon D = (i == nb_sem) ? dark2 : dark;
-
-            JButton btn = (i % 2 == 0)
-                    ? CreerBTN(300, firstY, 200, 31, L, name, 2)
-                    : CreerBTN(300, firstY, 200, 31, D, name, 2);
-
-            btn.setVisible(false);
-            this.add(btn,0);
-            myBtns.add(btn);
+        //================================================================
+ 
+        for (int i = 0 ; i < semsInfo.size() ; i++){
+            this.add(createSemester(i, 167 + 128 * i));
+            this.add(createLine( i));
         }
+        BleuLines.get(0).setVisible(true);
 
-        // Table images
-        JLabel tab_1 = new JLabel(tab1);
-        tab_1.setBounds(200, 250, 650, 60);
-        tab_1.setVisible(false);
-        tab_1.setOpaque(false);
-        this.add(tab_1);
+        caderPan = new JPanel();
+        caderPan.setLayout(null);
+        caderPan.setOpaque(false);
+        caderPan = creatMarksTable(caderPan, 0);
+        caderPan.setBorder(null);
+        
+        caderPan.setBounds(170 , 250 , 740 , 285);
+        this.add(caderPan);
 
-        JLabel tab_4 = new JLabel(tab4);
-        tab_4.setBounds(200, 250, 650, 147);
-        tab_4.setVisible(false);
-        tab_4.setOpaque(false);
-        this.add(tab_4);
 
-        JLabel tab_6 = new JLabel(tab6);
-        tab_6.setBounds(200, 250, 650, 207);
-        tab_6.setVisible(false);
-        tab_6.setOpaque(false);
-        this.add(tab_6);
 
-        // Confirm button
-        JButton confirm = new JButton("Confirm", conf1);
-        confirm.setBounds(550, 160, 131, 31);
-        confirm.setHorizontalTextPosition(JButton.CENTER);
-        confirm.setVerticalTextPosition(JButton.CENTER);
-        confirm.setContentAreaFilled(false);
-        confirm.setBorderPainted(false);
-        confirm.setFocusPainted(false);
-        confirm.setForeground(Color.white);
-        confirm.setFont(new Font("Arial", Font.BOLD, 14));
-        confirm.setCursor(new Cursor(HAND_CURSOR));
 
-        confirm.addMouseListener(new java.awt.event.MouseAdapter() {
+       
 
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                confirm.setIcon(conf2);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                confirm.setIcon(conf1);
-            }
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-                String str = sems.getText(); // "Semester 1" ... "Semester 4"
-                if (!str.startsWith("Semester ")) return;
-
-                int semNumber;
-                try {
-                    semNumber = Integer.parseInt(str.substring("Semester ".length()).trim());
-                } catch (NumberFormatException ex) {
-                    return;
-                }
-
-                int idx = semNumber - 1;
-                if (idx < 0 || idx >= semsInfo.size()) return;
-
-                String[] modules = semsInfo.get(idx);
-                String[] cds = codes.get(idx);
-
-                int nb_mod = modules.length;
-
-                tab_1.setVisible(false);
-                tab_4.setVisible(false);
-                tab_6.setVisible(false);
-
-                switch (nb_mod) {
-                    case 1:
-                        tab_1.setVisible(true);
-                        break;
-                    case 4:
-                        tab_4.setVisible(true);
-                        break;
-                    case 6:
-                        tab_6.setVisible(true);
-                        break;
-                    default:
-                        break;
-                }
-
-                clearLines();
-
-                int y = 279;
-                for (int j = 0; j < modules.length; j++) {
-                    createLine(y, cds[j], modules[j], 10.00, 10.00, 10.00);
-                    y += 30;
-                }
-            }
-        });
-
-        this.add(confirm);
     }
 
     @Override

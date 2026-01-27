@@ -128,7 +128,7 @@ public final class Contact extends JPanel {
 
         JLabel countLabel = new JLabel("0 / 1000");
         countLabel.setBounds(495, 358, 66, 20); 
-        countLabel.setForeground(Color.BLACK);
+        countLabel.setBackground(Color.red);
         countLabel.setFont(new Font("Arial", Font.PLAIN, 10));
         countLabel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         this.add(countLabel);
