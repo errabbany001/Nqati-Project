@@ -72,7 +72,7 @@ public final class Etudient_profil extends JPanel {
         //Color ciel = new Color(166, 177, 235);
         
         JLabel profilIcon = new JLabel(icon_1);
-        profilIcon.setBounds(250, 200, 150, 150);
+        profilIcon.setBounds(250, 215, 150, 150);
         this.add(profilIcon);
 
         JLabel profilIconMini = new JLabel(icon_2);
