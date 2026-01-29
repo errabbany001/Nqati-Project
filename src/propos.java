@@ -7,7 +7,6 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,8 +35,9 @@ public final class Propos extends JPanel {
         profilIconMini.setBounds(920,48 , 40, 40);
         this.add(profilIconMini);
     
-        JLabel myname = Etudient_profil.creetLabel(710, 60, Etudient_profil.fullName);
+        JLabel myname = Functions.creetLabel(710, 60, Main.getUserName());
         myname.setHorizontalAlignment(JLabel.RIGHT);
+        this.add(myname);
         
 
 

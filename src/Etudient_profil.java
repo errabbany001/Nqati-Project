@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
@@ -24,21 +23,7 @@ public final class Etudient_profil extends JPanel {
     static String fullName , Cne , ddn , option , niveau , semester , note , admis;
 
 
-    static JLabel creetLabel(int x , int y , String text ){
-        JLabel myText = new JLabel(text);
-        myText.setBounds(x,y,200,20);
-        myText.setFont(Functions.getMyFont("", Font.BOLD, 14f));
-        myText.setForeground(new Color(22, 31, 112));
-        return myText;
-	}
 
-    JLabel EtudInfo(int x , int y , String text ){
-        JLabel myText = new JLabel(text);
-        myText.setBounds(x,y,200,20);
-        myText.setFont(Functions.getMyFont("Raleway-Regular.fft", Font.BOLD, 17f));
-        myText.setForeground(new Color(34, 161, 241));
-        return myText;
-	}
 
     JLabel creetVector(int x , int y , ImageIcon vect){
         JLabel vector = new JLabel(vect);
@@ -66,7 +51,9 @@ public final class Etudient_profil extends JPanel {
         admis = "OUI";
         note = "00.00";
         semester = "S1";
-        
+
+        Main.setUserName(fullName);
+    
 
         Color perpul = new Color(87, 107, 194);
         //Color ciel = new Color(166, 177, 235);
@@ -79,30 +66,30 @@ public final class Etudient_profil extends JPanel {
         profilIconMini.setBounds(920,48 , 40, 40);
         this.add(profilIconMini);
 
-        JLabel myname = creetLabel(710, 60, fullName);
+        JLabel myname = Functions.creetLabel(710, 60, fullName);
         myname.setHorizontalAlignment(JLabel.RIGHT);
         this.add(myname);
       
-        JLabel FullN =  creetLabel(230, 370, fullName);
+        JLabel FullN =  Functions.creetLabel(230, 370, fullName);
         FullN.setHorizontalAlignment(JLabel.CENTER);
         this.add(FullN);
 
-        JLabel CneLab =  EtudInfo(230, 390, Cne);
-        CneLab.setHorizontalAlignment(JLabel.CENTER);
+        JLabel CneLab =  Functions.EtudInfo(230, 390, Cne);
+        CneLab.setHorizontalAlignment(JLabel.CENTER); 
         this.add(CneLab);
 
-        this.add(creetLabel(515, 245, "DATE DE NAISSANCE"));
-        this.add(EtudInfo(515, 280, ddn));
+        this.add(Functions.creetLabel(515, 245, "DATE DE NAISSANCE"));
+        this.add(Functions.EtudInfo(515, 280, ddn));
 
-        this.add(creetLabel(515, 345, "OPTION"));
-        this.add(EtudInfo(515, 380, option));
+        this.add(Functions.creetLabel(515, 345, "OPTION"));
+        this.add(Functions.EtudInfo(515, 380, option));
 
-        this.add(creetLabel(720, 245, "NIVEAU"));
-        this.add(EtudInfo(720, 280, niveau));
+        this.add(Functions.creetLabel(720, 245, "NIVEAU"));
+        this.add(Functions.EtudInfo(720, 280, niveau));
 
 
-        this.add(creetLabel(720, 345, "SEMESTER"));
-        this.add(EtudInfo(720, 380, semester));
+        this.add(Functions.creetLabel(720, 345, "SEMESTER"));
+        this.add(Functions.EtudInfo(720, 380, semester));
 
 
         this.add(creetVector(480, 240, vect_ddn));
@@ -112,12 +99,12 @@ public final class Etudient_profil extends JPanel {
     
         
         this.add(creetVector(300, 515, vet_adm));
-        this.add(creetLabel(335, 520, "ADMIS DIPLOM : "));
-        this.add(EtudInfo(460, 521, admis));
+        this.add(Functions.creetLabel(335, 520, "ADMIS DIPLOM : "));
+        this.add(Functions.EtudInfo(460, 521, admis));
 
         this.add(creetVector(600, 515, vect_not));
-        this.add(creetLabel(635, 520, "NOTE : "));
-        this.add(EtudInfo(700, 521, note));
+        this.add(Functions.creetLabel(635, 520, "NOTE : "));
+        this.add(Functions.EtudInfo(700, 521, note));
         
     
 
@@ -125,9 +112,9 @@ public final class Etudient_profil extends JPanel {
         this.add(Functions.LogOutIcon(this));
             
        
-        JButton Notification =  Functions.createNavButton(55, 486, "notification", this);
-        JButton Settings = Functions.createNavButton(55, 406, "settings", this);
-        JButton Notes =  Functions.createNavButton(55, 326,  "notes", this);
+        JButton Notification =  Functions.createNavButton(55, 486, "notification_etd", this);
+        JButton Settings = Functions.createNavButton(55, 406, "settings_etd", this);
+        JButton Notes =  Functions.createNavButton(55, 326,  "notes_etd", this);
 
 
         this.add(Notification);

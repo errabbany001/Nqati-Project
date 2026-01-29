@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 public class Main {
 
     private static Etudient etudient;
+    private static String userName;
     private static Class<? extends JPanel> lastClass = Accueil.class;
     private  static ArrayList<Class<? extends JPanel>> LisOfCls = new ArrayList<>();
     private static ImageIcon logo  = new ImageIcon(new ImageIcon("data/logo.png").getImage().getScaledInstance(100, 87, Image.SCALE_SMOOTH));
@@ -27,10 +28,12 @@ public class Main {
 
         //Accueil lge = new Accueil();
         //motDePasseOublier lge = new motDePasseOublier();
-       // Etudient_notes lge = new Etudient_notes();
+        // Etudient_notes lge = new Etudient_notes();
         //LoginEtudient lge = new LoginEtudient();
         //Etudient_profil lge = new Etudient_profil();
-        Etudient_notification lge = new Etudient_notification();
+        // Etudient_notification lge = new Etudient_notification();
+        //Enseignement_profil lge = new Enseignement_profil();
+        Enseignement_notes lge = new Enseignement_notes();
 
         
 
@@ -147,8 +150,15 @@ public class Main {
     public static void setLogedIn(int logedIn) {
         Main.logedIn = logedIn;
     }
-    
 
+    public static String getUserName() {
+        return userName;
+    }
+
+    public static void setUserName(String userName) {
+        Main.userName = userName;
+    }
+    
     
 
     

@@ -1,22 +1,18 @@
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Path2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 public final class Etudient_notes extends JPanel {
 
@@ -111,78 +107,7 @@ public ImageIcon readImage(String path, int l, int h) {
 }
 
 //====================================================================
-private JLabel createCustomLabelWithBorder(String text, int x, int y, int width, int height, 
-                                           int topLeft, int topRight, int bottomRight, int bottomLeft, 
-                                           Color color) {
-    
-    JLabel label = new JLabel(text) {
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            // Lissage des bords pour l'arrondi et la ligne
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            // Pour éviter que la bordure de 2px soit coupée, on réduit légèrement la zone de dessin
-            // 1px de marge (moitié de l'épaisseur de 2px)
-            int borderThickness = 1;
-            int inset = 1; 
-            int w = getWidth() - (inset * 2);
-            int h = getHeight() - (inset * 2);
-
-            // On déplace le crayon pour commencer à (1,1) au lieu de (0,0)
-            g2.translate(inset, inset);
-
-            // --- Création de la forme (Path) ---
-            Path2D.Float path = new Path2D.Float();
-
-            // 1. Coin Haut-Gauche
-            path.moveTo(0, topLeft);
-            if (topLeft > 0) path.quadTo(0, 0, topLeft, 0);
-            else path.lineTo(0, 0);
-
-            // 2. Coin Haut-Droit
-            path.lineTo(w - topRight, 0);
-            if (topRight > 0) path.quadTo(w, 0, w, topRight);
-            else path.lineTo(w, 0);
-
-            // 3. Coin Bas-Droit
-            path.lineTo(w, h - bottomRight);
-            if (bottomRight > 0) path.quadTo(w, h, w - bottomRight, h);
-            else path.lineTo(w, h);
-
-            // 4. Coin Bas-Gauche
-            path.lineTo(bottomLeft, h);
-            if (bottomLeft > 0) path.quadTo(0, h, 0, h - bottomLeft);
-            else path.lineTo(0, h);
-
-            path.closePath();
-
-            // --- Remplissage (Fond) ---
-            g2.setColor(getBackground());
-            g2.fill(path);
-
-            // --- Bordure (Contour Noir) ---
-            g2.setColor(Color.BLACK); // Couleur de la bordure
-            g2.setStroke(new BasicStroke(borderThickness)); // Épaisseur 2px
-            g2.draw(path);
-
-            g2.dispose();
-            
-            // On remet la translation à 0 pour que le texte soit bien centré par rapport au composant global
-            super.paintComponent(g); 
-        }
-    };
-
-    // Configuration
-    label.setOpaque(false);
-    label.setBackground(color);
-    label.setForeground(Color.WHITE); // Couleur du texte
-    label.setHorizontalAlignment(SwingConstants.CENTER);
-    label.setBounds(x, y, width, height);
-    label.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-
-    return label;
-}
 
   
     //==========================================================
@@ -306,15 +231,15 @@ private JLabel createCustomLabelWithBorder(String text, int x, int y, int width,
 
         pan = WriteALine(pan, "Code", "Module", "NN", "NR", "NF", "Statu",  0);
 
-        pan.add(createCustomLabelWithBorder("", 10, 10, 700, 38, 10, 10, 0, 0, new Color(87, 107, 194)));
+        pan.add(Functions.createCustomLabelWithBorder("", 10, 10, 700, 38, 10, 10, 0, 0, new Color(87, 107, 194)));
 
         int a = semsInfo.get(semes).length;
         for ( int j = 1 ; j <= a ; j++){
             pan = WriteALine(pan, codes.get(semes)[j-1], semsInfo.get(semes)[j-1], "00.00", "00.00", "00.00", "V", j);
             if (j != a)
-         {pan.add(createCustomLabelWithBorder("", 10, 10 + j * 36, 700, 38, 0, 0, 0, 0, Color.white));  } 
+         {pan.add(Functions.createCustomLabelWithBorder("", 10, 10 + j * 36, 700, 38, 0, 0, 0, 0, Color.white));  } 
             else {
-           pan.add(createCustomLabelWithBorder("", 10, 10 + j * 36, 700, 38, 0, 0, 10, 10, Color.white));     
+           pan.add(Functions.createCustomLabelWithBorder("", 10, 10 + j * 36, 700, 38, 0, 0, 10, 10, Color.white));     
             }
         }
         a += 1;
@@ -348,7 +273,7 @@ private JLabel createCustomLabelWithBorder(String text, int x, int y, int width,
         profilIconMini.setBounds(920,48 , 40, 40);
         this.add(profilIconMini);
     
-        JLabel myname = Etudient_profil.creetLabel(710, 60, Etudient_profil.fullName);
+        JLabel myname = Functions.creetLabel(710, 60, Main.getUserName());
         myname.setHorizontalAlignment(JLabel.RIGHT);
         this.add(myname);
 
@@ -357,9 +282,9 @@ private JLabel createCustomLabelWithBorder(String text, int x, int y, int width,
 
         Color perpul = new Color(87, 107, 194);
 
-        JButton Profil = Functions.createNavButton(55, 246, "profil", this);
-        JButton Settings = Functions.createNavButton(55, 406, "settings", this);
-        JButton Notification = Functions.createNavButton(55, 486, "notification", this);
+        JButton Profil = Functions.createNavButton(55, 246, "profil_etd", this);
+        JButton Settings = Functions.createNavButton(55, 406, "settings_etd", this);
+        JButton Notification = Functions.createNavButton(55, 486, "notification_etd", this);
 
         this.add(Profil);
         this.add(Settings);

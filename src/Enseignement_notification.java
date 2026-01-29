@@ -16,9 +16,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-public final class Etudient_notification extends JPanel {
 
-    private Image backgroundImage;
+public class Enseignement_notification extends JPanel {
+
+ private Image backgroundImage;
     private ImageIcon cader0 = new ImageIcon(new ImageIcon("data/netification_cader0.png").getImage().getScaledInstance(784, 97, Image.SCALE_SMOOTH));
     private ImageIcon cader1 = new ImageIcon(new ImageIcon("data/netification_cader.png").getImage().getScaledInstance(784, 97, Image.SCALE_SMOOTH));
     private ImageIcon cader2 = new ImageIcon(new ImageIcon("data/netification_cader2.png").getImage().getScaledInstance(784, 447, Image.SCALE_SMOOTH));
@@ -149,7 +150,10 @@ public final class Etudient_notification extends JPanel {
 
 
 
-    public Etudient_notification() {
+
+
+    public Enseignement_notification() {
+
         Main.setLastClass(this.getClass());
 
         try {
@@ -169,54 +173,61 @@ public final class Etudient_notification extends JPanel {
         this.add(myname);
       
     
-
         if(notificationList.isEmpty())
         { 
+            // 1. Academic Deadline (Most important for teachers)
             notificationList.add(new String[]{
-                "Emploi du temps", 
-                "Le planning détaillé des examens de la session d'automne a été publié. Veuillez vérifier vos horaires sur le portail étudiant. En cas de chevauchement d'horaires ou d'erreur de groupe, vous devez contacter l'administration avant le vendredi 30 janvier à 16h00.", 
+                "Saisie des Notes", 
+                "Rappel : La date limite pour la saisie des notes du module 'Algorithmique Avancée' (Session normale) est fixée au 30 janvier. Veuillez valider les PV sur l'intranet avant minuit pour permettre la tenue des délibérations.", 
                 "new"
             });
 
+            // 2. Department Meeting
             notificationList.add(new String[]{
-                "Bibliothèque", 
-                "Rappel : Le livre 'Java Programming for Beginners' que vous avez emprunté le 12 janvier arrive à échéance demain. Veuillez le rendre ou prolonger votre emprunt via l'application pour éviter les pénalités de retard de 5 DH par jour.", 
+                "Réunion Département", 
+                "Le Chef de Département Informatique vous convie à la réunion mensuelle ce mercredi à 10h00 (Salle des Réunions). Ordre du jour : Répartition des charges horaires du semestre de printemps et accréditation de la nouvelle filière Big Data.", 
                 "new"
             });
 
+            // 3. Supervision / PFE (End of Studies Project)
             notificationList.add(new String[]{
-                "Administration", 
-                "Votre demande de relevé de notes certifié a bien été traitée par le service de scolarité. Le document est disponible au guichet 3 (Bloc B). N'oubliez pas de vous munir de votre carte d'étudiant ou d'une pièce d'identité pour le retrait.", 
+                "Encadrement PFE", 
+                "La liste préliminaire des étudiants affectés à votre encadrement pour les Projets de Fin d'Études (Master & Licence) est disponible. Vous avez jusqu'à lundi pour valider les sujets ou signaler un conflit d'intérêt.", 
                 "new"
             });
 
+            // 4. Logistics / Room Change
             notificationList.add(new String[]{
-                "Absence Professeur", 
-                "Nous vous informons que le cours de M. Alami (Analyse Mathématique II) prévu cet après-midi à 14h00 en Amphi A est annulé pour des raisons médicales. Une séance de rattrapage sera programmée ultérieurement, la date vous sera communiquée par email.", 
+                "Changement de Salle", 
+                "En raison d'une panne de projecteur en Amphi B, votre cours de 'Systèmes Distribués' de demain 14h30 est déplacé en Salle C-12. Les étudiants ont été notifiés par email, mais une affiche a été placée sur la porte.", 
                 "new"
             });
 
+            // 5. HR / Administrative
             notificationList.add(new String[]{
-                "Bourse Universitaire", 
-                "Le virement de la bourse 'Minhaty' concernant le premier trimestre a été effectué sur votre compte bancaire. Si vous n'avez pas reçu le montant sous 48h, veuillez vérifier votre RIB auprès du service économique ou contacter votre agence bancaire.", 
+                "Situation Administrative", 
+                "Votre demande d'attestation de travail et de bulletin de paie a été traitée par le service RH. Les documents signés sont disponibles au bureau du personnel ou téléchargeables via votre espace E-Rh.", 
                 "new"
             });
 
+            // 6. Exam Surveillance
             notificationList.add(new String[]{
-                "Club Informatique", 
-                "Grande réunion de lancement pour le projet 'Nqati' ! Nous cherchons des développeurs Java Swing, des designers UI/UX et des testeurs. Rejoignez-nous ce mercredi à 15h00 au Bloc C, salle 12. Des pizzas et des boissons seront offertes à tous les participants.", 
+                "Planning Surveillances", 
+                "Le planning des surveillances pour les examens de rattrapage est en ligne. Vous êtes programmé pour 3 séances la semaine prochaine. En cas d'empêchement majeur, veuillez trouver un remplaçant et notifier la scolarité 48h à l'avance.", 
                 "new"
             });
 
+            // 7. Research / Events
             notificationList.add(new String[]{
-                "Maintenance Serveur", 
-                "Attention : Le site web de l'université et la plateforme e-learning seront inaccessibles ce soir entre 22h00 et 02h00 du matin pour une mise à jour de sécurité majeure. Veuillez sauvegarder votre travail et ne pas commencer de quiz en ligne durant cette période.", 
+                "Conférence Smart-Tech", 
+                "Appel à participation : L'université organise la 3ème édition de la conférence sur l'IA et l'IoT. En tant que membre du comité scientifique, votre présence est requise pour la session d'ouverture le 15 février au Centre de Conférences.", 
                 "new"
             });
 
+            // 8. IT Maintenance (Generic but affects everyone)
             notificationList.add(new String[]{
-                "Note Disponible", 
-                "La note finale du module 'Structures de Données et Algorithmes' est désormais affichée sur votre espace personnel. Vous disposez de 48 heures pour déposer une réclamation via le formulaire en ligne si vous constatez une erreur de comptage.", 
+                "Maintenance Moodle", 
+                "Attention : La plateforme e-learning (Moodle) sera en maintenance ce week-end. L'upload des supports de cours et la création de devoirs seront indisponibles du samedi 22h au dimanche 06h.", 
                 "new"
             });
         }
@@ -312,9 +323,9 @@ public final class Etudient_notification extends JPanel {
             
        
 
-        JButton Profil =  Functions.createNavButton(55, 246, "profil_etd", this);
-        JButton Settings = Functions.createNavButton(55, 406, "settings_etd", this);
-        JButton Notes =  Functions.createNavButton(55, 326,  "notes_etd", this);
+        JButton Profil =  Functions.createNavButton(55, 246, "profil_ens", this);
+        JButton Settings = Functions.createNavButton(55, 406, "settings_ens", this);
+        JButton Notes =  Functions.createNavButton(55, 326,  "notes_ens", this);
 
 
         this.add(Profil);
@@ -329,6 +340,9 @@ public final class Etudient_notification extends JPanel {
         this.add(propos);
     }
 
+
+
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -336,4 +350,25 @@ public final class Etudient_notification extends JPanel {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
     }
+
+
+
+
+
+
+
+
+
+
+    
 }
+
+
+
+
+
+
+
+
+
+

@@ -33,7 +33,7 @@ public final class Etudient_settings extends JPanel{
         profilIconMini.setBounds(920,48 , 40, 40);
         this.add(profilIconMini);
     
-        JLabel myname = Etudient_profil.creetLabel(710, 60, Etudient_profil.fullName);
+        JLabel myname = Functions.creetLabel(710, 60, Main.getUserName());
         myname.setHorizontalAlignment(JLabel.RIGHT);
         this.add(myname);
         
@@ -49,9 +49,9 @@ public final class Etudient_settings extends JPanel{
        
 
 
-        JButton Profil =  Functions.createNavButton(55, 246, "profil", this);
-        JButton Notification = Functions.createNavButton(55, 486, "notification", this);
-        JButton Notes =  Functions.createNavButton(55, 326,  "notes", this);
+        JButton Profil =  Functions.createNavButton(55, 246, "profil_etd", this);
+        JButton Notification = Functions.createNavButton(55, 486, "notification_etd", this);
+        JButton Notes =  Functions.createNavButton(55, 326,  "notes_etd", this);
 
 
         this.add(Profil);

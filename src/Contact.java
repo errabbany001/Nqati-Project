@@ -89,7 +89,7 @@ public final class Contact extends JPanel {
         profilIconMini.setBounds(920,48 , 40, 40);
         this.add(profilIconMini);
     
-        JLabel myname = Etudient_profil.creetLabel(710, 60, Etudient_profil.fullName);
+        JLabel myname = Functions.creetLabel(710, 60, Main.getUserName());
         myname.setHorizontalAlignment(JLabel.RIGHT);
         this.add(myname);
   
@@ -230,24 +230,24 @@ public final class Contact extends JPanel {
 
 
 
-        this.add(cretIcon(mail,738, 280));
-        this.add(cretTextCont("Contact@nqaty.com", 657, 302));
-        this.add(cretIcon(phone , 738, 360));
-        this.add(cretTextCont("06 00 10 01 45", 657, 382));
-        this.add(cretIcon(localisation , 738, 440));
-        this.add(cretTextCont("FSTE, Er-rachidia", 657, 462));
+        this.add(cretIcon(mail,738, 310));
+        this.add(cretTextCont("Contact@nqaty.com", 657, 332));
+        this.add(cretIcon(phone , 738, 390));
+        this.add(cretTextCont("06 00 10 01 45", 657, 412));
+        this.add(cretIcon(localisation , 738, 470));
+        this.add(cretTextCont("FSTE, Er-rachidia", 657, 492));
 
 
         JLabel cader1 = new JLabel(cdr1);
-        cader1.setBounds(658,260, 200 , 75);
+        cader1.setBounds(658,290, 200 , 75);
         this.add(cader1);
 
         JLabel cader2 = new JLabel(cdr1);
-        cader2.setBounds(658,340, 200 , 75);
+        cader2.setBounds(658,370, 200 , 75);
         this.add(cader2);
 
         JLabel cader3 = new JLabel(cdr1);
-        cader3.setBounds(658,420, 200 , 75);
+        cader3.setBounds(658,450, 200 , 75);
         this.add(cader3);
 
 

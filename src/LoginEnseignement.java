@@ -211,8 +211,8 @@ public final  class LoginEnseignement extends JPanel{
                 javax.swing.JFrame frame = (javax.swing.JFrame) window;
                 
                 Main.addPageToHistory(LoginEnseignement.class);
-
-                Etudient_notes panelMdp = new Etudient_notes();
+                Main.setLogedIn(1);
+                Enseignement_profil panelMdp = new Enseignement_profil();
                 frame.setContentPane(panelMdp);
                 frame.revalidate();
                 frame.repaint();

@@ -1,14 +1,18 @@
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Path2D;
 import java.io.File;
 import java.util.regex.Pattern;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,7 +26,78 @@ import javax.swing.UIManager;
 
 public class Functions {
 
+    public static  JLabel createCustomLabelWithBorder(String text, int x, int y, int width, int height, 
+                                           int topLeft, int topRight, int bottomRight, int bottomLeft, 
+                                           Color color) {
+    
+    JLabel label = new JLabel(text) {
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            // Lissage des bords pour l'arrondi et la ligne
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+            // Pour éviter que la bordure de 2px soit coupée, on réduit légèrement la zone de dessin
+            // 1px de marge (moitié de l'épaisseur de 2px)
+            int borderThickness = 1;
+            int inset = 1; 
+            int w = getWidth() - (inset * 2);
+            int h = getHeight() - (inset * 2);
+
+            // On déplace le crayon pour commencer à (1,1) au lieu de (0,0)
+            g2.translate(inset, inset);
+
+            // --- Création de la forme (Path) ---
+            Path2D.Float path = new Path2D.Float();
+
+            // 1. Coin Haut-Gauche
+            path.moveTo(0, topLeft);
+            if (topLeft > 0) path.quadTo(0, 0, topLeft, 0);
+            else path.lineTo(0, 0);
+
+            // 2. Coin Haut-Droit
+            path.lineTo(w - topRight, 0);
+            if (topRight > 0) path.quadTo(w, 0, w, topRight);
+            else path.lineTo(w, 0);
+
+            // 3. Coin Bas-Droit
+            path.lineTo(w, h - bottomRight);
+            if (bottomRight > 0) path.quadTo(w, h, w - bottomRight, h);
+            else path.lineTo(w, h);
+
+            // 4. Coin Bas-Gauche
+            path.lineTo(bottomLeft, h);
+            if (bottomLeft > 0) path.quadTo(0, h, 0, h - bottomLeft);
+            else path.lineTo(0, h);
+
+            path.closePath();
+
+            // --- Remplissage (Fond) ---
+            g2.setColor(getBackground());
+            g2.fill(path);
+
+            // --- Bordure (Contour Noir) ---
+            g2.setColor(Color.BLACK); // Couleur de la bordure
+            g2.setStroke(new BasicStroke(borderThickness)); // Épaisseur 2px
+            g2.draw(path);
+
+            g2.dispose();
+            
+            // On remet la translation à 0 pour que le texte soit bien centré par rapport au composant global
+            super.paintComponent(g); 
+        }
+            };
+
+        // Configuration
+        label.setOpaque(false);
+        label.setBackground(color);
+        label.setForeground(Color.WHITE); // Couleur du texte
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setBounds(x, y, width, height);
+        label.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+
+    return label;
+    }
     //==========================================================
     public static JButton LogOutIcon(javax.swing.JPanel currentFrame){
         ImageIcon logOutIcon1 = new ImageIcon(new ImageIcon("data/logOut_icon_1.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
@@ -85,10 +160,17 @@ public class Functions {
 
            
             switch (target.toLowerCase()) {
-                case "notes": nextPanel = new Etudient_notes(); break;
-                case "profil": nextPanel = new Etudient_profil(); break;
-                case "settings": nextPanel = new Etudient_settings(); break;
-                case "notification": nextPanel = new Etudient_notification(); break;
+                case "notes_etd": nextPanel = new Etudient_notes(); break;
+                case "notes_ens": nextPanel = new Enseignement_notes(); break;
+
+                case "profil_etd": nextPanel = new Etudient_profil(); break;
+                case "profil_ens": nextPanel = new Enseignement_profil(); break;
+
+                case "settings_etd": nextPanel = new Etudient_settings(); break;
+                case "settings_ens": nextPanel = new Enseignement_settings(); break;
+
+                case "notification_etd": nextPanel = new Etudient_notification(); break;
+                case "notification_ens": nextPanel = new Enseignement_notification(); break;
             }
 
             if (nextPanel != null) {
@@ -295,4 +377,21 @@ public class Functions {
             return new Font("Arial", style, (int)size);
         }
     }
+    
+    //=========================================================================
+    static JLabel creetLabel(int x , int y , String text ){
+        JLabel myText = new JLabel(text);
+        myText.setBounds(x,y,200,20);
+        myText.setFont(Functions.getMyFont("", Font.BOLD, 14f));
+        myText.setForeground(new Color(22, 31, 112));
+        return myText;
+	}
+
+    static JLabel EtudInfo(int x , int y , String text ){
+        JLabel myText = new JLabel(text);
+        myText.setBounds(x,y,200,20);
+        myText.setFont(Functions.getMyFont("Raleway-Regular.fft", Font.BOLD, 17f));
+        myText.setForeground(new Color(34, 161, 241));
+        return myText;
+	}
 }
