@@ -7,29 +7,23 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public final class Etudient_notes extends JPanel {
 
+    // Déclaration des variables globales pour l'arrière-plan et le stockage des données académiques
     private Image backgroundImage;
     private int nb_sem;
     private JPanel caderPan;
-
-    // Each item = one semester array of module names
     private final ArrayList<String[]> semsInfo = new ArrayList<>();
-    // Each item = one semester array of codes
     private final ArrayList<String[]> codes = new ArrayList<>();
-
     private final ArrayList<JLabel> BleuLines = new ArrayList<>();
     private final ArrayList<JLabel> semesters = new ArrayList<>();
 
-
-    // =========================================================
+    // Initialisation des données des modules et des codes pour chaque semestre (S1 à S4)
     public void FillTherSemsInfo() {
 
         String[] s1 = {
@@ -79,86 +73,60 @@ public final class Etudient_notes extends JPanel {
         codes.add(s4_codes);
     }
 
-    // =========================================================
-public ImageIcon readImage(String path, int l, int h) {
-    try {
-        // Method A: Try ClassLoader (Good for JARs)
-        java.net.URL imgURL = getClass().getClassLoader().getResource(path);
-        
-        Image img;
-        if (imgURL != null) {
-            img = ImageIO.read(imgURL);
-        } else {
-            // Method B: Fallback to File System (Good for IDE testing)
-            File file = new File(path);
-            if (!file.exists()) {
-                System.err.println("CRITICAL: Path not found on Disk or Classpath: " + path);
-                return null;
+    // Méthode utilitaire pour charger et redimensionner des images (depuis JAR ou disque)
+    public ImageIcon readImage(String path, int l, int h) {
+        try {
+            java.net.URL imgURL = getClass().getClassLoader().getResource(path);
+            Image img;
+            if (imgURL != null) {
+                img = ImageIO.read(imgURL);
+            } else {
+                File file = new File(path);
+                if (!file.exists()) {
+                    System.err.println("CRITICAL: Path not found: " + path);
+                    return null;
+                }
+                img = ImageIO.read(file);
             }
-            img = ImageIO.read(file);
+            Image scaled = img.getScaledInstance(l, h, Image.SCALE_SMOOTH);
+            return new ImageIcon(scaled);
+        } catch (IOException e) {
+            System.err.println("Erreur de chargement " + path);
+            return null;
         }
-
-        Image scaled = img.getScaledInstance(l, h, Image.SCALE_SMOOTH);
-        return new ImageIcon(scaled);
-    } catch (IOException e) {
-        System.err.println("Erreur de uploading " + path);
-        return null;
     }
-}
 
-//====================================================================
-
-
-  
-    //==========================================================
+    // Création des étiquettes de semestre avec gestion du clic pour filtrer les notes
     private JLabel createSemester(int i, int x) {
         int num = i + 1;
         JLabel semester = new JLabel("Semester " + num);
         semester.setBounds(x, 195, 95, 20);
         semester.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 17)); 
-        semester.setForeground(new Color(87, 107, 194)); // Couleur inactive par défaut
+        semester.setForeground(new Color(87, 107, 194));
         semester.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        if (i == 0){
-            semester.setForeground(new Color(78, 94, 241));
-        }
+        if (i == 0) semester.setForeground(new Color(78, 94, 241));
 
         semester.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // 1. Activer l'élément cliqué
-                semester.setForeground(new Color(78, 94, 241)); // Couleur active
-                if (i < BleuLines.size()) {
-                    BleuLines.get(i).setVisible(true);
-                }
+                semester.setForeground(new Color(78, 94, 241));
+                if (i < BleuLines.size()) BleuLines.get(i).setVisible(true);
 
-                // 2. Désactiver tous les autres (Boucle corrigée)
                 for (int j = 0; j < semesters.size(); j++) {
-                    // On vérifie que ce n'est pas l'élément actuel
                     if (j != i) { 
-                        semesters.get(j).setForeground(new Color(87, 107, 194)); // Remettre en gris/bleu pâle
-                        if (j < BleuLines.size()) {
-                            BleuLines.get(j).setVisible(false); // Cacher la ligne
-                        }
+                        semesters.get(j).setForeground(new Color(87, 107, 194));
+                        if (j < BleuLines.size()) BleuLines.get(j).setVisible(false);
                     }
                 }
 
                 caderPan.removeAll();
-                
-                // 2. Recalculates the layout (tells Java "the space is empty now")
                 caderPan.revalidate();
-                
-                // 3. Redraws the caderPan (clears the visual pixels on screen)
                 caderPan.repaint();
 
                 String text = semester.getText();
-
-                String lastChar = text.substring(text.length() - 1);
-
-                // 2. Convert to int
-                int number = Integer.parseInt(lastChar);
-
-                caderPan = creatMarksTable(caderPan, number -1);
+                int number = Integer.parseInt(text.substring(text.length() - 1));
+                caderPan = creatMarksTable(caderPan, number - 1);
             }
         });
 
@@ -166,100 +134,76 @@ public ImageIcon readImage(String path, int l, int h) {
         return semester;
     }
 
-
-
-    
-
-    public JLabel createLine( int i){
+    // Création de la ligne bleue indicative sous le semestre sélectionné
+    public JLabel createLine(int i) {
         JLabel line = new JLabel();
         line.setOpaque(true);
-        line.setBackground(new Color(78,94,241));
-        line.setBounds(156 + i * 127,225 , 126 , 5);
+        line.setBackground(new Color(78, 94, 241));
+        line.setBounds(156 + i * 127, 225, 126, 5);
         line.setVisible(false);
         BleuLines.add(line);
-        
-        return (line);
+        return line;
     }
-    // ==========================================================
 
-    private JLabel verticalLine(int x, int y , int h){
+    // Méthodes de dessin pour les séparateurs verticaux et le texte des cellules du tableau
+    private JLabel verticalLine(int x, int y, int h) {
         JLabel leb = new JLabel();
-        leb.setBounds(x, y , 1 , h);
+        leb.setBounds(x, y, 1, h);
         leb.setOpaque(true);
         leb.setBackground(Color.black);
         return leb;
     }
 
-
-
-    private JLabel WriteText(String text , int x , int y , int l , int h, Color col){
+    private JLabel WriteText(String text, int x, int y, int l, int h, Color col) {
         JLabel lab = new JLabel(text);
-        lab.setBounds(x , y , l ,h);
+        lab.setBounds(x, y, l, h);
         lab.setHorizontalAlignment(JLabel.CENTER);
         lab.setForeground(col);
         lab.setFont(Functions.getMyFont("", Font.BOLD, 12f));
         return lab;
-
     }
 
-    private JPanel WriteALine(JPanel pan ,String cd, String nam, String nn , String nr , String nf, String valid  , int i){
-        Color myCol = (i == 0) ? Color.white : new Color(49,54,154);
-        JLabel code = WriteText(cd, 12, 12 + i * 36, 54, 34, myCol);
-        JLabel name = WriteText(nam, 72, 12 + i * 36, 394, 34, myCol);
-        JLabel notNor = WriteText(nn, 472, 12 + i * 36, 54, 34, myCol);
-        JLabel notRat = WriteText(nr, 532, 12 + i * 36, 54, 34, myCol);
-        JLabel notFin = WriteText(nf, 592, 12 + i * 36, 54, 34, myCol);
-        JLabel val = WriteText(valid, 652, 12 + i * 36, 54, 34, myCol);
-
-
-        pan.add(code);
-        pan.add(name);
-        pan.add(notNor);
-        pan.add(notRat);
-        pan.add(notFin);
-        pan.add(val);
-
-
+    // Construction d'une ligne de données pour le tableau des notes
+    private JPanel WriteALine(JPanel pan, String cd, String nam, String nn, String nr, String nf, String valid, int i) {
+        Color myCol = (i == 0) ? Color.white : new Color(49, 54, 154);
+        pan.add(WriteText(cd, 12, 12 + i * 36, 54, 34, myCol));
+        pan.add(WriteText(nam, 72, 12 + i * 36, 394, 34, myCol));
+        pan.add(WriteText(nn, 472, 12 + i * 36, 54, 34, myCol));
+        pan.add(WriteText(nr, 532, 12 + i * 36, 54, 34, myCol));
+        pan.add(WriteText(nf, 592, 12 + i * 36, 54, 34, myCol));
+        pan.add(WriteText(valid, 652, 12 + i * 36, 54, 34, myCol));
         return pan;
     }
-    
 
-    //=====================================================
-
-    public JPanel creatMarksTable(JPanel pan , int semes){
-
-
-        pan = WriteALine(pan, "Code", "Module", "NN", "NR", "NF", "Statu",  0);
-
+    // Génération complète du tableau des notes pour un semestre donné
+    public JPanel creatMarksTable(JPanel pan, int semes) {
+        pan = WriteALine(pan, "Code", "Module", "NN", "NR", "NF", "Statu", 0);
         pan.add(Functions.createCustomLabelWithBorder("", 10, 10, 700, 38, 10, 10, 0, 0, new Color(87, 107, 194)));
 
-        int a = semsInfo.get(semes).length;
-        for ( int j = 1 ; j <= a ; j++){
+        int modulesCount = semsInfo.get(semes).length;
+        for (int j = 1; j <= modulesCount; j++) {
             pan = WriteALine(pan, codes.get(semes)[j-1], semsInfo.get(semes)[j-1], "00.00", "00.00", "00.00", "V", j);
-            if (j != a)
-         {pan.add(Functions.createCustomLabelWithBorder("", 10, 10 + j * 36, 700, 38, 0, 0, 0, 0, Color.white));  } 
-            else {
-           pan.add(Functions.createCustomLabelWithBorder("", 10, 10 + j * 36, 700, 38, 0, 0, 10, 10, Color.white));     
+            if (j != modulesCount) {
+                pan.add(Functions.createCustomLabelWithBorder("", 10, 10 + j * 36, 700, 38, 0, 0, 0, 0, Color.white));
+            } else {
+                pan.add(Functions.createCustomLabelWithBorder("", 10, 10 + j * 36, 700, 38, 0, 0, 10, 10, Color.white));
             }
         }
-        a += 1;
-        pan.add(verticalLine(70, 11, a * 36) , 0);
-        pan.add(verticalLine(470, 11, a * 36) , 0);
-        pan.add(verticalLine(530, 11, a * 36) , 0);
-        pan.add(verticalLine(590, 11, a * 36), 0);
-        pan.add(verticalLine(650, 11, a * 36) , 0);
-
+        
+        int rows = modulesCount + 1;
+        pan.add(verticalLine(70, 11, rows * 36), 0);
+        pan.add(verticalLine(470, 11, rows * 36), 0);
+        pan.add(verticalLine(530, 11, rows * 36), 0);
+        pan.add(verticalLine(590, 11, rows * 36), 0);
+        pan.add(verticalLine(650, 11, rows * 36), 0);
         
         return pan;
     }
 
-    // =========================================================
     public Etudient_notes() {
 
-        if (semsInfo.isEmpty()){
-            FillTherSemsInfo();
-        }
-        
+        // Chargement initial des données et de l'arrière-plan du panneau
+        if (semsInfo.isEmpty()) FillTherSemsInfo();
         Main.setLastClass(this.getClass());
         nb_sem = semsInfo.size();
 
@@ -269,42 +213,31 @@ public ImageIcon readImage(String path, int l, int h) {
             System.err.println("Error: Could not load data/pg_Etudient_notes.png");
         }
 
+        // Affichage des informations de profil et configuration du layout
         JLabel profilIconMini = new JLabel(Etudient_profil.icon_2);
-        profilIconMini.setBounds(920,48 , 40, 40);
+        profilIconMini.setBounds(920, 48, 40, 40);
         this.add(profilIconMini);
     
         JLabel myname = Functions.creetLabel(710, 60, Main.getUserName());
         myname.setHorizontalAlignment(JLabel.RIGHT);
         this.add(myname);
-
-        //================================================================
         this.setLayout(null);
 
+        // Ajout des boutons de navigation latérale et du menu supérieur
         Color perpul = new Color(87, 107, 194);
-
-        JButton Profil = Functions.createNavButton(55, 246, "profil_etd", this);
-        JButton Settings = Functions.createNavButton(55, 406, "settings_etd", this);
-        JButton Notification = Functions.createNavButton(55, 486, "notification_etd", this);
-
-        this.add(Profil);
-        this.add(Settings);
-        this.add(Notification);
-
+        this.add(Functions.createNavButton(55, 246, "profil_etd", this));
+        this.add(Functions.createNavButton(55, 406, "settings_etd", this));
+        this.add(Functions.createNavButton(55, 486, "notification_etd", this));
         this.add(Functions.LogOutIcon(this));
-        
 
-        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Main.getLastClass() , this);
-        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
-        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
+        this.add(Functions.creerMenu("Accueil", 300, 60, perpul, Main.getLastClass(), this));
+        this.add(Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this));
+        this.add(Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this));
 
-        this.add(acceuille);
-        this.add(contact);
-        this.add(propos);
-        //================================================================
- 
-        for (int i = 0 ; i < semsInfo.size() ; i++){
+        // Initialisation des onglets de semestres et du tableau des notes par défaut (S1)
+        for (int i = 0; i < semsInfo.size(); i++) {
             this.add(createSemester(i, 167 + 128 * i));
-            this.add(createLine( i));
+            this.add(createLine(i));
         }
         BleuLines.get(0).setVisible(true);
 
@@ -312,18 +245,11 @@ public ImageIcon readImage(String path, int l, int h) {
         caderPan.setLayout(null);
         caderPan.setOpaque(false);
         caderPan = creatMarksTable(caderPan, 0);
-        caderPan.setBorder(null);
-        
-        caderPan.setBounds(170 , 250 , 740 , 285);
+        caderPan.setBounds(170, 250, 740, 285);
         this.add(caderPan);
-
-
-
-
-       
-
     }
 
+    // Gestion du rendu graphique pour l'image de fond
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

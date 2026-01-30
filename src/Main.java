@@ -4,21 +4,22 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-
 public class Main {
 
+    // Déclaration des variables globales : données utilisateur, navigation et ressources graphiques
     private static Etudient etudient;
     private static String userName;
     private static Class<? extends JPanel> lastClass = Accueil.class;
-    private  static ArrayList<Class<? extends JPanel>> LisOfCls = new ArrayList<>();
-    private static ImageIcon logo  = new ImageIcon(new ImageIcon("data/logo.png").getImage().getScaledInstance(100, 87, Image.SCALE_SMOOTH));
-    private static ImageIcon ph_1  = new ImageIcon(new ImageIcon("data/photo_1.png").getImage().getScaledInstance(860, 416, Image.SCALE_SMOOTH));
-    private static ImageIcon ph_2  = new ImageIcon(new ImageIcon("data/photo_2.png").getImage().getScaledInstance(400, 320, Image.SCALE_SMOOTH));
-    private static ImageIcon ph_3  = new ImageIcon(new ImageIcon("data/photo_3.png").getImage().getScaledInstance(300, 400, Image.SCALE_SMOOTH));
-    private static ImageIcon ph_4  = new ImageIcon(new ImageIcon("data/photo_4.png").getImage().getScaledInstance(560, 400, Image.SCALE_SMOOTH));
-    private static ImageIcon ph_5  = new ImageIcon(new ImageIcon("data/photo_5.png").getImage().getScaledInstance(860, 400, Image.SCALE_SMOOTH));
+    private static ArrayList<Class<? extends JPanel>> LisOfCls = new ArrayList<>();
+    private static ImageIcon logo = new ImageIcon(new ImageIcon("data/logo.png").getImage().getScaledInstance(100, 87, Image.SCALE_SMOOTH));
+    private static ImageIcon ph_1 = new ImageIcon(new ImageIcon("data/photo_1.png").getImage().getScaledInstance(860, 416, Image.SCALE_SMOOTH));
+    private static ImageIcon ph_2 = new ImageIcon(new ImageIcon("data/photo_2.png").getImage().getScaledInstance(400, 320, Image.SCALE_SMOOTH));
+    private static ImageIcon ph_3 = new ImageIcon(new ImageIcon("data/photo_3.png").getImage().getScaledInstance(300, 400, Image.SCALE_SMOOTH));
+    private static ImageIcon ph_4 = new ImageIcon(new ImageIcon("data/photo_4.png").getImage().getScaledInstance(560, 400, Image.SCALE_SMOOTH));
+    private static ImageIcon ph_5 = new ImageIcon(new ImageIcon("data/photo_5.png").getImage().getScaledInstance(860, 400, Image.SCALE_SMOOTH));
     private static int logedIn = 0;
     
+    // Point d'entrée de l'application : configuration de la fenêtre principale (JFrame)
     public static void main(String[] args) {
         JFrame frame = new JFrame("Nqati Student Marks");
         frame.setSize(1000, 697);
@@ -26,51 +27,31 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
-        //Accueil lge = new Accueil();
-        //motDePasseOublier lge = new motDePasseOublier();
-        // Etudient_notes lge = new Etudient_notes();
-        //LoginEtudient lge = new LoginEtudient();
-        //Etudient_profil lge = new Etudient_profil();
-        // Etudient_notification lge = new Etudient_notification();
-        //Enseignement_profil lge = new Enseignement_profil();
-        Enseignement_notes lge = new Enseignement_notes();
-
-        
-
-
- 
-        
-
+        // Initialisation du panneau de démarrage (actuellement configuré sur Enseignement_notes pour le test)
+        Accueil lge = new Accueil();
 
         frame.setContentPane(lge); 
-
         frame.setVisible(true);
-
     }
 
-        //======================
-            public static void addPageToHistory(Class<? extends JPanel> cls) {
-            String name = cls.getSimpleName();
-            if (name.equals("Contact") || name.equals("Propos")) {
+    // Gestion de l'historique de navigation pour permettre le retour aux pages précédentes
+    public static void addPageToHistory(Class<? extends JPanel> cls) {
+        String name = cls.getSimpleName();
+        // Exclusion des pages de contenu simple (Contact/A propos) de l'historique
+        if (name.equals("Contact") || name.equals("Propos")) {
+            return; 
+        }
+        // Évite d'ajouter deux fois la même page consécutivement
+        if (!LisOfCls.isEmpty()) {
+            Class<? extends JPanel> lastSaved = LisOfCls.get(LisOfCls.size() - 1);
+            if (lastSaved.equals(cls)) {
                 return; 
             }
-            if (!LisOfCls.isEmpty()) {
-                Class<? extends JPanel> lastSaved = LisOfCls.get(LisOfCls.size() - 1);
-                if (lastSaved.equals(cls)) {
-                    return; 
-                }
-            }
-            LisOfCls.add(cls);
         }
+        LisOfCls.add(cls);
+    }
 
-
-//============================================
-
-
-
-
-
-
+    // Getters et Setters pour l'accès global aux informations de session et aux ressources
     public static Etudient getEtudient() {
         return etudient;
     }
@@ -158,9 +139,4 @@ public class Main {
     public static void setUserName(String userName) {
         Main.userName = userName;
     }
-    
-    
-
-    
-    
 }

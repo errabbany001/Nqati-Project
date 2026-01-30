@@ -1,4 +1,3 @@
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -13,29 +12,29 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Enseignement_profil extends JPanel {
+    
+    // Déclaration des attributs pour l'image de fond et les données personnelles du professeur
     private Image backgroundImage;
-    private String fullName , Id , ddn , departement , sexe;
+    private String fullName, Id, ddn, departement, sexe;
     private ArrayList<String> listCours = new ArrayList();
     private ArrayList<String> codes = new ArrayList();
 
-    static ImageIcon icon_1  = new ImageIcon(new ImageIcon("data/default_profil.png").getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH));
-    static ImageIcon icon_2  = new ImageIcon(new ImageIcon("data/default_profil.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
- 
+    // Initialisation des icônes par défaut pour le profil (grande et petite taille)
+    static ImageIcon icon_1 = new ImageIcon(new ImageIcon("data/default_profil.png").getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH));
+    static ImageIcon icon_2 = new ImageIcon(new ImageIcon("data/default_profil.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 
-
-   
     public Enseignement_profil() {
 
-                Main.setLastClass(this.getClass());
-
+        // Chargement de l'image de fond et enregistrement de l'historique de navigation
+        Main.setLastClass(this.getClass());
         try {
             backgroundImage = ImageIO.read(new File("data/pg_Enseignement_profil.png"));
         } catch (IOException e) {
             System.err.println("Error: Could not load pg_home.png");
         }
 
+        // Configuration du layout et définition des données académiques (cours et codes)
         this.setLayout(null); 
-
         Color perpul = new Color(87, 107, 194);
 
         if (listCours.isEmpty()){
@@ -50,33 +49,29 @@ public class Enseignement_profil extends JPanel {
             codes.add("BI17");
         }
 
+        // Initialisation des informations personnelles de l'enseignant
         fullName = "Yassine Er-rabbany";
         Id = "X000000";
         ddn = "01 / 01 / 1975";
         departement = "Informatique";
         sexe = "Homme";
-
         Main.setUserName(fullName);
 
-
+        // Affichage des images de profil (avatar principal et icône de la barre supérieure)
         JLabel profilIcon = new JLabel(icon_1);
-        profilIcon.setBounds(274 , 215 , 150 , 150);
+        profilIcon.setBounds(274, 215, 150, 150);
         this.add(profilIcon);
 
         JLabel profilIconMini = new JLabel(icon_2);
-        profilIconMini.setBounds(920,48 , 40, 40);
+        profilIconMini.setBounds(920, 48, 40, 40);
         this.add(profilIconMini);
-    
+
+        // Affichage du nom d'utilisateur dans la barre d'en-tête
         JLabel myname = Functions.creetLabel(710, 60, fullName);
         myname.setHorizontalAlignment(JLabel.RIGHT);
         this.add(myname);
-       
 
-
-        
-
-        
-
+        // Affichage des détails d'identité sous la photo de profil (Nom, ID, Date de naissance, Sexe)
         JLabel name = Functions.creetLabel(245, 400, "Prof. " + fullName);
         name.setHorizontalAlignment(JLabel.CENTER);
         this.add(name);
@@ -89,74 +84,35 @@ public class Enseignement_profil extends JPanel {
         datDN.setHorizontalAlignment(JLabel.CENTER);
         this.add(datDN);
 
-        JLabel sex = Functions.EtudInfo(245 , 466 ,sexe);
+        JLabel sex = Functions.EtudInfo(245, 466, sexe);
         sex.setHorizontalAlignment(JLabel.CENTER);
         this.add(sex);
 
-
-
+        // Affichage des informations professionnelles (Département et liste des cours assignés)
         this.add(Functions.creetLabel(520, 220, "Departement  :"));
         this.add(Functions.EtudInfo(640, 220, departement));
 
         this.add(Functions.creetLabel(520, 250, "Les Cours  :"));
-        for (int i = 0  ; i < listCours.size() ; i++){
+        for (int i = 0; i < listCours.size(); i++){
             JLabel line = Functions.EtudInfo(560, 270 + i * 20, "- " + codes.get(i) + " : " + listCours.get(i));
-            line.setBounds(540, 270 + i * 20 , 500 , 20);
-            line.setFont(new Font("Ariel" , Font.BOLD , 13));
+            line.setBounds(540, 270 + i * 20, 500, 20);
+            line.setFont(new Font("Ariel", Font.BOLD, 13));
             this.add(line);
         }
-        
 
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        // Ajout des boutons de navigation latérale et de déconnexion
         this.add(Functions.LogOutIcon(this));
-            
-       
-        JButton Notification =  Functions.createNavButton(55, 486, "notification_ens", this);
+        
+        JButton Notification = Functions.createNavButton(55, 486, "notification_ens", this);
         JButton Settings = Functions.createNavButton(55, 406, "settings_ens", this);
-        JButton Notes =  Functions.createNavButton(55, 326,  "notes_ens", this);
+        JButton Notes = Functions.createNavButton(55, 326, "notes_ens", this);
 
         this.add(Notification);
         this.add(Settings);
         this.add(Notes);
 
-        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Main.getLastClass() , this);
+        // Ajout du menu de navigation horizontal supérieur
+        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Main.getLastClass(), this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
         
@@ -165,13 +121,12 @@ public class Enseignement_profil extends JPanel {
         this.add(propos);
     }
 
-    
-        @Override
+    // Gestion du rendu visuel pour dessiner l'image d'arrière-plan du profil
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (backgroundImage != null) {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
     }
-    
 }

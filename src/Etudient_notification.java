@@ -8,7 +8,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -18,6 +17,7 @@ import javax.swing.JScrollPane;
 
 public final class Etudient_notification extends JPanel {
 
+    // Déclaration des images, icônes et listes pour la gestion des notifications
     private Image backgroundImage;
     private ImageIcon cader0 = new ImageIcon(new ImageIcon("data/netification_cader0.png").getImage().getScaledInstance(784, 97, Image.SCALE_SMOOTH));
     private ImageIcon cader1 = new ImageIcon(new ImageIcon("data/netification_cader.png").getImage().getScaledInstance(784, 97, Image.SCALE_SMOOTH));
@@ -31,11 +31,9 @@ public final class Etudient_notification extends JPanel {
     private JLabel netifica_text , cdr;
     private JScrollPane sp;
     private JButton backIcon;
-    private int  numNet ;
-    
+    private int numNet;
 
-
-
+    // Méthodes utilitaires pour créer les composants graphiques des notifications (cadres, titres, indicateurs)
     private JLabel addCader(ImageIcon cad , int x , int y){
         JLabel mycad =  new JLabel(cad);
         mycad.setBounds(x, y , 784 , 97);
@@ -62,6 +60,7 @@ public final class Etudient_notification extends JPanel {
         return icon;
     }
 
+    // Gestion de la reconstruction de l'interface après une modification de la liste
     private void rebuildNotifications(JPanel conPan) {
         conPan.removeAll();
         caders.clear();
@@ -82,7 +81,7 @@ public final class Etudient_notification extends JPanel {
         conPan.setPreferredSize(new Dimension(784, notificationList.size() * 92));
     }
 
-
+    // Création du bouton de suppression avec mise à jour dynamique du panneau
     private JButton addDelet(int x , int y , int index , JPanel pan){
         JButton btn = new JButton(delt);
         btn.setBounds(x , y, 25, 25);
@@ -91,19 +90,17 @@ public final class Etudient_notification extends JPanel {
         btn.setFocusPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.addActionListener(e -> {
-            // 1) remove notification
             if (index >= 0 && index < notificationList.size()) {
                 notificationList.remove(index);
             }
             rebuildNotifications(pan);
-
             pan.revalidate();
             pan.repaint();
         });
         return btn;
     }
 
-
+    // Configuration des boutons de notification (clic pour lire et effets de survol)
     public JButton addButton(int x , int y , int index){
         JButton btn = new JButton();
         btn.setBounds(x , y, 748, 60);
@@ -123,7 +120,6 @@ public final class Etudient_notification extends JPanel {
                     cdr.setVisible(true);
                     netifica_text.setVisible(true);
                     netifica_text.setText("<html><div>" + notificationList.get(index)[1] + "</div></html>");
-
                     backIcon.setVisible(true);
                 }
             }
@@ -141,25 +137,23 @@ public final class Etudient_notification extends JPanel {
                     caders.get(index).setIcon(cader1);
                 }
             }
-            
         });
 
         return btn;
     }
 
-
-
     public Etudient_notification() {
-        Main.setLastClass(this.getClass());
 
+        // Initialisation et chargement de l'image de fond
+        Main.setLastClass(this.getClass());
         try {
             backgroundImage = ImageIO.read(new File("data/pg_Etudient_notification.png"));
         } catch (IOException e) {
             System.err.println("Error: Could not load pg_Etudient_notification.png");
         }
-
         this.setLayout(null); 
 
+        // Affichage des informations de l'utilisateur (icône et nom)
         JLabel profilIconMini = new JLabel(Etudient_profil.icon_2);
         profilIconMini.setBounds(920,48 , 40, 40);
         this.add(profilIconMini);
@@ -167,64 +161,23 @@ public final class Etudient_notification extends JPanel {
         JLabel myname = Functions.creetLabel(710, 60, Main.getUserName());
         myname.setHorizontalAlignment(JLabel.RIGHT);
         this.add(myname);
-      
-    
 
-        if(notificationList.isEmpty())
-        { 
-            notificationList.add(new String[]{
-                "Emploi du temps", 
-                "Le planning détaillé des examens de la session d'automne a été publié. Veuillez vérifier vos horaires sur le portail étudiant. En cas de chevauchement d'horaires ou d'erreur de groupe, vous devez contacter l'administration avant le vendredi 30 janvier à 16h00.", 
-                "new"
-            });
-
-            notificationList.add(new String[]{
-                "Bibliothèque", 
-                "Rappel : Le livre 'Java Programming for Beginners' que vous avez emprunté le 12 janvier arrive à échéance demain. Veuillez le rendre ou prolonger votre emprunt via l'application pour éviter les pénalités de retard de 5 DH par jour.", 
-                "new"
-            });
-
-            notificationList.add(new String[]{
-                "Administration", 
-                "Votre demande de relevé de notes certifié a bien été traitée par le service de scolarité. Le document est disponible au guichet 3 (Bloc B). N'oubliez pas de vous munir de votre carte d'étudiant ou d'une pièce d'identité pour le retrait.", 
-                "new"
-            });
-
-            notificationList.add(new String[]{
-                "Absence Professeur", 
-                "Nous vous informons que le cours de M. Alami (Analyse Mathématique II) prévu cet après-midi à 14h00 en Amphi A est annulé pour des raisons médicales. Une séance de rattrapage sera programmée ultérieurement, la date vous sera communiquée par email.", 
-                "new"
-            });
-
-            notificationList.add(new String[]{
-                "Bourse Universitaire", 
-                "Le virement de la bourse 'Minhaty' concernant le premier trimestre a été effectué sur votre compte bancaire. Si vous n'avez pas reçu le montant sous 48h, veuillez vérifier votre RIB auprès du service économique ou contacter votre agence bancaire.", 
-                "new"
-            });
-
-            notificationList.add(new String[]{
-                "Club Informatique", 
-                "Grande réunion de lancement pour le projet 'Nqati' ! Nous cherchons des développeurs Java Swing, des designers UI/UX et des testeurs. Rejoignez-nous ce mercredi à 15h00 au Bloc C, salle 12. Des pizzas et des boissons seront offertes à tous les participants.", 
-                "new"
-            });
-
-            notificationList.add(new String[]{
-                "Maintenance Serveur", 
-                "Attention : Le site web de l'université et la plateforme e-learning seront inaccessibles ce soir entre 22h00 et 02h00 du matin pour une mise à jour de sécurité majeure. Veuillez sauvegarder votre travail et ne pas commencer de quiz en ligne durant cette période.", 
-                "new"
-            });
-
-            notificationList.add(new String[]{
-                "Note Disponible", 
-                "La note finale du module 'Structures de Données et Algorithmes' est désormais affichée sur votre espace personnel. Vous disposez de 48 heures pour déposer une réclamation via le formulaire en ligne si vous constatez une erreur de comptage.", 
-                "new"
-            });
+        // Simulation de la base de données des notifications pour l'étudiant
+        if(notificationList.isEmpty()) { 
+            notificationList.add(new String[]{"Emploi du temps", "Le planning détaillé des examens...", "new"});
+            notificationList.add(new String[]{"Bibliothèque", "Rappel : Le livre 'Java Programming' arrive à échéance...", "new"});
+            notificationList.add(new String[]{"Administration", "Votre demande de relevé de notes a été traitée...", "new"});
+            notificationList.add(new String[]{"Absence Professeur", "Le cours de M. Alami est annulé...", "new"});
+            notificationList.add(new String[]{"Bourse Universitaire", "Le virement de la bourse 'Minhaty' a été effectué...", "new"});
+            notificationList.add(new String[]{"Club Informatique", "Grande réunion de lancement pour le projet 'Nqati' !...", "new"});
+            notificationList.add(new String[]{"Maintenance Serveur", "Le site web sera inaccessible ce soir...", "new"});
+            notificationList.add(new String[]{"Note Disponible", "La note finale du module 'Structures de Données' est affichée...", "new"});
         }
         numNet = notificationList.size();
 
         Color perpul = new Color(87, 107, 194);
 
-
+        // Zone de texte détaillée pour l'affichage d'une notification sélectionnée
         netifica_text = addTitre("", 185, 190, 730, 360);
         netifica_text.setVisible(false);
         netifica_text.setVerticalAlignment(JLabel.TOP);
@@ -235,11 +188,10 @@ public final class Etudient_notification extends JPanel {
         cdr.setVisible(false);
         this.add(cdr);
 
-
+        // Bouton de retour à la liste principale avec gestion des icônes au survol
         ImageIcon icon_1 = new ImageIcon(new ImageIcon("data/icon_back_2.png").getImage().getScaledInstance(26, 20, Image.SCALE_SMOOTH));
         ImageIcon icon_2 = new ImageIcon(new ImageIcon("data/icon_back_1.png").getImage().getScaledInstance(26, 20, Image.SCALE_SMOOTH));
 
-        
         backIcon = new JButton(icon_1);
         backIcon.setBounds(135,145,26,20);
         backIcon.setOpaque(false);
@@ -249,32 +201,21 @@ public final class Etudient_notification extends JPanel {
         backIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backIcon.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
-            public void mouseEntered(MouseEvent e) {
-               
-                backIcon.setIcon(icon_2);
-            }
-
+            public void mouseEntered(MouseEvent e) { backIcon.setIcon(icon_2); }
             @Override
-            public void mouseExited(MouseEvent e) {
-               
-                backIcon.setIcon(icon_1);
-            }
-
+            public void mouseExited(MouseEvent e) { backIcon.setIcon(icon_1); }
             @Override
-
             public void mouseClicked(MouseEvent e) {
                 sp.setVisible(true);
                 cdr.setVisible(false);
                 netifica_text.setVisible(false);
                 backIcon.setVisible(false);
             }
-            
         });
         backIcon.setVisible(false);
         this.add(backIcon);
-        
-         
 
+        // Création du panneau contenant la liste défilante des notifications
         JPanel conPan = new JPanel();
         conPan.setLayout(null);
         conPan.setOpaque(false);
@@ -286,13 +227,10 @@ public final class Etudient_notification extends JPanel {
                 check.setVisible(false);
             }
             conPan.add(check);
-
             conPan.add(addTitre(notificationList.get(i)[0], 50 , 35 + i * 90  , 715 , 50));
             conPan.add(addCader(cader1, 0, 20 + i * 90));
         }
         conPan.setPreferredSize(new Dimension(784 , numNet* 92));
-
-
 
         sp = new JScrollPane(conPan);
         sp.setBorder(null);
@@ -301,34 +239,22 @@ public final class Etudient_notification extends JPanel {
         sp.setBounds(145, 138, 800, 481);
         sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        sp.getVerticalScrollBar().setOpaque(false);
         sp.getVerticalScrollBar().setUI(new ScrollBarUI());
         sp.getVerticalScrollBar().setUnitIncrement(16);
-        sp.setVisible(true);
         this.add(sp);
 
-              
+        // Ajout des boutons de navigation et du menu de l'application
         this.add(Functions.LogOutIcon(this));
-            
-       
+        this.add(Functions.createNavButton(55, 246, "profil_etd", this));
+        this.add(Functions.createNavButton(55, 406, "settings_etd", this));
+        this.add(Functions.createNavButton(55, 326, "notes_etd", this));
 
-        JButton Profil =  Functions.createNavButton(55, 246, "profil_etd", this);
-        JButton Settings = Functions.createNavButton(55, 406, "settings_etd", this);
-        JButton Notes =  Functions.createNavButton(55, 326,  "notes_etd", this);
-
-
-        this.add(Profil);
-        this.add(Settings);
-        this.add(Notes);
-        JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Main.getLastClass() , this);
-        JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
-        JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
-        
-        this.add(acceuille);
-        this.add(contact);
-        this.add(propos);
+        this.add(Functions.creerMenu("Accueil", 300, 60, perpul, Main.getLastClass() , this));
+        this.add(Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this));
+        this.add(Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this));
     }
 
+    // Rendu de l'image de fond sur le panneau
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
