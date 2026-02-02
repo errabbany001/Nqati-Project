@@ -18,7 +18,6 @@ public class Enseignement_settings extends JPanel{
     private Image backgroundImage;
     
     public Enseignement_settings() {
-        // FIXED: Main.setLastClass -> Navigation.lastClass
         Navigation.lastClass = this.getClass();
 
         try {
@@ -33,7 +32,6 @@ public class Enseignement_settings extends JPanel{
         profilIconMini.setBounds(920,48 , 40, 40);
         this.add(profilIconMini);
     
-        // FIXED: Main.getUserName() -> Session.userName
         JLabel myname = Functions.creetLabel(710, 60, Session.userName);
         myname.setHorizontalAlignment(JLabel.RIGHT);
         this.add(myname);
@@ -50,7 +48,6 @@ public class Enseignement_settings extends JPanel{
         this.add(Notification);
         this.add(Notes);
 
-        // FIXED: Main.getLastClass() -> Navigation.lastClass
         JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Navigation.lastClass , this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);

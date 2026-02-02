@@ -96,12 +96,10 @@ public final class Contact extends JPanel {
         profilIconMini.setBounds(920, 48, 40, 40);
         this.add(profilIconMini);
 
-        // FIXED: Main.getUserName() -> Session.userName
         JLabel myname = Functions.creetLabel(710, 60, Session.userName);
         myname.setHorizontalAlignment(JLabel.RIGHT);
         this.add(myname);
 
-        // FIXED: Main.getLogedIn() -> Session.isLoggedIn
         if (Session.isLoggedIn == 0) {
             profilIconMini.setVisible(false);
             myname.setVisible(false);
@@ -252,7 +250,6 @@ public final class Contact extends JPanel {
         this.add(cader3);
 
         // Initialisation des éléments du menu de navigation supérieur
-        // FIXED: Main.getLastClass() -> Navigation.lastClass
         JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Navigation.lastClass, this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);

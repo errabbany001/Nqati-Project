@@ -14,6 +14,11 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
 import java.io.File;
+import java.security.MessageDigest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Base64;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -25,11 +30,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-
-import tools.Navigation;
-import tools.Session;
-import tools.Resources;
-
 import panels.Accueil;
 import panels.Enseignement_notes;
 import panels.Enseignement_notification;
@@ -302,16 +302,64 @@ public class Functions {
     public static JLabel creetLabel(int x , int y , String text ){
         JLabel myText = new JLabel(text);
         myText.setBounds(x, y, 200, 20);
-        myText.setFont(Functions.getMyFont("", Font.BOLD, 14f));
+        myText.setFont(getMyFont("", Font.BOLD, 14f));
         myText.setForeground(new Color(22, 31, 112));
         return myText;
     }
 
-    public static JLabel EtudInfo(int x , int y , String text ){
+    public static JLabel EtudInfo(int x , int y ,   String text ){
         JLabel myText = new JLabel(text);
         myText.setBounds(x, y, 200, 20);
-        myText.setFont(Functions.getMyFont("Raleway-Regular.fft", Font.BOLD, 17f));
+        myText.setFont(getMyFont("Raleway-Regular.fft", Font.BOLD, 17f));
         myText.setForeground(new Color(34, 161, 241));
         return myText;
+    }
+
+    public static JLabel EtudInfo(int x, int y, int l, int h, float  size , String text) {
+        JLabel myText = new JLabel(text);
+        myText.setBounds(x, y, l, h);
+        
+        myText.setFont(getMyFont("Raleway-Regular.ttf", Font.BOLD, size)); 
+        myText.setForeground(new Color(34, 161, 241));
+        return myText;
+    }
+
+
+   // Hacher le mot de passe en utilisant SHA-256
+    public static String hashPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes("UTF-8"));
+            return Base64.getEncoder().encodeToString(hash);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors du hachage", e);
+        }
+    }
+    
+    
+    //verification de utilisateur dans la base des donnees
+    public static boolean checkUser(Connection con , String tableu , String mail  , String pass){
+        
+        String sql = "select password from "+ tableu + " where email = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)){
+            ps.setString(1, mail);
+
+            try (ResultSet rs = ps.executeQuery()){
+                if(rs.next()){
+                    String storeHash = rs.getString("password");
+                    String inputHash = hashPassword(pass);
+
+                    return inputHash.equals(storeHash);
+                }
+            } catch (Exception e) {
+              System.out.println(e.getMessage());
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return false;
     }
 }

@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MigratePasswords",
+            "request": "launch",
+            "mainClass": "tools.MigratePasswords",
+            "projectName": "Nqati-Project"
+        },
+        {
+            "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "Main",

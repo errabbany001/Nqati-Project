@@ -77,7 +77,6 @@ public final class MotDePasseOublier extends JPanel {
     public MotDePasseOublier() {
         
         // Initialisation du panneau : chargement de l'image et configuration du layout
-        // FIXED: Main.setLastClass -> Navigation.lastClass
         Navigation.lastClass = this.getClass();
         try {
             backgroundImage = ImageIO.read(new File("data/pg_PasseOublier.png"));
@@ -197,7 +196,6 @@ public final class MotDePasseOublier extends JPanel {
         }); 
         
         // Initialisation du menu de navigation supérieur
-        // FIXED: Main.getLastClass() -> Navigation.lastClass
         JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Navigation.lastClass, this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);

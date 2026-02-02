@@ -19,11 +19,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-
 import tools.Functions;
 import tools.Navigation;
 import tools.Session;
-import tools.Resources;
 
 public final class LoginEnseignement extends JPanel {
 
@@ -49,7 +47,6 @@ public final class LoginEnseignement extends JPanel {
     public LoginEnseignement() {
         
         // Initialisation du panneau : historique et chargement de l'image de fond
-        // FIXED: Main.setLastClass -> Navigation.lastClass
         Navigation.lastClass = this.getClass();
         try {
             backgroundImage = ImageIO.read(new File("data/Login_Enseignement.png"));
@@ -114,43 +111,43 @@ public final class LoginEnseignement extends JPanel {
         this.add(cneEtud);
 
         // Configuration du champ Mot de passe avec gestion de la visibilité et du placeholder
-        JPasswordField passEtud = new JPasswordField();
-        passEtud.setBounds(370, 424, 250, 30);
-        passEtud.setOpaque(false);
-        passEtud.setBorder(null);
-        passEtud.setHorizontalAlignment(JTextField.CENTER);
-        passEtud.setForeground(perpul);
-        passEtud.setFont(font);
-        defaultEchoChar = passEtud.getEchoChar(); 
-        passEtud.setEchoChar((char) 0); // Texte en clair pour le placeholder
-        passEtud.setText("Mot de passe");
+        JPasswordField passWord = new JPasswordField();
+        passWord.setBounds(370, 424, 250, 30);
+        passWord.setOpaque(false);
+        passWord.setBorder(null);
+        passWord.setHorizontalAlignment(JTextField.CENTER);
+        passWord.setForeground(perpul);
+        passWord.setFont(font);
+        defaultEchoChar = passWord.getEchoChar(); 
+        passWord.setEchoChar((char) 0); // Texte en clair pour le placeholder
+        passWord.setText("Mot de passe");
 
-        passEtud.addFocusListener(new FocusListener() {
+        passWord.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if ("Mot de passe".equals(String.valueOf(passEtud.getPassword()))) {
-                    passEtud.setText("");
-                    passEtud.setEchoChar(defaultEchoChar); // Active les points de sécurité
-                    passEtud.setBounds(370, 422, 250, 30);
+                if ("Mot de passe".equals(String.valueOf(passWord.getPassword()))) {
+                    passWord.setText("");
+                    passWord.setEchoChar(defaultEchoChar); // Active les points de sécurité
+                    passWord.setBounds(370, 422, 250, 30);
                 }
-                passEtud.setForeground(bleu);
+                passWord.setForeground(bleu);
                 line2.setBackground(bleu);
                 icon.setVisible(true);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                if (String.valueOf(passEtud.getPassword()).trim().isEmpty()) {
-                    passEtud.setText("Mot de passe");
-                    passEtud.setForeground(perpul);
+                if (String.valueOf(passWord.getPassword()).trim().isEmpty()) {
+                    passWord.setText("Mot de passe");
+                    passWord.setForeground(perpul);
                     line2.setBackground(perpul);
-                    passEtud.setEchoChar((char) 0); 
+                    passWord.setEchoChar((char) 0); 
                     icon.setVisible(false);
-                    passEtud.setBounds(370, 424, 250, 30);
+                    passWord.setBounds(370, 424, 250, 30);
                 }
             }
         });
-        this.add(passEtud);
+        this.add(passWord);
 
         // Création du bouton pour afficher/masquer le mot de passe
         ImageIcon show = new ImageIcon(new ImageIcon("data/show_icon.png").getImage().getScaledInstance(25, 18, Image.SCALE_SMOOTH));
@@ -169,11 +166,11 @@ public final class LoginEnseignement extends JPanel {
                 if (switcher == 0){
                     icon.setIcon(show);
                     switcher = 1;
-                    passEtud.setEchoChar((char) 0);
+                    passWord.setEchoChar((char) 0);
                 } else {
                     icon.setIcon(hide);
                     switcher = 0;
-                    passEtud.setEchoChar(defaultEchoChar);
+                    passWord.setEchoChar(defaultEchoChar);
                 }
             }
         });
@@ -209,9 +206,7 @@ public final class LoginEnseignement extends JPanel {
             java.awt.Window window = SwingUtilities.getWindowAncestor(LoginEnseignement.this);
             if (window instanceof javax.swing.JFrame) {
                 javax.swing.JFrame frame = (javax.swing.JFrame) window;
-                // FIXED: Main.addPageToHistory -> Navigation.addToHistory
                 Navigation.addToHistory(LoginEnseignement.class);
-                // FIXED: Main.setLogedIn -> Session.isLoggedIn
                 Session.isLoggedIn = 1;
                 Enseignement_profil panelMdp = new Enseignement_profil();
                 frame.setContentPane(panelMdp);
@@ -235,7 +230,6 @@ public final class LoginEnseignement extends JPanel {
                 if (window instanceof javax.swing.JFrame) {
                     javax.swing.JFrame frame = (javax.swing.JFrame) window;
                     MotDePasseOublier panelMdp = new MotDePasseOublier();
-                    // FIXED: Main.addPageToHistory -> Navigation.addToHistory
                     Navigation.addToHistory(LoginEnseignement.class);
                     frame.setContentPane(panelMdp);
                     frame.revalidate();
@@ -261,7 +255,6 @@ public final class LoginEnseignement extends JPanel {
         }); 
 
         // Ajout du menu supérieur de navigation
-        // FIXED: Main.getLastClass() -> Navigation.lastClass
         JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Navigation.lastClass, this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);

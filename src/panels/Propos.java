@@ -38,12 +38,10 @@ public final class Propos extends JPanel {
         profilIconMini.setBounds(920, 48, 40, 40);
         this.add(profilIconMini);
     
-        // FIXED: Main.getUserName() -> Session.userName
         JLabel myname = Functions.creetLabel(710, 60, Session.userName);
         myname.setHorizontalAlignment(JLabel.RIGHT);
         this.add(myname);
         
-        // FIXED: Main.getLogedIn() -> Session.isLoggedIn
         if(Session.isLoggedIn == 0){
             profilIconMini.setVisible(false);
             myname.setVisible(false);
@@ -56,7 +54,6 @@ public final class Propos extends JPanel {
         Color bleu = new Color(22, 31, 112);
 
         // Ajout des boutons de navigation du menu supérieur
-        // FIXED: Main.getLastClass() -> Navigation.lastClass
         JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Navigation.lastClass, this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);
@@ -72,7 +69,6 @@ public final class Propos extends JPanel {
         contentPanel.setPreferredSize(new Dimension(876, 2200));
 
         // Ajout du logo et des titres d'introduction de la section "À Propos"
-        // FIXED: Main.getLogo() -> Resources.logo
         JLabel lg = new JLabel(Resources.logo);
         lg.setBounds(380, 20, 100, 87);
         contentPanel.add(lg);
@@ -113,12 +109,10 @@ public final class Propos extends JPanel {
         text4.setBounds(440, 793, 400, 200);
         contentPanel.add(text4);
 
-        // FIXED: Main.getPh_1() -> Resources.ph_1
         JLabel photo1 = new JLabel(Resources.ph_1);
         photo1.setBounds(4, 150, 874, 416);
         contentPanel.add(photo1);
 
-        // FIXED: Main.getPh_2() -> Resources.ph_2
         JLabel photo2 = new JLabel(Resources.ph_2);
         photo2.setBounds(0, 668, 400, 320);
         contentPanel.add(photo2);
@@ -150,7 +144,6 @@ public final class Propos extends JPanel {
         text8.setBounds(30, 1190, 240, 80);
         contentPanel.add(text8);
 
-        // FIXED: Main.getPh_3() -> Resources.ph_3
         JLabel photo3 = new JLabel(Resources.ph_3);
         photo3.setBounds(4, 1160, 300, 400);
         contentPanel.add(photo3);
@@ -168,7 +161,6 @@ public final class Propos extends JPanel {
         text10.setBounds(340, 1285, 240, 80);
         contentPanel.add(text10);
 
-        // FIXED: Main.getPh_4() -> Resources.ph_4
         JLabel photo4 = new JLabel(Resources.ph_4);
         photo4.setBounds(310, 1160, 560, 400);
         contentPanel.add(photo4);
@@ -187,7 +179,6 @@ public final class Propos extends JPanel {
         text12.setHorizontalAlignment(JLabel.CENTER);
         contentPanel.add(text12);
 
-        // FIXED: Main.getPh_5() -> Resources.ph_5
         JLabel photo5 = new JLabel(Resources.ph_5);
         photo5.setBounds(4, 1780, 874, 400);
         contentPanel.add(photo5);

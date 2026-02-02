@@ -22,7 +22,6 @@ public class Enseignement_profil extends JPanel {
     private Image backgroundImage;
     private String fullName, Id, ddn, departement, sexe;
     
-    // FIXED: Added <> to fix [unchecked] warnings
     private ArrayList<String> listCours = new ArrayList<>();
     private ArrayList<String> codes = new ArrayList<>();
 

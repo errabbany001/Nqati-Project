@@ -1,13 +1,16 @@
-
 import javax.swing.JFrame;
 import panels.Accueil;
-import tools.Resources;
+import panels.Contact;
+import panels.Propos;
+import element.Etudiant;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Resources r = new Resources();
+        Propos p = new Propos();
+        Contact c = new Contact();
+        
         // Création de la fenêtre principale
         JFrame frame = new JFrame("Nqati Student Marks");
         frame.setSize(1000, 697);

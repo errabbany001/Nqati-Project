@@ -152,7 +152,6 @@ public class Enseignement_notification extends JPanel {
     public Enseignement_notification() {
 
         // Initialisation du panneau : chargement de l'arrière-plan et des infos utilisateur
-        // FIXED: Main.setLastClass -> Navigation.lastClass
         Navigation.lastClass = this.getClass();
         try {
             backgroundImage = ImageIO.read(new File("data/pg_Etudient_notification.png"));
@@ -165,7 +164,6 @@ public class Enseignement_notification extends JPanel {
         profilIconMini.setBounds(920, 48, 40, 40);
         this.add(profilIconMini);
     
-        // FIXED: Main.getUserName() -> Session.userName
         JLabel myname = Functions.creetLabel(710, 60, Session.userName);
         myname.setHorizontalAlignment(JLabel.RIGHT);
         this.add(myname);
@@ -261,7 +259,6 @@ public class Enseignement_notification extends JPanel {
         this.add(Notes);
 
         // Ajout du menu de navigation supérieur (Accueil, Contact, À propos)
-        // FIXED: Main.getLastClass() -> Navigation.lastClass
         JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Navigation.lastClass, this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);

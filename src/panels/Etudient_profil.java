@@ -10,11 +10,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import tools.Functions;
 import tools.Navigation;
 import tools.Session;
-import tools.Resources;
 
 public final class Etudient_profil extends JPanel {
 
@@ -42,7 +40,6 @@ public final class Etudient_profil extends JPanel {
     public Etudient_profil() {
         
         // Initialisation du panneau : historique et chargement de l'image de fond
-        // FIXED: Main.setLastClass -> Navigation.lastClass
         Navigation.lastClass = this.getClass();
         try {
             backgroundImage = ImageIO.read(new File("data/pg_Etudient_profil.png"));
@@ -52,16 +49,15 @@ public final class Etudient_profil extends JPanel {
         this.setLayout(null);
 
         // Simulation des données de l'étudiant (base de données fictive)
-        fullName = "Yassine Er-rabbany";
-        Cne = "R130000121";
-        ddn = "01 / 01 / 2001";
-        option = "SIDI";
-        niveau = "MASTER";
-        admis = "OUI";
-        note = "00.00";
-        semester = "S1";
+        fullName = Session.getEtudiant().getNom() + " " + Session.getEtudiant().getPrenom();
+        Cne = Session.getEtudiant().getCne();
+        ddn = Session.getEtudiant().getDateDeNaissance();
+        option = Session.getEtudiant().getFilier();
+        niveau = Session.getEtudiant().getNiveau();
+        admis = "---";
+        note = "--.--";
+        semester = Session.getEtudiant().getSemester();
         
-        // FIXED: Main.setUserName -> Session.userName
         Session.userName = fullName;
 
         Color perpul = new Color(87, 107, 194);
@@ -76,7 +72,6 @@ public final class Etudient_profil extends JPanel {
         this.add(profilIconMini);
 
         // Affichage du nom d'utilisateur et des identifiants (CNE)
-        // FIXED: Main.getUserName() -> Session.userName
         JLabel myname = Functions.creetLabel(710, 60, Session.userName);
         myname.setHorizontalAlignment(JLabel.RIGHT);
         this.add(myname);
@@ -94,7 +89,7 @@ public final class Etudient_profil extends JPanel {
         this.add(Functions.EtudInfo(515, 280, ddn));
 
         this.add(Functions.creetLabel(515, 345, "OPTION"));
-        this.add(Functions.EtudInfo(515, 380, option));
+        this.add(Functions.EtudInfo(500, 365, 200 , 50 ,14f, "<html> " + option + "</html>"));
 
         this.add(Functions.creetLabel(720, 245, "NIVEAU"));
         this.add(Functions.EtudInfo(720, 280, niveau));
@@ -129,7 +124,6 @@ public final class Etudient_profil extends JPanel {
         this.add(Notes);
 
         // Ajout du menu supérieur (Accueil, Contact, À propos)
-        // FIXED: Main.getLastClass() -> Navigation.lastClass
         JButton acceuille = Functions.creerMenu("Accueil", 300, 60, perpul, Navigation.lastClass, this);
         JButton contact = Functions.creerMenu("Contact", 440, 60, perpul, Contact.class, this);
         JButton propos = Functions.creerMenu("A propos", 580, 60, perpul, Propos.class, this);

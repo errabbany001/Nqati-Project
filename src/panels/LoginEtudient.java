@@ -1,5 +1,6 @@
 package panels;
 
+import element.Etudiant;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -10,6 +11,9 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,6 +23,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import tools.Connexion;
 import tools.Functions;
 import tools.Navigation;
 import tools.Session;
@@ -27,7 +32,7 @@ public final class LoginEtudient extends JPanel {
 
     // Déclaration des images de fond, des icônes et des variables d'état (visibilité mot de passe)
     private Image backgroundImage;
-    private JLabel line1, line2;
+    private JLabel line1, line2, erur;
     private char defaultEchoChar;
     private int switcher = 0;
     private JButton icon; 
@@ -38,12 +43,87 @@ public final class LoginEtudient extends JPanel {
     ImageIcon show = new ImageIcon(new ImageIcon("data/show_icon.png").getImage().getScaledInstance(25, 18, Image.SCALE_SMOOTH));
     ImageIcon hide = new ImageIcon(new ImageIcon("data/hide_icon.png").getImage().getScaledInstance(25, 18, Image.SCALE_SMOOTH));
     
+
+
     // Méthode utilitaire pour créer les lignes décoratives sous les champs de saisie
     public JLabel creetLine(int x, int y, Color c){
         JLabel line = new JLabel();
         line.setBackground(c); line.setOpaque(true);
         line.setBounds(x, y, 320, 4); return line;
     }
+
+
+    public Etudiant getTheStudent(  String cne){
+        Connection con = Connexion.getCon();
+        Etudiant etudiant = new Etudiant();
+        etudiant.setCne(cne);
+
+        String sql  = "select e.nom , e.prenom, e.dateDeNaissance , c.id_class, c.semester_actuel , f.nom_filiere , n.nom_niveau , e.password " + 
+                        "from etudiant e " + 
+                        "join class c on e.id_class = c.id_class " + 
+                        "join filiere f on f.id_filiere = c.id_filiere " + 
+                        "join niveau n on n.id_niveau = f.id_niveau " + 
+                        "where Cne = ? ";
+
+
+
+        try(PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, cne);
+
+            try (ResultSet rs = ps.executeQuery()){
+               if(rs.next()) {
+                    etudiant.setNom(rs.getString(1));
+                    etudiant.setPrenom(rs.getString(2));
+                    etudiant.setDateDeNaissance(rs.getString(3));
+                    etudiant.setEtu_class(rs.getString(4));
+                    etudiant.setSemester(rs.getString(5));
+                    etudiant.setFilier(rs.getString(6));
+                    etudiant.setNiveau(rs.getString(7));
+                    etudiant.setPassword(rs.getString(8));
+                    
+
+                    System.err.println(rs.getString(1) + rs.getString(2) + rs.getString(3) + rs.getString(4) + rs.getString(5) + rs.getString(6) + rs.getString(7) + rs.getString(8)   );
+
+
+               }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return etudiant;
+    }
+
+    public String getStudentCne( String email){
+       
+        Connection con = Connexion.getCon();
+        String sql  = "select cne from etudiant where email = ?";
+
+
+
+        try(PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, email);
+
+            try (ResultSet rs = ps.executeQuery()){
+               if(rs.next()) {
+                    return  rs.getString(1);
+               }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return "";
+    }
+    
+
+
 
     public LoginEtudient() {
         
@@ -56,7 +136,12 @@ public final class LoginEtudient extends JPanel {
             System.err.println("Error: Could not load pg_home.png");
         }
 
+        //Connexion a la base des donnees
+        Connection con =  Connexion.getConnexion();
+
         this.setLayout(null); 
+        
+
         
         // Gestionnaire pour retirer le focus des champs de saisie lors d'un clic sur le panneau
         this.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -78,78 +163,80 @@ public final class LoginEtudient extends JPanel {
         this.add(line2);
 
         // Configuration du champ Email avec gestion du texte par défaut (Placeholder)
-        JTextField cneEtud = new JTextField();
-        cneEtud.setBounds(360, 345, 270, 30);
-        cneEtud.setOpaque(false);
-        cneEtud.setBorder(null);
-        cneEtud.setHorizontalAlignment(JTextField.CENTER);
-        cneEtud.setForeground(perpul);
-        cneEtud.setFont(font);
-        cneEtud.setText("Email  ");
+        JTextField mail = new JTextField();
+        mail.setBounds(360, 345, 270, 30);
+        mail.setOpaque(false);
+        mail.setBorder(null);
+        mail.setHorizontalAlignment(JTextField.CENTER);
+        mail.setForeground(perpul);
+        mail.setFont(font);
+        mail.setText("Email  ");
 
-        cneEtud.addFocusListener(new FocusListener() {
+        mail.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if ("Email  ".equals(cneEtud.getText())) {
-                    cneEtud.setText("");
+                erur.setText("");
+                if ("Email  ".equals(mail.getText())) {
+                    mail.setText("");
                 }
-                cneEtud.setBounds(360, 343, 270, 30);
-                cneEtud.setForeground(bleu);
+                mail.setBounds(360, 343, 270, 30);
+                mail.setForeground(bleu);
                 line1.setBackground(bleu);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                cneEtud.setCaretPosition(0);
-                if (cneEtud.getText().replace(" ", "").equals("")) {
-                    cneEtud.setText("Email  ");
-                    cneEtud.setForeground(perpul);
+                mail.setCaretPosition(0);
+                if (mail.getText().replace(" ", "").equals("")) {
+                    mail.setText("Email  ");
+                    mail.setForeground(perpul);
                     line1.setBackground(perpul);
-                    cneEtud.setHorizontalAlignment(JTextField.CENTER); 
-                    cneEtud.setBounds(360, 345, 270, 30);
+                    mail.setHorizontalAlignment(JTextField.CENTER); 
+                    mail.setBounds(360, 345, 270, 30);
                 }
             }
         });
-        this.add(cneEtud);
+        this.add(mail);
 
         // Configuration du champ Mot de passe avec gestion de l'écho des caractères (masquage)
-        JPasswordField passEtud = new JPasswordField();
-        passEtud.setBounds(370, 424, 250, 30);
-        passEtud.setOpaque(false);
-        passEtud.setBorder(null);
-        passEtud.setHorizontalAlignment(JTextField.CENTER);
-        passEtud.setForeground(perpul);
-        passEtud.setFont(font);
-        defaultEchoChar = passEtud.getEchoChar(); 
-        passEtud.setEchoChar((char) 0); 
-        passEtud.setText("Mot de passe");
+        JPasswordField passWord = new JPasswordField();
+        passWord.setBounds(370, 424, 250, 30);
+        passWord.setOpaque(false);
+        passWord.setBorder(null);
+        passWord.setHorizontalAlignment(JTextField.CENTER);
+        passWord.setForeground(perpul);
+        passWord.setFont(font);
+        defaultEchoChar = passWord.getEchoChar(); 
+        passWord.setEchoChar((char) 0); 
+        passWord.setText("Mot de passe");
 
-        passEtud.addFocusListener(new FocusListener() {
+        passWord.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if ("Mot de passe".equals(String.valueOf(passEtud.getPassword()))) {
-                    passEtud.setText("");
-                    passEtud.setEchoChar(defaultEchoChar); 
-                    passEtud.setBounds(370, 422, 250, 30);
+                erur.setText("");
+                if ("Mot de passe".equals(String.valueOf(passWord.getPassword()))) {
+                    passWord.setText("");
+                    passWord.setEchoChar(defaultEchoChar); 
+                    passWord.setBounds(370, 422, 250, 30);
                 }
-                passEtud.setForeground(bleu);
+                passWord.setForeground(bleu);
                 line2.setBackground(bleu);
                 icon.setVisible(true);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                if (String.valueOf(passEtud.getPassword()).trim().isEmpty()) {
-                    passEtud.setText("Mot de passe");
-                    passEtud.setForeground(perpul);
+                if (String.valueOf(passWord.getPassword()).trim().isEmpty()) {
+                    passWord.setText("Mot de passe");
+                    passWord.setForeground(perpul);
                     line2.setBackground(perpul);
-                    passEtud.setEchoChar((char) 0); 
+                    passWord.setEchoChar((char) 0); 
                     icon.setVisible(false);
-                    passEtud.setBounds(370, 424, 250, 30);
+                    passWord.setBounds(370, 424, 250, 30);
                 }
             }
         });
-        this.add(passEtud);
+        this.add(passWord);
 
         // Bouton pour afficher ou masquer le mot de passe en clair
         icon = new JButton(hide);
@@ -165,11 +252,11 @@ public final class LoginEtudient extends JPanel {
                 if (switcher == 0){
                     icon.setIcon(show);
                     switcher = 1;
-                    passEtud.setEchoChar((char) 0);
+                    passWord.setEchoChar((char) 0);
                 } else {
                     icon.setIcon(hide);
                     switcher = 0;
-                    passEtud.setEchoChar(defaultEchoChar);
+                    passWord.setEchoChar(defaultEchoChar);
                 }
             }
         });
@@ -204,15 +291,27 @@ public final class LoginEtudient extends JPanel {
         loginBtn.addActionListener(e -> {
             java.awt.Window window = SwingUtilities.getWindowAncestor(LoginEtudient.this);
             if (window instanceof javax.swing.JFrame) {
+                char[] input = passWord.getPassword();
+                String passString = new String(input);
+
+                if(Functions.checkUser(con, "etudiant",mail.getText().toLowerCase().trim() ,passString )){
+                Etudiant etud = getTheStudent(getStudentCne(mail.getText().toLowerCase().trim()));
+                etud.setEmail(mail.getText().toLowerCase().trim());
+
+                Session.setEtudiant(etud);
+                
+
                 javax.swing.JFrame frame = (javax.swing.JFrame) window;
-                // FIXED: Main.setLogedIn -> Session.isLoggedIn
                 Session.isLoggedIn = 1;
-                // FIXED: Main.addPageToHistory -> Navigation.addToHistory
                 Navigation.addToHistory(LoginEtudient.class); 
                 Etudient_profil panelMdp = new Etudient_profil();
                 frame.setContentPane(panelMdp);
                 frame.revalidate();
                 frame.repaint();
+                }else{
+                  erur.setText("Email ou mot de passe incorrect");  
+                }
+
             }
         });
         this.add(loginBtn);
@@ -231,7 +330,6 @@ public final class LoginEtudient extends JPanel {
                 if (window instanceof javax.swing.JFrame) {
                     javax.swing.JFrame frame = (javax.swing.JFrame) window;
                     MotDePasseOublier panelMdp = new MotDePasseOublier();
-                    // FIXED: Main.addPageToHistory -> Navigation.addToHistory
                     Navigation.addToHistory(LoginEtudient.class);
                     frame.setContentPane(panelMdp);
                     frame.revalidate();
@@ -240,6 +338,14 @@ public final class LoginEtudient extends JPanel {
             }
         });
         this.add(forgotLabel);
+
+        // Zone d'affichage des messages d'erreur de validation
+        erur = new JLabel();
+        erur.setForeground(Color.red);
+        erur.setFont(new Font("Arial", Font.BOLD, 14));
+        erur.setBounds(360, 565, 260, 30);
+        erur.setHorizontalAlignment(JLabel.CENTER);
+        this.add(erur);
 
         // Définition du bouton par défaut (Entrée) une fois le composant affiché à l'écran
         this.addHierarchyListener(new java.awt.event.HierarchyListener() {
