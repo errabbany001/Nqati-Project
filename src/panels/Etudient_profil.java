@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import tools.Functions;
-import tools.Navigation;
+import tools.Navigation;  
 import tools.Session;
 
 public final class Etudient_profil extends JPanel {

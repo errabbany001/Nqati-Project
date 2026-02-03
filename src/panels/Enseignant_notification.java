@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -18,12 +19,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import tools.Functions;
-import tools.ScrollBarUI;
 import tools.Navigation;
+import tools.ScrollBarUI;
 import tools.Session;
-import tools.Resources;
 
-public class Enseignement_notification extends JPanel {
+public class Enseignant_notification extends JPanel {
 
     // Déclaration des ressources graphiques (images et icônes) et des listes de données
     private Image backgroundImage;
@@ -149,7 +149,7 @@ public class Enseignement_notification extends JPanel {
         return btn;
     }
 
-    public Enseignement_notification() {
+    public Enseignant_notification() {
 
         // Initialisation du panneau : chargement de l'arrière-plan et des infos utilisateur
         Navigation.lastClass = this.getClass();

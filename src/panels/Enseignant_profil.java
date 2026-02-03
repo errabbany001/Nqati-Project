@@ -7,16 +7,18 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import tools.Functions;
 import tools.Navigation;
 import tools.Session;
 
-public class Enseignement_profil extends JPanel {
+public class Enseignant_profil extends JPanel {
     
     // Déclaration des attributs pour l'image de fond et les données personnelles du professeur
     private Image backgroundImage;
@@ -29,12 +31,12 @@ public class Enseignement_profil extends JPanel {
     static ImageIcon icon_1 = new ImageIcon(new ImageIcon("data/default_profil.png").getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH));
     static ImageIcon icon_2 = new ImageIcon(new ImageIcon("data/default_profil.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 
-    public Enseignement_profil() {
+    public Enseignant_profil() {
 
         // Chargement de l'image de fond et enregistrement de l'historique de navigation
         Navigation.lastClass = this.getClass();
         try {
-            backgroundImage = ImageIO.read(new File("data/pg_Enseignement_profil.png"));
+            backgroundImage = ImageIO.read(new File("data/pg_Enseignant_profil.png"));
         } catch (IOException e) {
             System.err.println("Error: Could not load pg_home.png");
         }
@@ -44,23 +46,18 @@ public class Enseignement_profil extends JPanel {
         Color perpul = new Color(87, 107, 194);
 
         if (listCours.isEmpty()){
-            listCours.add("Sécurité des Systèmes Informatiques");
-            listCours.add("Théorie des graphes et Techniques d’Optimisation");
-            listCours.add("Logique et Intelligence Artificielle");
-            listCours.add("Web Semantique");
-
-            codes.add("BI10");
-            codes.add("BI03");
-            codes.add("BI14");
-            codes.add("BI17");
+            for (String[] elem : Session.getEnseignant().getCours()) {
+                listCours.add(elem[1]);
+                codes.add(elem[0]);
+            }
         }
 
         // Initialisation des informations personnelles de l'enseignant
-        fullName = "Yassine Er-rabbany";
-        Id = "X000000";
-        ddn = "01 / 01 / 1975";
-        departement = "Informatique";
-        sexe = "Homme";
+        fullName = Session.getEnseignant().getNom() + " " + Session.getEnseignant().getPrenom();
+        Id = Session.getEnseignant().getId_ens();
+        ddn = Session.getEnseignant().getDateDeNaissance();
+        departement = Session.getEnseignant().getDepatement();
+        sexe = Session.getEnseignant().getGener();
         Session.userName = fullName;
 
         // Affichage des images de profil (avatar principal et icône de la barre supérieure)

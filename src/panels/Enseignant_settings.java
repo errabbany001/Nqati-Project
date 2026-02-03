@@ -5,19 +5,21 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import tools.Functions;
 import tools.Navigation;
 import tools.Session;
 
-public class Enseignement_settings extends JPanel{
+public class Enseignant_settings extends JPanel{
 
     private Image backgroundImage;
     
-    public Enseignement_settings() {
+    public Enseignant_settings() {
         Navigation.lastClass = this.getClass();
 
         try {

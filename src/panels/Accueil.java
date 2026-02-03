@@ -140,50 +140,50 @@ public final class Accueil extends JPanel {
         this.add(etudiant);
 
         // === BOUTON : ESPACE ENSEIGNEMENT ===
-        JButton enseignement = new JButton("enseignement");
-        enseignement.setFont(new Font("Arial", Font.BOLD, 18));
-        enseignement.setForeground(perpul);
-        enseignement.setBackground(Color.white);
-        enseignement.setOpaque(true);
-        enseignement.setBorder(new LineBorder(perpul, 2, true));
-        enseignement.setBounds(580, 380, 250, 50);
-        enseignement.setFocusPainted(false);
-        enseignement.setContentAreaFilled(true);
-        enseignement.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JButton enseignant = new JButton("enseignant");
+        enseignant.setFont(new Font("Arial", Font.BOLD, 18));
+        enseignant.setForeground(perpul);
+        enseignant.setBackground(Color.white);
+        enseignant.setOpaque(true);
+        enseignant.setBorder(new LineBorder(perpul, 2, true));
+        enseignant.setBounds(580, 380, 250, 50);
+        enseignant.setFocusPainted(false);
+        enseignant.setContentAreaFilled(true);
+        enseignant.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // Événements souris pour le bouton Enseignement
-        enseignement.addMouseListener(new java.awt.event.MouseAdapter() {
+        // Événements souris pour le bouton Enseignant
+        enseignant.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                enseignement.setBackground(ciel);
-                enseignement.setForeground(Color.white);
+                enseignant.setBackground(ciel);
+                enseignant.setForeground(Color.white);
                 cader2.setBounds(580, 380, 30, 50);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                enseignement.setBackground(Color.white);
-                enseignement.setForeground(perpul);
+                enseignant.setBackground(Color.white);
+                enseignant.setForeground(perpul);
                 cader2.setBounds(580, 380, 10, 50);
             }
 
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                // Navigation vers la page Login Enseignement
+                // Navigation vers la page Login Enseignant
                 java.awt.Window window = SwingUtilities.getWindowAncestor(Accueil.this);
                 if (window instanceof javax.swing.JFrame) {
                     javax.swing.JFrame frame = (javax.swing.JFrame) window;
                     
                     Navigation.addToHistory(Accueil.class);
                     
-                    LoginEnseignement panelMdp = new LoginEnseignement();
+                    LoginEnseignant panelMdp = new LoginEnseignant();
                     frame.setContentPane(panelMdp);
                     frame.revalidate();
                     frame.repaint();
                 }
             }
         });
-        this.add(enseignement);
+        this.add(enseignant);
 
         // --- 5. Menu de Navigation Supérieur ---
         // Utilisation de la classe utilitaire Functions pour créer les boutons de menu standardisés

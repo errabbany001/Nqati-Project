@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -23,14 +24,12 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
 
-// Added Imports
 import tools.Functions;
-import tools.ScrollBarUI;
 import tools.Navigation;
+import tools.ScrollBarUI;
 import tools.Session;
-import tools.Resources;
 
-public class Enseignement_notes extends JPanel {
+public class Enseignant_notes extends JPanel {
     
     // Déclaration des variables globales
     private Image backgroundImage;
@@ -51,12 +50,12 @@ public class Enseignement_notes extends JPanel {
         return index;
     }
 
-    public Enseignement_notes() {
+    public Enseignant_notes() {
         
         Navigation.lastClass = this.getClass();
         
         try {
-            backgroundImage = ImageIO.read(new File("data/pg_Enseignement_notes.png"));
+            backgroundImage = ImageIO.read(new File("data/pg_Enseignant_notes.png"));
         } catch (IOException e) {
             System.err.println("Error: Could not load data/pg_Etudient_notes.png");
         }

@@ -28,9 +28,12 @@ public final class Etudient_notes extends JPanel {
     private Image backgroundImage;
     private int nb_sem,  thisSemester;
     private JPanel caderPan;
+    //stock the cours there codes
     private ArrayList<String[]> semsInfo = new ArrayList<>();
     private ArrayList<String[]> codes = new ArrayList<>();
+    // lines for telling what semester the user chosse
     private ArrayList<JLabel> BleuLines = new ArrayList<>();
+    // list of the semesters
     private ArrayList<JLabel> semesters = new ArrayList<>();
 
 
@@ -315,8 +318,18 @@ public final class Etudient_notes extends JPanel {
         String result;
         if (mark == -1){
             result = "-----------";
-        }else{
-            result = (mark >= 10) ? "Varlider" : "Nom Valider";
+        }else if (true) {
+            int check = 1;
+            for (String elem : codes.get(semes)) {
+                if (getMark( Session.getEtudiant().getCne(), elem).getFinalle() < 10){
+                    check = 0;
+                    break;
+                }
+            }  
+            result = (check == 1)? "Valider" : "Non Valider"; 
+        }
+        else{
+            result = (mark >= 10) ? "Varlider" : "Non Valider";
         }
         JLabel statu = Functions.EtudInfo(565 , 315 , result);
         pan.add(statu);

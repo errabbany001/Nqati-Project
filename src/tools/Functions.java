@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Base64;
 import java.util.regex.Pattern;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -30,11 +31,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
 import panels.Accueil;
-import panels.Enseignement_notes;
-import panels.Enseignement_notification;
-import panels.Enseignement_profil;
-import panels.Enseignement_settings;
+import panels.Enseignant_notes;
+import panels.Enseignant_notification;
+import panels.Enseignant_profil;
+import panels.Enseignant_settings;
 import panels.Etudient_notes;
 import panels.Etudient_notification;
 import panels.Etudient_profil;
@@ -149,13 +151,13 @@ public class Functions {
             JPanel nextPanel = null;
             switch (target.toLowerCase()) {
                 case "notes_etd": nextPanel = new Etudient_notes(); break;
-                case "notes_ens": nextPanel = new Enseignement_notes(); break;
+                case "notes_ens": nextPanel = new Enseignant_notes(); break;
                 case "profil_etd": nextPanel = new Etudient_profil(); break;
-                case "profil_ens": nextPanel = new Enseignement_profil(); break;
+                case "profil_ens": nextPanel = new Enseignant_profil(); break;
                 case "settings_etd": nextPanel = new Etudient_settings(); break;
-                case "settings_ens": nextPanel = new Enseignement_settings(); break;
+                case "settings_ens": nextPanel = new Enseignant_settings(); break;
                 case "notification_etd": nextPanel = new Etudient_notification(); break;
-                case "notification_ens": nextPanel = new Enseignement_notification(); break;
+                case "notification_ens": nextPanel = new Enseignant_notification(); break;
             }
 
             if (nextPanel != null) {
