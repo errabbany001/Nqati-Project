@@ -7,17 +7,21 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -28,6 +32,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
+
 import tools.Connexion;
 import tools.Functions;
 import tools.Navigation;
@@ -42,13 +47,19 @@ public class Enseignant_notes extends JPanel {
     private ArrayList<JLabel> choisses = new ArrayList<>();
     private JLabel cdr_1, cdr_2, info , nor , rat;
     private int switcher = 0;
-    JScrollPane sp;
-    JPanel conPan;
+    private JScrollPane sp;
+    private JPanel conPan;
+    private JButton CourChoisse;
     private ArrayList<String[]> students = new ArrayList<>();
-    Color col = new Color(77, 149, 247);
-    Color grey = new Color(122, 145, 176);
-    Color lightBleu = new Color(219,245,255);
-    Color ratColor = lightBleu , norColor = lightBleu;
+    private Color col = new Color(77, 149, 247);
+    private Color grey = new Color(122, 145, 176);
+    private Color lightBleu = new Color(219,245,255);
+    private Color ratColor = lightBleu , norColor = lightBleu;
+    private String Text = "";
+    private Color perpul = new Color(87, 107, 194);
+    private JLabel telecharger , importer;
+    private ArrayList<String[]> importedStudents = new ArrayList<>(); 
+    private ArrayList<JTextField> listOfNotes = new ArrayList<>();
 
     // Méthode utilitaire pour trouver l'index d'un cours
     public int findIndex(String code) {
@@ -59,6 +70,25 @@ public class Enseignant_notes extends JPanel {
             }
         }
         return index;
+    }
+    //=====================================================================
+    //=====================================================================
+    public void saveToCSV(ArrayList<String[]> dataList, String filePath) {
+    try (FileWriter writer = new FileWriter(filePath)) {
+        
+        writer.append("Nom Complet,CNE,Note\n");
+
+        for (String[] row : dataList) {
+            writer.append(row[0]+" " + row[1]).append(","); // Nom Complet
+            writer.append(row[2]).append("\n"); // CNE
+        }
+        writer.flush();
+        JOptionPane.showMessageDialog(null, "✅ C'est bon ! Le fichier est enregistré.");
+
+    } catch (IOException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "❌ Erreur : " + ex.getMessage());
+    }
     }
 
     // =====================================================================
@@ -71,21 +101,113 @@ public class Enseignant_notes extends JPanel {
         myPan.setOpaque(false);
         myPan.setLayout(null);
 
-        myPan.add(Functions.createCustomLabelWithBorder("Nom Complet", 130, 40, 200, 25, 5, 5, 5, 5, col));
-        myPan.add(Functions.createCustomLabelWithBorder("CNE", 360, 40, 150, 25, 5, 5, 5, 5, col));
-        myPan.add(Functions.createCustomLabelWithBorder("La Note", 540, 40, 80, 25, 5, 5, 5, 5, col));
+        JButton btnDownload = new JButton();
+        btnDownload.setBounds(130 , 15 , 240 , 25);
+        btnDownload.setOpaque(false);
+        btnDownload.setContentAreaFilled(false);
+        btnDownload.setBorderPainted(false);
+        btnDownload.setFocusPainted(false);
+        btnDownload.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnDownload.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                telecharger.setBackground(grey);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                telecharger.setBackground(perpul);
+            }
+            
+        });
+        btnDownload.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Choisir l'emplacement de sauvegarde");
+            
+            fileChooser.setSelectedFile(new File((CourChoisse.getText() + cours.get(findIndex(CourChoisse.getText()))[2]+ cours.get(findIndex(CourChoisse.getText()))[3]).replace(" ", "") + Text +  ".csv"));
+
+            int userSelection = fileChooser.showSaveDialog(null);
+
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                
+                File fileToSave = fileChooser.getSelectedFile();
+                String path = fileToSave.getAbsolutePath();
+
+                if (!path.toLowerCase().endsWith(".csv")) {
+                    path += ".csv";
+                }
+
+                saveToCSV(students, path);
+            }
+        });
+        myPan.add(btnDownload);
+        //-------------------------------------------
+        JButton btnUploadList = new JButton();
+        btnUploadList.setBounds(380, 15, 240, 25); // بلاصة جديدة
+        btnUploadList.setOpaque(false);
+        btnUploadList.setContentAreaFilled(false);
+        btnUploadList.setBorderPainted(false);
+        btnUploadList.setFocusPainted(false);
+        btnUploadList.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnUploadList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                importer.setBackground(grey);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                importer.setBackground(perpul);
+            }
+            
+        });
+        btnUploadList.addActionListener(e -> {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Choisir la liste des étudiants (CSV)");
+            
+            int result = chooser.showOpenDialog(null);
+            
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+                
+                loadStudentsToArrayList(file);
+                
+                System.out.println("List Size: " + importedStudents.size());
+                for (String[] elem : importedStudents) {
+                        System.err.println(elem[0] + " "+ elem[2]);
+                }
+            
+            }
+        });
+
+        myPan.add(btnUploadList);
+
+
+
+
+         
+         telecharger =  Functions.createCustomLabelWithBorder("Telecharger la list", 130, 15, 240, 25, 5, 5, 5, 5, perpul);
+        myPan.add(telecharger);
+         importer =  Functions.createCustomLabelWithBorder("Import la list des note", 380, 15, 240, 25, 5, 5, 5, 5, perpul);
+        myPan.add(importer);
+
+
+
+        myPan.add(Functions.createCustomLabelWithBorder("Nom Complet", 130, 70, 200, 25, 5, 5, 5, 5, col));
+        myPan.add(Functions.createCustomLabelWithBorder("CNE", 360, 70, 150, 25, 5, 5, 5, 5, col));
+        myPan.add(Functions.createCustomLabelWithBorder("La Note", 540, 70, 80, 25, 5, 5, 5, 5, col));
 
         for (int i = 0; i < students.size(); i++) {
-            JLabel fullName = Functions.createCustomLabelWithBorder(students.get(i)[0] + " " + students.get(i)[1], 130, 70 + 30 * i, 200, 25, 5, 5, 5, 5, new Color(204, 255, 255));
+            JLabel fullName = Functions.createCustomLabelWithBorder(students.get(i)[0] + " " + students.get(i)[1], 130, 100 + 30 * i, 200, 25, 5, 5, 5, 5, new Color(204, 255, 255));
             fullName.setForeground(new Color(0, 0, 102));
 
-            JLabel cne = Functions.createCustomLabelWithBorder(students.get(i)[2], 360, 70 + 30 * i, 150, 25, 5, 5, 5, 5, new Color(204, 255, 255));
+            JLabel cne = Functions.createCustomLabelWithBorder(students.get(i)[2], 360, 100 + 30 * i, 150, 25, 5, 5, 5, 5, new Color(204, 255, 255));
             cne.setForeground(new Color(0, 0, 102));
 
-            JLabel cader = Functions.createCustomLabelWithBorder("", 540, 70 + 30 * i, 80, 25, 5, 5, 5, 5, new Color(204, 255, 255));
+            JLabel cader = Functions.createCustomLabelWithBorder("", 540, 100 + 30 * i, 80, 25, 5, 5, 5, 5, new Color(204, 255, 255));
 
             JTextField mark = new JTextField("00.00");
-            mark.setBounds(540, 70 + 30 * i, 80, 25);
+            mark.setBounds(540, 100 + 30 * i, 80, 25);
             mark.setHorizontalAlignment(JTextField.CENTER);
             mark.setFont(new Font("Arial", Font.BOLD, 12));
             mark.setForeground(new Color(0, 0, 102));
@@ -102,8 +224,11 @@ public class Enseignant_notes extends JPanel {
             ((AbstractDocument) mark.getDocument()).setDocumentFilter(new MarkFilter());
             checkColor.run();
             mark.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
                 public void insertUpdate(DocumentEvent e) { checkColor.run(); }
+                @Override
                 public void removeUpdate(DocumentEvent e) { checkColor.run(); }
+                @Override
                 public void changedUpdate(DocumentEvent e) { checkColor.run(); }
             });
 
@@ -115,21 +240,16 @@ public class Enseignant_notes extends JPanel {
         return myPan;
     }
 
-  public void changeContent(JPanel newPan) {
-    // 1. Set the new view
-    // 'sp' is accessed directly from the class
-    sp.setViewportView(newPan);
-    
-    // 2. Recalculate ScrollBar based on the global 'students' list
-    // We access 'students.size()' directly
-    if (students.size() * 30 + 140 > 392) {
-        int scrollValue = (int) (153664 / (students.size() * 30 + 70));
-        sp.getVerticalScrollBar().setUI(new ScrollBarUI(scrollValue));
-    }
+    public void changeContent(JPanel newPan) {
+        sp.setViewportView(newPan);
+        
+        if (students.size() * 30 + 140 > 392) {
+            int scrollValue = (int) (153664 / (students.size() * 30 + 70));
+            sp.getVerticalScrollBar().setUI(new ScrollBarUI(scrollValue));
+        }
 
-    // 3. Refresh
-    sp.revalidate();
-    sp.repaint();
+        sp.revalidate();
+        sp.repaint();
     }
      //=======================================================================
      //=======================================================================
@@ -147,6 +267,52 @@ public class Enseignant_notes extends JPanel {
 
     // =====================================================================
     // =====================================================================
+   
+
+    public void loadStudentsToArrayList(File file) {
+    if (!file.getName().toLowerCase().endsWith(".csv")) {
+        JOptionPane.showMessageDialog(null, "❌ Erreur : Veuillez sélectionner un fichier CSV (.csv).", "Format Invalide", JOptionPane.ERROR_MESSAGE);
+        return; 
+    }
+
+    importedStudents.clear(); 
+
+    try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        String line;
+        
+
+        while ((line = br.readLine()) != null) {
+            // Skip empty lines to avoid errors
+            if (line.trim().isEmpty()) {
+                continue;
+            }
+
+            String[] data = line.split(",");
+            
+            if (data.length >= 3) {
+                String col1 = data[0].trim(); // Nom
+                String col2 = data[1].trim(); // CNE
+                String col3 = data[2].trim(); // Note
+                
+                importedStudents.add(new String[]{col1, col2 , col3});
+            } 
+        }
+        
+        if (importedStudents.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "⚠️ Le fichier est vide ou le format est incorrect.", "Attention", JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "✅ Importation réussie : " + importedStudents.size() + " étudiants chargés.");
+            
+        }
+
+    } catch (Exception e) {
+        // 3. We removed e.printStackTrace() so it doesn't clutter the terminal
+        JOptionPane.showMessageDialog(null, "❌ Erreur lors de la lecture du fichier : " + e.getMessage());
+    }
+}
+    // =====================================================================
+    // =====================================================================
+    
     public ArrayList<String[]> getListOfStudent(String id_co , boolean statu){
         ArrayList<String[]> LiStu  = new ArrayList<>();
         String sql1  = "SELECT nom , prenom , Cne FROM etudiant e " + 
@@ -196,7 +362,7 @@ public class Enseignant_notes extends JPanel {
         } catch (IOException e) {
             System.err.println("Error: Could not load data/pg_Etudient_notes.png");
         }
-        Color perpul = new Color(87, 107, 194);
+        
 
         // Initialisation des données de test
         if (cours.isEmpty()) {
@@ -216,7 +382,7 @@ public class Enseignant_notes extends JPanel {
 
 
         // Configuration du bouton de sélection de cours
-        JButton CourChoisse = new JButton("Cour");
+        CourChoisse = new JButton("Cour");
         CourChoisse.setBounds(180, 170, 150, 25);
         CourChoisse.setHorizontalAlignment(JButton.CENTER);
         CourChoisse.setForeground(Color.white);
@@ -283,6 +449,7 @@ public class Enseignant_notes extends JPanel {
                     rat.setBackground(lightBleu);
                     norColor = perpul;
                     ratColor = lightBleu;
+                    Text = "Normal";
             }
         });
         nor.setVisible(false);
@@ -321,6 +488,7 @@ public class Enseignant_notes extends JPanel {
                     nor.setBackground(lightBleu);
                     ratColor = perpul;
                     norColor = lightBleu;
+                    Text = "Rattrappage";
             }
         });
         rat.setVisible(false);
@@ -366,9 +534,9 @@ public class Enseignant_notes extends JPanel {
         this.add(info);
 
         // Création du conteneur pour la liste des étudiants
-        conPan = fillPanel();
+        
 
-        sp = new JScrollPane(conPan);
+        sp = new JScrollPane();
         sp.setBorder(null);
         sp.setOpaque(false);
         sp.getViewport().setOpaque(false);
@@ -407,6 +575,8 @@ public class Enseignant_notes extends JPanel {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
     }
+
+
 
     private static class MarkFilter extends DocumentFilter {
         @Override

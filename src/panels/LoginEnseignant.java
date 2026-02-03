@@ -100,7 +100,7 @@ public final class LoginEnseignant extends JPanel{
                         "join semester sem on sem.id_semester = co.id_semester " +
                         "join filiere fi on fi.id_filiere = sem.id_filiere " +
                         "join niveau ni on ni.id_niveau = fi.id_niveau " +
-                        "where id_enseignant = ? ;";
+                        "where id_enseignant = ? ;"; 
 
         try(PreparedStatement pr = con.prepareStatement(sql)) {
             pr.setString(1, id_ens);
