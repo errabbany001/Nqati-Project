@@ -7,26 +7,27 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Comparator;
-
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
-
 import tools.Connexion;
 import tools.Functions;
 import tools.Navigation;
@@ -39,13 +40,15 @@ public class Enseignant_notes extends JPanel {
     private Image backgroundImage;
     private ArrayList<String[]> cours = new ArrayList<>();
     private ArrayList<JLabel> choisses = new ArrayList<>();
-    private JLabel cdr_1, cdr_2, info;
+    private JLabel cdr_1, cdr_2, info , nor , rat;
     private int switcher = 0;
     JScrollPane sp;
     JPanel conPan;
     private ArrayList<String[]> students = new ArrayList<>();
     Color col = new Color(77, 149, 247);
     Color grey = new Color(122, 145, 176);
+    Color lightBleu = new Color(219,245,255);
+    Color ratColor = lightBleu , norColor = lightBleu;
 
     // Méthode utilitaire pour trouver l'index d'un cours
     public int findIndex(String code) {
@@ -68,28 +71,41 @@ public class Enseignant_notes extends JPanel {
         myPan.setOpaque(false);
         myPan.setLayout(null);
 
-        myPan.add(Functions.createCustomLabelWithBorder("Nom Complet", 130, 15, 200, 25, 5, 5, 5, 5, col));
-        myPan.add(Functions.createCustomLabelWithBorder("CNE", 360, 15, 150, 25, 5, 5, 5, 5, col));
-        myPan.add(Functions.createCustomLabelWithBorder("La Note", 540, 15, 80, 25, 5, 5, 5, 5, col));
+        myPan.add(Functions.createCustomLabelWithBorder("Nom Complet", 130, 40, 200, 25, 5, 5, 5, 5, col));
+        myPan.add(Functions.createCustomLabelWithBorder("CNE", 360, 40, 150, 25, 5, 5, 5, 5, col));
+        myPan.add(Functions.createCustomLabelWithBorder("La Note", 540, 40, 80, 25, 5, 5, 5, 5, col));
 
         for (int i = 0; i < students.size(); i++) {
-            JLabel fullName = Functions.createCustomLabelWithBorder(students.get(i)[0] + " " + students.get(i)[1], 130, 45 + 30 * i, 200, 25, 5, 5, 5, 5, new Color(204, 255, 255));
+            JLabel fullName = Functions.createCustomLabelWithBorder(students.get(i)[0] + " " + students.get(i)[1], 130, 70 + 30 * i, 200, 25, 5, 5, 5, 5, new Color(204, 255, 255));
             fullName.setForeground(new Color(0, 0, 102));
 
-            JLabel cne = Functions.createCustomLabelWithBorder(students.get(i)[2], 360, 45 + 30 * i, 150, 25, 5, 5, 5, 5, new Color(204, 255, 255));
+            JLabel cne = Functions.createCustomLabelWithBorder(students.get(i)[2], 360, 70 + 30 * i, 150, 25, 5, 5, 5, 5, new Color(204, 255, 255));
             cne.setForeground(new Color(0, 0, 102));
 
-            JLabel cader = Functions.createCustomLabelWithBorder("", 540, 45 + 30 * i, 80, 25, 5, 5, 5, 5, new Color(204, 255, 255));
+            JLabel cader = Functions.createCustomLabelWithBorder("", 540, 70 + 30 * i, 80, 25, 5, 5, 5, 5, new Color(204, 255, 255));
 
             JTextField mark = new JTextField("00.00");
-            mark.setBounds(540, 45 + 30 * i, 80, 25);
+            mark.setBounds(540, 70 + 30 * i, 80, 25);
             mark.setHorizontalAlignment(JTextField.CENTER);
             mark.setFont(new Font("Arial", Font.BOLD, 12));
             mark.setForeground(new Color(0, 0, 102));
             mark.setOpaque(false);
             mark.setBorder(null);
 
+            Runnable checkColor = () -> {
+                if (mark.getText().equals("00.00")) {
+                    mark.setForeground(Color.RED); 
+                } else {
+                    mark.setForeground(new Color(0, 0, 102));
+                }
+            };
             ((AbstractDocument) mark.getDocument()).setDocumentFilter(new MarkFilter());
+            checkColor.run();
+            mark.getDocument().addDocumentListener(new DocumentListener() {
+                public void insertUpdate(DocumentEvent e) { checkColor.run(); }
+                public void removeUpdate(DocumentEvent e) { checkColor.run(); }
+                public void changedUpdate(DocumentEvent e) { checkColor.run(); }
+            });
 
             myPan.add(fullName);
             myPan.add(cne);
@@ -114,18 +130,40 @@ public class Enseignant_notes extends JPanel {
     // 3. Refresh
     sp.revalidate();
     sp.repaint();
-}
+    }
+     //=======================================================================
+     //=======================================================================
+
+    public JButton getNewButton(int x  , int y){
+        JButton btn = new JButton();
+        btn.setBounds(x, y , 90 , 25);
+        btn.setOpaque(false);
+        btn.setContentAreaFilled(false);
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return btn;
+    }
 
     // =====================================================================
     // =====================================================================
-    public ArrayList<String[]> getListOfStudent(String id_co){
+    public ArrayList<String[]> getListOfStudent(String id_co , boolean statu){
         ArrayList<String[]> LiStu  = new ArrayList<>();
-        String sql  = "SELECT nom , prenom , Cne FROM etudiant e " + 
+        String sql1  = "SELECT nom , prenom , Cne FROM etudiant e " + 
                         "join class cl on cl.id_class = e.id_class " + 
                         "join filiere fi on fi.id_filiere = cl.id_filiere " + 
                         "join semester sem on fi.id_filiere = sem.id_filiere " + 
                         "join cour co on co.id_semester = sem.id_semester " + 
                         "where id_cour = ? ;";
+        String sql2 = "SELECT * FROM etudiant e " + 
+                        "join class cl on cl.id_class = e.id_class " + 
+                        "join filiere fi on fi.id_filiere = cl.id_filiere " + 
+                        "join semester sem on fi.id_filiere = sem.id_filiere " + 
+                        "join cour co on co.id_semester = sem.id_semester " + 
+                        "join note nn on nn.id_etudiant = e.Cne and nn.id_cour = co.id_cour " + 
+                        "where co.id_cour = ? and note_normal < 10 ;";
+
+        String sql = statu ? sql1 : sql2;
 
         Connection con = Connexion.getConnexion();
 
@@ -164,18 +202,6 @@ public class Enseignant_notes extends JPanel {
         if (cours.isEmpty()) {
             cours = Session.getEnseignant().getCours();
         }
-
-        if (students.isEmpty()) {
-            students.add(new String[]{"Alami", "Yassine", "G135042189"});
-            students.add(new String[]{"Bennani", "Salma", "R120934556"});
-            students.add(new String[]{"Chraibi", "Omar", "S134098221"});
-            students.add(new String[]{"Idrissi", "Laila", "K110763442"});
-            students.add(new String[]{"Mansouri", "Hamza", "M145022339"});
-            students.add(new String[]{"Tazi", "Kenza", "P120055441"});
-
-            
-        }
-        students.sort(Comparator.comparing(s -> s[0]));
 
         // Affichage du profil
         JLabel profilIconMini = new JLabel(Etudient_profil.icon_2);
@@ -223,6 +249,83 @@ public class Enseignant_notes extends JPanel {
         cdr_2.setVisible(false);
         this.add(cdr_2);
 
+  
+
+
+        nor = Functions.createCustomLabelWithBorder("Normal", 700, 170, 90, 25, 7, 7, 7, 7, norColor);
+        nor.setFont(new Font("Arial" , Font.BOLD , 12));
+        nor.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        nor.setForeground(Color.black);
+        nor.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (norColor.equals(lightBleu)){
+                    nor.setBackground(grey);
+                }
+                
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (norColor.equals(lightBleu)){
+                    nor.setBackground(lightBleu);
+                }
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                    students.clear();
+                    students = getListOfStudent(CourChoisse.getText() , true);
+                    changeContent(fillPanel());
+                    nor.setForeground(Color.white);
+                    rat.setForeground(Color.black);
+                    nor.setBackground(perpul);
+                    rat.setBackground(lightBleu);
+                    norColor = perpul;
+                    ratColor = lightBleu;
+            }
+        });
+        nor.setVisible(false);
+        this.add(nor);
+
+
+
+
+        rat = Functions.createCustomLabelWithBorder("Rattrapage", 800, 170, 90, 25, 7, 7, 7, 7, ratColor);
+        rat.setFont(new Font("Arial" , Font.BOLD , 12));
+        rat.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        rat.setForeground(Color.black);
+        rat.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if(ratColor.equals(lightBleu)){
+                    rat.setBackground(grey);
+                }
+                
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if(ratColor.equals(lightBleu)){
+                    rat.setBackground(lightBleu);
+                }
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                    students.clear();
+                    students = getListOfStudent(CourChoisse.getText() , false);
+                    changeContent(fillPanel());
+                    rat.setForeground(Color.white);
+                    nor.setForeground(Color.black);
+                    rat.setBackground(perpul);
+                    nor.setBackground(lightBleu);
+                    ratColor = perpul;
+                    norColor = lightBleu;
+            }
+        });
+        rat.setVisible(false);
+        this.add(rat);
+
         // Génération dynamique de la liste déroulante
         for (int i = 0; i < cours.size(); i++) {
             final int index = i;
@@ -246,13 +349,9 @@ public class Enseignant_notes extends JPanel {
                     switcher = 0;
                     for (JLabel choi : choisses) choi.setVisible(false);
                     int idx = findIndex(lib.getText());
-                    info.setText(lib.getText() + " : " + cours.get(idx)[1] + "         " + cours.get(idx)[2] + " : " + cours.get(idx)[3] + "-" + cours.get(idx)[4]);
-                    students.clear();
-                    students = getListOfStudent(lib.getText());
-                    changeContent(fillPanel());
-
-                    
-                    
+                    info.setText( "<html><div>"+lib.getText() + " : " + cours.get(idx)[1] + "<br>" + cours.get(idx)[2] + " : " + cours.get(idx)[3] + "-" + cours.get(idx)[4] + "</html></div>");
+                    rat.setVisible(true);
+                    nor.setVisible(true);
                 }
             });
             lib.setVisible(false);
