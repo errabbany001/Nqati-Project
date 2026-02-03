@@ -9,6 +9,9 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -24,6 +27,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
 
+import tools.Connexion;
 import tools.Functions;
 import tools.Navigation;
 import tools.ScrollBarUI;
@@ -37,7 +41,11 @@ public class Enseignant_notes extends JPanel {
     private ArrayList<JLabel> choisses = new ArrayList<>();
     private JLabel cdr_1, cdr_2, info;
     private int switcher = 0;
+    JScrollPane sp;
+    JPanel conPan;
     private ArrayList<String[]> students = new ArrayList<>();
+    Color col = new Color(77, 149, 247);
+    Color grey = new Color(122, 145, 176);
 
     // Méthode utilitaire pour trouver l'index d'un cours
     public int findIndex(String code) {
@@ -49,6 +57,97 @@ public class Enseignant_notes extends JPanel {
         }
         return index;
     }
+
+    // =====================================================================
+    // =====================================================================
+
+    public JPanel fillPanel(){
+        JPanel myPan = new JPanel();
+
+        myPan.setPreferredSize(new Dimension(784, students.size() * 30 + 140));
+        myPan.setOpaque(false);
+        myPan.setLayout(null);
+
+        myPan.add(Functions.createCustomLabelWithBorder("Nom Complet", 130, 15, 200, 25, 5, 5, 5, 5, col));
+        myPan.add(Functions.createCustomLabelWithBorder("CNE", 360, 15, 150, 25, 5, 5, 5, 5, col));
+        myPan.add(Functions.createCustomLabelWithBorder("La Note", 540, 15, 80, 25, 5, 5, 5, 5, col));
+
+        for (int i = 0; i < students.size(); i++) {
+            JLabel fullName = Functions.createCustomLabelWithBorder(students.get(i)[0] + " " + students.get(i)[1], 130, 45 + 30 * i, 200, 25, 5, 5, 5, 5, new Color(204, 255, 255));
+            fullName.setForeground(new Color(0, 0, 102));
+
+            JLabel cne = Functions.createCustomLabelWithBorder(students.get(i)[2], 360, 45 + 30 * i, 150, 25, 5, 5, 5, 5, new Color(204, 255, 255));
+            cne.setForeground(new Color(0, 0, 102));
+
+            JLabel cader = Functions.createCustomLabelWithBorder("", 540, 45 + 30 * i, 80, 25, 5, 5, 5, 5, new Color(204, 255, 255));
+
+            JTextField mark = new JTextField("00.00");
+            mark.setBounds(540, 45 + 30 * i, 80, 25);
+            mark.setHorizontalAlignment(JTextField.CENTER);
+            mark.setFont(new Font("Arial", Font.BOLD, 12));
+            mark.setForeground(new Color(0, 0, 102));
+            mark.setOpaque(false);
+            mark.setBorder(null);
+
+            ((AbstractDocument) mark.getDocument()).setDocumentFilter(new MarkFilter());
+
+            myPan.add(fullName);
+            myPan.add(cne);
+            myPan.add(mark);
+            myPan.add(cader);
+        }
+        return myPan;
+    }
+
+  public void changeContent(JPanel newPan) {
+    // 1. Set the new view
+    // 'sp' is accessed directly from the class
+    sp.setViewportView(newPan);
+    
+    // 2. Recalculate ScrollBar based on the global 'students' list
+    // We access 'students.size()' directly
+    if (students.size() * 30 + 140 > 392) {
+        int scrollValue = (int) (153664 / (students.size() * 30 + 70));
+        sp.getVerticalScrollBar().setUI(new ScrollBarUI(scrollValue));
+    }
+
+    // 3. Refresh
+    sp.revalidate();
+    sp.repaint();
+}
+
+    // =====================================================================
+    // =====================================================================
+    public ArrayList<String[]> getListOfStudent(String id_co){
+        ArrayList<String[]> LiStu  = new ArrayList<>();
+        String sql  = "SELECT nom , prenom , Cne FROM etudiant e " + 
+                        "join class cl on cl.id_class = e.id_class " + 
+                        "join filiere fi on fi.id_filiere = cl.id_filiere " + 
+                        "join semester sem on fi.id_filiere = sem.id_filiere " + 
+                        "join cour co on co.id_semester = sem.id_semester " + 
+                        "where id_cour = ? ;";
+
+        Connection con = Connexion.getConnexion();
+
+        try(PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, id_co);
+
+            try (ResultSet rs = ps.executeQuery()){
+                while(rs.next()) {
+                    LiStu.add(new String[] { rs.getString(1) , rs.getString( 2), rs.getString(3)});
+               }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return LiStu;
+    }
+    
+    // =====================================================================
+    // =====================================================================
 
     public Enseignant_notes() {
         
@@ -63,11 +162,7 @@ public class Enseignant_notes extends JPanel {
 
         // Initialisation des données de test
         if (cours.isEmpty()) {
-            cours.add(new String[]{"BI15", "Sécurité des Systèmes Informatiques", "Master", "SIDI", "S1"});
-            cours.add(new String[]{"GL054", "Théorie des Graphes et Optimisation", "Licence", "Génie Logiciel", "S2"});
-            cours.add(new String[]{"IDS01", "Logique et Intelligence Artificielle", "Master", "IA & Data Science", "S1"});
-            cours.add(new String[]{"FS11", "Développement Web Sémantique", "Licence", "Fullstack", "S2"});
-            cours.add(new String[]{"SI09", "Administration des Bases de Données", "Licence", "Systèmes d'Information", "S1"});
+            cours = Session.getEnseignant().getCours();
         }
 
         if (students.isEmpty()) {
@@ -77,12 +172,8 @@ public class Enseignant_notes extends JPanel {
             students.add(new String[]{"Idrissi", "Laila", "K110763442"});
             students.add(new String[]{"Mansouri", "Hamza", "M145022339"});
             students.add(new String[]{"Tazi", "Kenza", "P120055441"});
-            students.add(new String[]{"Zahiri", "Anas", "D139088772"});
-            students.add(new String[]{"Fassi", "Meriem", "B110334455"});
-            students.add(new String[]{"Jouhari", "Amine", "H142099881"});
-            students.add(new String[]{"Radi", "Sanaa", "F130077662"});
-            students.add(new String[]{"Belkhayat", "Walid", "J122044335"});
-            students.add(new String[]{"Tahiri", "Nouzha", "E110022998"});
+
+            
         }
         students.sort(Comparator.comparing(s -> s[0]));
 
@@ -96,8 +187,7 @@ public class Enseignant_notes extends JPanel {
         this.add(myname);
         this.setLayout(null);
 
-        Color col = new Color(77, 149, 247);
-        Color grey = new Color(122, 145, 176);
+
 
         // Configuration du bouton de sélection de cours
         JButton CourChoisse = new JButton("Cour");
@@ -157,6 +247,12 @@ public class Enseignant_notes extends JPanel {
                     for (JLabel choi : choisses) choi.setVisible(false);
                     int idx = findIndex(lib.getText());
                     info.setText(lib.getText() + " : " + cours.get(idx)[1] + "         " + cours.get(idx)[2] + " : " + cours.get(idx)[3] + "-" + cours.get(idx)[4]);
+                    students.clear();
+                    students = getListOfStudent(lib.getText());
+                    changeContent(fillPanel());
+
+                    
+                    
                 }
             });
             lib.setVisible(false);
@@ -171,41 +267,9 @@ public class Enseignant_notes extends JPanel {
         this.add(info);
 
         // Création du conteneur pour la liste des étudiants
-        JPanel conPan = new JPanel();
-        conPan.setPreferredSize(new Dimension(784, students.size() * 30 + 140));
-        conPan.setOpaque(false);
-        conPan.setLayout(null);
+        conPan = fillPanel();
 
-        conPan.add(Functions.createCustomLabelWithBorder("Nom Complet", 130, 15, 200, 25, 5, 5, 5, 5, col));
-        conPan.add(Functions.createCustomLabelWithBorder("CNE", 360, 15, 150, 25, 5, 5, 5, 5, col));
-        conPan.add(Functions.createCustomLabelWithBorder("La Note", 540, 15, 80, 25, 5, 5, 5, 5, col));
-
-        for (int i = 0; i < students.size(); i++) {
-            JLabel fullName = Functions.createCustomLabelWithBorder(students.get(i)[0] + " " + students.get(i)[1], 130, 45 + 30 * i, 200, 25, 5, 5, 5, 5, new Color(204, 255, 255));
-            fullName.setForeground(new Color(0, 0, 102));
-
-            JLabel cne = Functions.createCustomLabelWithBorder(students.get(i)[2], 360, 45 + 30 * i, 150, 25, 5, 5, 5, 5, new Color(204, 255, 255));
-            cne.setForeground(new Color(0, 0, 102));
-
-            JLabel cader = Functions.createCustomLabelWithBorder("", 540, 45 + 30 * i, 80, 25, 5, 5, 5, 5, new Color(204, 255, 255));
-
-            JTextField mark = new JTextField("00.00");
-            mark.setBounds(540, 45 + 30 * i, 80, 25);
-            mark.setHorizontalAlignment(JTextField.CENTER);
-            mark.setFont(new Font("Arial", Font.BOLD, 12));
-            mark.setForeground(new Color(0, 0, 102));
-            mark.setOpaque(false);
-            mark.setBorder(null);
-
-            ((AbstractDocument) mark.getDocument()).setDocumentFilter(new MarkFilter());
-
-            conPan.add(fullName);
-            conPan.add(cne);
-            conPan.add(mark);
-            conPan.add(cader);
-        }
-
-        JScrollPane sp = new JScrollPane(conPan);
+        sp = new JScrollPane(conPan);
         sp.setBorder(null);
         sp.setOpaque(false);
         sp.getViewport().setOpaque(false);
