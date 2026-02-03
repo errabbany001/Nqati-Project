@@ -16,7 +16,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -32,7 +31,6 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
-
 import tools.Connexion;
 import tools.Functions;
 import tools.Navigation;
@@ -43,21 +41,21 @@ public class Enseignant_notes extends JPanel {
     
     // Déclaration des variables globales
     private Image backgroundImage;
-    private ArrayList<String[]> cours = new ArrayList<>();
-    private ArrayList<JLabel> choisses = new ArrayList<>();
-    private JLabel cdr_1, cdr_2, info , nor , rat;
+    
+    private JLabel cdr_1, cdr_2, info , nor , rat, telecharger , importer;;
     private int switcher = 0;
+    private String Text = "";
     private JScrollPane sp;
     private JPanel conPan;
     private JButton CourChoisse;
-    private ArrayList<String[]> students = new ArrayList<>();
     private Color col = new Color(77, 149, 247);
     private Color grey = new Color(122, 145, 176);
     private Color lightBleu = new Color(219,245,255);
     private Color ratColor = lightBleu , norColor = lightBleu;
-    private String Text = "";
     private Color perpul = new Color(87, 107, 194);
-    private JLabel telecharger , importer;
+    private ArrayList<String[]> cours = new ArrayList<>();
+    private ArrayList<JLabel> choisses = new ArrayList<>();
+    private ArrayList<String[]> students = new ArrayList<>();
     private ArrayList<String[]> importedStudents = new ArrayList<>(); 
     private ArrayList<JTextField> listOfNotes = new ArrayList<>();
 
@@ -91,6 +89,27 @@ public class Enseignant_notes extends JPanel {
     }
     }
 
+    // =====================================================================
+    // =====================================================================
+    public int getIndexByCne(String stu_cne){
+        int indx = -1;
+        for(int i = 0 ; i < students.size() ; i++){
+            if (students.get(i)[2].equals(stu_cne)){
+                indx = i;
+                break;
+            }
+        }
+        return indx;
+    }
+    //-----------------------
+    public void changeMarks(){
+        for (String[] elem : importedStudents) {
+            int note_indx = getIndexByCne(elem[1]);
+            if (note_indx != -1){
+                listOfNotes.get(note_indx).setText(elem[2]);
+            }
+        }
+    }
     // =====================================================================
     // =====================================================================
 
@@ -176,27 +195,23 @@ public class Enseignant_notes extends JPanel {
                 for (String[] elem : importedStudents) {
                         System.err.println(elem[0] + " "+ elem[2]);
                 }
+                changeMarks();
             
             }
         });
-
         myPan.add(btnUploadList);
 
 
-
-
-         
          telecharger =  Functions.createCustomLabelWithBorder("Telecharger la list", 130, 15, 240, 25, 5, 5, 5, 5, perpul);
         myPan.add(telecharger);
          importer =  Functions.createCustomLabelWithBorder("Import la list des note", 380, 15, 240, 25, 5, 5, 5, 5, perpul);
         myPan.add(importer);
 
-
-
         myPan.add(Functions.createCustomLabelWithBorder("Nom Complet", 130, 70, 200, 25, 5, 5, 5, 5, col));
         myPan.add(Functions.createCustomLabelWithBorder("CNE", 360, 70, 150, 25, 5, 5, 5, 5, col));
         myPan.add(Functions.createCustomLabelWithBorder("La Note", 540, 70, 80, 25, 5, 5, 5, 5, col));
 
+        listOfNotes.clear();
         for (int i = 0; i < students.size(); i++) {
             JLabel fullName = Functions.createCustomLabelWithBorder(students.get(i)[0] + " " + students.get(i)[1], 130, 100 + 30 * i, 200, 25, 5, 5, 5, 5, new Color(204, 255, 255));
             fullName.setForeground(new Color(0, 0, 102));
@@ -213,7 +228,6 @@ public class Enseignant_notes extends JPanel {
             mark.setForeground(new Color(0, 0, 102));
             mark.setOpaque(false);
             mark.setBorder(null);
-
             Runnable checkColor = () -> {
                 if (mark.getText().equals("00.00")) {
                     mark.setForeground(Color.RED); 
@@ -231,7 +245,7 @@ public class Enseignant_notes extends JPanel {
                 @Override
                 public void changedUpdate(DocumentEvent e) { checkColor.run(); }
             });
-
+            listOfNotes.add(mark);
             myPan.add(fullName);
             myPan.add(cne);
             myPan.add(mark);
@@ -251,8 +265,8 @@ public class Enseignant_notes extends JPanel {
         sp.revalidate();
         sp.repaint();
     }
-     //=======================================================================
-     //=======================================================================
+    //=======================================================================
+    //=======================================================================
 
     public JButton getNewButton(int x  , int y){
         JButton btn = new JButton();
@@ -312,7 +326,7 @@ public class Enseignant_notes extends JPanel {
 }
     // =====================================================================
     // =====================================================================
-    
+
     public ArrayList<String[]> getListOfStudent(String id_co , boolean statu){
         ArrayList<String[]> LiStu  = new ArrayList<>();
         String sql1  = "SELECT nom , prenom , Cne FROM etudiant e " + 
