@@ -1,8 +1,9 @@
+import java.sql.Connection;
 import javax.swing.JFrame;
 import panels.Accueil;
 import panels.Contact;
 import panels.Propos;
-import element.Etudiant;
+import tools.Connexion;
 
 public class Main {
 
@@ -10,7 +11,7 @@ public class Main {
 
         Propos p = new Propos();
         Contact c = new Contact();
-        
+        Connection con = Connexion.getConnexion();
         // Création de la fenêtre principale
         JFrame frame = new JFrame("Nqati Student Marks");
         frame.setSize(1000, 697);

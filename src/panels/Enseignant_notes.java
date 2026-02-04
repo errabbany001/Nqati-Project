@@ -58,6 +58,7 @@ public class Enseignant_notes extends JPanel {
     private ArrayList<String[]> students = new ArrayList<>();
     private ArrayList<String[]> importedStudents = new ArrayList<>(); 
     private ArrayList<JTextField> listOfNotes = new ArrayList<>();
+    private Connection con = Connexion.getConnexion();
 
     // Méthode utilitaire pour trouver l'index d'un cours
     public int findIndex(String code) {
@@ -113,60 +114,50 @@ public class Enseignant_notes extends JPanel {
     // =====================================================================
     // =====================================================================
     public void saveMarks() {
-        // 1. تحديد الكور (Matière)
         String idCour = CourChoisse.getText();
         String tableu = (Text.equals("Normal")) ? "note_normal" : "note_rattrapage";
-        // 2. جملة SQL للتحديث (تعتمد على note_normal حسب طلبك)
         String sql = "UPDATE note SET " + tableu + " = ? WHERE id_etudiant = ? AND id_cour = ?";
 
-        // استخدام try-with-resources لغلق الكونيكسيون تلقائياً
         try (Connection con = Connexion.getConnexion();
             PreparedStatement pst = con.prepareStatement(sql)) {
 
-            // 3. الدوران على جميع التلاميذ
             for (int i = 0; i < students.size(); i++) {
                 
-                // أ) جلب الـ CNE من الليستة (الخانة الثالثة رقم 2)
                 String idEtudiant = students.get(i)[2]; 
                 
-                // ب) جلب النقطة من JTextField الموافق لهذا التلميذ
                 String noteText = listOfNotes.get(i).getText().trim();
                 
-                // ج) تحويل النقطة إلى رقم (Double)
                 double noteVal = 0.0;
                 try {
-                    // إذا كانت الخانة فارغة أو فيها "00.00" نعتبرها 0
                     if (!noteText.isEmpty() && !noteText.equals("00.00")) {
                         noteVal = Double.parseDouble(noteText);
                     }
                 } catch (NumberFormatException e) {
-                    noteVal = 0.0; // حماية إضافية
+                    noteVal = 0.0; 
                 }
 
-                // د) ملء الفراغات في الـ Query
-                pst.setDouble(1, noteVal);   // مكان note_normal
-                pst.setString(2, idEtudiant); // مكان id_etudiant
-                pst.setString(3, idCour);     // مكان id_cour
+                pst.setDouble(1, noteVal); 
+                pst.setString(2, idEtudiant); 
+                pst.setString(3, idCour);     
 
-                // هـ) إضافة الأمر إلى الحزمة (Batch) لتنفيذها دفعة واحدة
+                
                 pst.addBatch();
             }
 
-            // 4. تنفيذ التحديثات دفعة واحدة (أسرع من تحديث واحد بواحد)
+            
             pst.executeBatch();
             
-            JOptionPane.showMessageDialog(null, "✅ تم حفظ جميع النقط بنجاح!");
+            JOptionPane.showMessageDialog(null, "✅ Toutes les notes ont été enregistrées avec succès !");
 
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "❌ خطأ أثناء الحفظ: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "❌ Erreur lors de la sauvegarde : " + e.getMessage());
         }
     }
     // =====================================================================
     // =====================================================================
     public String getMark(String id_etu, String id_cour) {
         String tab = (Text.equals("Normal")) ? "note_normal" : "note_rattrapage";
-        System.out.println(tab);
         String sql = "SELECT "+ tab +" FROM note WHERE id_etudiant = ? AND id_cour = ?";
         String noteStr = "00.00"; // Default value (valeur par défaut)
 
@@ -203,7 +194,7 @@ public class Enseignant_notes extends JPanel {
             java.sql.Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT DATABASE()")) {
             if (rs.next()) {
-                System.out.println("🚨 أنا متصل حالياً بقاعدة البيانات: " + rs.getString(1));
+                System.out.println("Connection avec la DataBase: " + rs.getString(1));
             }
         } catch (Exception e) { e.printStackTrace(); }
         if(!students.isEmpty()){
@@ -495,13 +486,13 @@ public class Enseignant_notes extends JPanel {
                         "join semester sem on fi.id_filiere = sem.id_filiere " + 
                         "join cour co on co.id_semester = sem.id_semester " + 
                         "where id_cour = ? ;";
-        String sql2 = "SELECT * FROM etudiant e " + 
+        String sql2 = "SELECT nom , prenom , Cne FROM etudiant e " + 
                         "join class cl on cl.id_class = e.id_class " + 
                         "join filiere fi on fi.id_filiere = cl.id_filiere " + 
                         "join semester sem on fi.id_filiere = sem.id_filiere " + 
                         "join cour co on co.id_semester = sem.id_semester " + 
-                        "join note nn on nn.id_etudiant = e.Cne and nn.id_cour = co.id_cour " + 
-                        "where co.id_cour = ? and note_normal < 10 ;";
+                        "join note nn on nn.id_etudiant = e.Cne AND nn.id_cour = co.id_cour " + 
+                        "where co.id_cour = ? AND note_normal < 10 ;";
 
         String sql = statu ? sql1 : sql2;
 
