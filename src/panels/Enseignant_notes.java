@@ -42,7 +42,7 @@ public class Enseignant_notes extends JPanel {
     // Déclaration des variables globales
     private Image backgroundImage;
     
-    private JLabel cdr_1, cdr_2, info , nor , rat, telecharger , importer;;
+    private JLabel cdr_1, cdr_2, info , nor , rat, telecharger , importer, Confirm_cader;
     private int switcher = 0;
     private String Text = "";
     private JScrollPane sp;
@@ -112,145 +112,305 @@ public class Enseignant_notes extends JPanel {
     }
     // =====================================================================
     // =====================================================================
+    public void saveMarks() {
+        // 1. تحديد الكور (Matière)
+        String idCour = CourChoisse.getText();
+        String tableu = (Text.equals("Normal")) ? "note_normal" : "note_rattrapage";
+        // 2. جملة SQL للتحديث (تعتمد على note_normal حسب طلبك)
+        String sql = "UPDATE note SET " + tableu + " = ? WHERE id_etudiant = ? AND id_cour = ?";
+
+        // استخدام try-with-resources لغلق الكونيكسيون تلقائياً
+        try (Connection con = Connexion.getConnexion();
+            PreparedStatement pst = con.prepareStatement(sql)) {
+
+            // 3. الدوران على جميع التلاميذ
+            for (int i = 0; i < students.size(); i++) {
+                
+                // أ) جلب الـ CNE من الليستة (الخانة الثالثة رقم 2)
+                String idEtudiant = students.get(i)[2]; 
+                
+                // ب) جلب النقطة من JTextField الموافق لهذا التلميذ
+                String noteText = listOfNotes.get(i).getText().trim();
+                
+                // ج) تحويل النقطة إلى رقم (Double)
+                double noteVal = 0.0;
+                try {
+                    // إذا كانت الخانة فارغة أو فيها "00.00" نعتبرها 0
+                    if (!noteText.isEmpty() && !noteText.equals("00.00")) {
+                        noteVal = Double.parseDouble(noteText);
+                    }
+                } catch (NumberFormatException e) {
+                    noteVal = 0.0; // حماية إضافية
+                }
+
+                // د) ملء الفراغات في الـ Query
+                pst.setDouble(1, noteVal);   // مكان note_normal
+                pst.setString(2, idEtudiant); // مكان id_etudiant
+                pst.setString(3, idCour);     // مكان id_cour
+
+                // هـ) إضافة الأمر إلى الحزمة (Batch) لتنفيذها دفعة واحدة
+                pst.addBatch();
+            }
+
+            // 4. تنفيذ التحديثات دفعة واحدة (أسرع من تحديث واحد بواحد)
+            pst.executeBatch();
+            
+            JOptionPane.showMessageDialog(null, "✅ تم حفظ جميع النقط بنجاح!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "❌ خطأ أثناء الحفظ: " + e.getMessage());
+        }
+    }
+    // =====================================================================
+    // =====================================================================
+    public String getMark(String id_etu, String id_cour) {
+        String tab = (Text.equals("Normal")) ? "note_normal" : "note_rattrapage";
+        System.out.println(tab);
+        String sql = "SELECT "+ tab +" FROM note WHERE id_etudiant = ? AND id_cour = ?";
+        String noteStr = "00.00"; // Default value (valeur par défaut)
+
+        try (Connection con = Connexion.getConnexion();
+            PreparedStatement pst = con.prepareStatement(sql)) {
+
+            pst.setString(1, id_etu);
+            pst.setString(2, id_cour);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    double note = rs.getDouble(1);
+                    
+                    // Check if the value was actually NULL in database
+                    if (!rs.wasNull()) {
+                        noteStr = String.valueOf(note);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error fetching mark: " + e.getMessage());
+        }
+        return noteStr;
+    }
+    // =====================================================================
+    // =====================================================================
 
     public JPanel fillPanel(){
         JPanel myPan = new JPanel();
-
-        myPan.setPreferredSize(new Dimension(784, students.size() * 30 + 140));
         myPan.setOpaque(false);
         myPan.setLayout(null);
-
-        JButton btnDownload = new JButton();
-        btnDownload.setBounds(130 , 15 , 240 , 25);
-        btnDownload.setOpaque(false);
-        btnDownload.setContentAreaFilled(false);
-        btnDownload.setBorderPainted(false);
-        btnDownload.setFocusPainted(false);
-        btnDownload.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnDownload.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                telecharger.setBackground(grey);
+        // ضعه في أول سطر في fillPanel
+        try (Connection con = Connexion.getConnexion();
+            java.sql.Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT DATABASE()")) {
+            if (rs.next()) {
+                System.out.println("🚨 أنا متصل حالياً بقاعدة البيانات: " + rs.getString(1));
             }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                telecharger.setBackground(perpul);
-            }
+        } catch (Exception e) { e.printStackTrace(); }
+        if(!students.isEmpty()){
+            myPan.setPreferredSize(new Dimension(784, students.size() * 30 + 140));
             
-        });
-        btnDownload.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Choisir l'emplacement de sauvegarde");
-            
-            fileChooser.setSelectedFile(new File((CourChoisse.getText() + cours.get(findIndex(CourChoisse.getText()))[2]+ cours.get(findIndex(CourChoisse.getText()))[3]).replace(" ", "") + Text +  ".csv"));
 
-            int userSelection = fileChooser.showSaveDialog(null);
-
-            if (userSelection == JFileChooser.APPROVE_OPTION) {
-                
-                File fileToSave = fileChooser.getSelectedFile();
-                String path = fileToSave.getAbsolutePath();
-
-                if (!path.toLowerCase().endsWith(".csv")) {
-                    path += ".csv";
+            JButton btnDownload = new JButton();
+            btnDownload.setBounds(130 , 15 , 240 , 25);
+            btnDownload.setOpaque(false);
+            btnDownload.setContentAreaFilled(false);
+            btnDownload.setBorderPainted(false);
+            btnDownload.setFocusPainted(false);
+            btnDownload.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            btnDownload.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    telecharger.setBackground(grey);
                 }
 
-                saveToCSV(students, path);
-            }
-        });
-        myPan.add(btnDownload);
-        //-------------------------------------------
-        JButton btnUploadList = new JButton();
-        btnUploadList.setBounds(380, 15, 240, 25); // بلاصة جديدة
-        btnUploadList.setOpaque(false);
-        btnUploadList.setContentAreaFilled(false);
-        btnUploadList.setBorderPainted(false);
-        btnUploadList.setFocusPainted(false);
-        btnUploadList.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnUploadList.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                importer.setBackground(grey);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                importer.setBackground(perpul);
-            }
-            
-        });
-        btnUploadList.addActionListener(e -> {
-            JFileChooser chooser = new JFileChooser();
-            chooser.setDialogTitle("Choisir la liste des étudiants (CSV)");
-            
-            int result = chooser.showOpenDialog(null);
-            
-            if (result == JFileChooser.APPROVE_OPTION) {
-                File file = chooser.getSelectedFile();
-                
-                loadStudentsToArrayList(file);
-                
-                System.out.println("List Size: " + importedStudents.size());
-                for (String[] elem : importedStudents) {
-                        System.err.println(elem[0] + " "+ elem[2]);
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    telecharger.setBackground(perpul);
                 }
-                changeMarks();
-            
-            }
-        });
-        myPan.add(btnUploadList);
-
-
-         telecharger =  Functions.createCustomLabelWithBorder("Telecharger la list", 130, 15, 240, 25, 5, 5, 5, 5, perpul);
-        myPan.add(telecharger);
-         importer =  Functions.createCustomLabelWithBorder("Import la list des note", 380, 15, 240, 25, 5, 5, 5, 5, perpul);
-        myPan.add(importer);
-
-        myPan.add(Functions.createCustomLabelWithBorder("Nom Complet", 130, 70, 200, 25, 5, 5, 5, 5, col));
-        myPan.add(Functions.createCustomLabelWithBorder("CNE", 360, 70, 150, 25, 5, 5, 5, 5, col));
-        myPan.add(Functions.createCustomLabelWithBorder("La Note", 540, 70, 80, 25, 5, 5, 5, 5, col));
-
-        listOfNotes.clear();
-        for (int i = 0; i < students.size(); i++) {
-            JLabel fullName = Functions.createCustomLabelWithBorder(students.get(i)[0] + " " + students.get(i)[1], 130, 100 + 30 * i, 200, 25, 5, 5, 5, 5, new Color(204, 255, 255));
-            fullName.setForeground(new Color(0, 0, 102));
-
-            JLabel cne = Functions.createCustomLabelWithBorder(students.get(i)[2], 360, 100 + 30 * i, 150, 25, 5, 5, 5, 5, new Color(204, 255, 255));
-            cne.setForeground(new Color(0, 0, 102));
-
-            JLabel cader = Functions.createCustomLabelWithBorder("", 540, 100 + 30 * i, 80, 25, 5, 5, 5, 5, new Color(204, 255, 255));
-
-            JTextField mark = new JTextField("00.00");
-            mark.setBounds(540, 100 + 30 * i, 80, 25);
-            mark.setHorizontalAlignment(JTextField.CENTER);
-            mark.setFont(new Font("Arial", Font.BOLD, 12));
-            mark.setForeground(new Color(0, 0, 102));
-            mark.setOpaque(false);
-            mark.setBorder(null);
-            Runnable checkColor = () -> {
-                if (mark.getText().equals("00.00")) {
-                    mark.setForeground(Color.RED); 
-                } else {
-                    mark.setForeground(new Color(0, 0, 102));
-                }
-            };
-            ((AbstractDocument) mark.getDocument()).setDocumentFilter(new MarkFilter());
-            checkColor.run();
-            mark.getDocument().addDocumentListener(new DocumentListener() {
-                @Override
-                public void insertUpdate(DocumentEvent e) { checkColor.run(); }
-                @Override
-                public void removeUpdate(DocumentEvent e) { checkColor.run(); }
-                @Override
-                public void changedUpdate(DocumentEvent e) { checkColor.run(); }
+                
             });
-            listOfNotes.add(mark);
-            myPan.add(fullName);
-            myPan.add(cne);
-            myPan.add(mark);
-            myPan.add(cader);
+            btnDownload.addActionListener(e -> {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Choisir l'emplacement de sauvegarde");
+                
+                fileChooser.setSelectedFile(new File((CourChoisse.getText() + cours.get(findIndex(CourChoisse.getText()))[2]+ cours.get(findIndex(CourChoisse.getText()))[3]).replace(" ", "") + Text +  ".csv"));
+
+                int userSelection = fileChooser.showSaveDialog(null);
+
+                if (userSelection == JFileChooser.APPROVE_OPTION) {
+                    
+                    File fileToSave = fileChooser.getSelectedFile();
+                    String path = fileToSave.getAbsolutePath();
+
+                    if (!path.toLowerCase().endsWith(".csv")) {
+                        path += ".csv";
+                    }
+
+                    saveToCSV(students, path);
+                }
+            });
+            myPan.add(btnDownload);
+            //-------------------------------------------
+            JButton btnUploadList = new JButton();
+            btnUploadList.setBounds(380, 15, 240, 25); // بلاصة جديدة
+            btnUploadList.setOpaque(false);
+            btnUploadList.setContentAreaFilled(false);
+            btnUploadList.setBorderPainted(false);
+            btnUploadList.setFocusPainted(false);
+            btnUploadList.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            btnUploadList.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    importer.setBackground(grey);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    importer.setBackground(perpul);
+                }
+                
+            });
+            btnUploadList.addActionListener(e -> {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setDialogTitle("Choisir la liste des étudiants (CSV)");
+                
+                int result = chooser.showOpenDialog(null);
+                
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File file = chooser.getSelectedFile();
+                    
+                    loadStudentsToArrayList(file);
+                    
+                    System.out.println("List Size: " + importedStudents.size());
+                    for (String[] elem : importedStudents) {
+                            System.err.println(elem[0] + " "+ elem[2]);
+                    }
+                    changeMarks();
+                
+                }
+            });
+            myPan.add(btnUploadList);
+
+
+            telecharger =  Functions.createCustomLabelWithBorder("Telecharger la list", 130, 15, 240, 25, 5, 5, 5, 5, perpul);
+            myPan.add(telecharger);
+            importer =  Functions.createCustomLabelWithBorder("Import la list des note", 380, 15, 240, 25, 5, 5, 5, 5, perpul);
+            myPan.add(importer);
+
+            myPan.add(Functions.createCustomLabelWithBorder("Nom Complet", 130, 70, 200, 25, 5, 5, 5, 5, col));
+            myPan.add(Functions.createCustomLabelWithBorder("CNE", 360, 70, 150, 25, 5, 5, 5, 5, col));
+            myPan.add(Functions.createCustomLabelWithBorder("La Note", 540, 70, 80, 25, 5, 5, 5, 5, col));
+
+            listOfNotes.clear();
+            int i ;
+            for (i = 0; i < students.size(); i++) {
+                JLabel fullName = Functions.createCustomLabelWithBorder(students.get(i)[0] + " " + students.get(i)[1], 130, 100 + 30 * i, 200, 25, 5, 5, 5, 5, new Color(204, 255, 255));
+                fullName.setForeground(new Color(0, 0, 102));
+
+                JLabel cne = Functions.createCustomLabelWithBorder(students.get(i)[2], 360, 100 + 30 * i, 150, 25, 5, 5, 5, 5, new Color(204, 255, 255));
+                cne.setForeground(new Color(0, 0, 102));
+
+                JLabel cader = Functions.createCustomLabelWithBorder("", 540, 100 + 30 * i, 80, 25, 5, 5, 5, 5, new Color(204, 255, 255));
+
+
+                JTextField mark = new JTextField(getMark(students.get(i)[2], CourChoisse.getText()));
+                mark.setBounds(540, 100 + 30 * i, 80, 25);
+                mark.setHorizontalAlignment(JTextField.CENTER);
+                mark.setFont(new Font("Arial", Font.BOLD, 12));
+                mark.setForeground(new Color(0, 0, 102)); 
+                mark.setOpaque(false);
+                mark.setBorder(null);
+
+                Runnable checkColor = () -> {
+                    String text = mark.getText().replace(".", "").replace("0", "").trim();
+                    if (text.isEmpty()) {
+                        mark.setForeground(Color.RED); 
+                    } else {
+                        mark.setForeground(new Color(0, 0, 102));
+                    }
+                };
+
+                ((AbstractDocument) mark.getDocument()).setDocumentFilter(new MarkFilter());
+
+                mark.getDocument().addDocumentListener(new DocumentListener() {
+                    @Override
+                    public void insertUpdate(DocumentEvent e) { checkColor.run(); }
+                    @Override
+                    public void removeUpdate(DocumentEvent e) { checkColor.run(); }
+                    @Override
+                    public void changedUpdate(DocumentEvent e) { checkColor.run(); }
+                });
+
+                mark.addFocusListener(new java.awt.event.FocusAdapter() {
+                    @Override
+                    public void focusGained(java.awt.event.FocusEvent e) {
+                        if (mark.getText().equals("00.00")) {
+                            mark.setText("");
+                        }
+                    }
+
+                    @Override
+                    public void focusLost(java.awt.event.FocusEvent e) {
+                        if (mark.getText().trim().isEmpty()) {
+                            mark.setText("00.00");
+                            checkColor.run();
+                        }
+                    }
+                });
+                checkColor.run();
+                listOfNotes.add(mark);
+
+                myPan.add(fullName);
+                myPan.add(cne);
+                myPan.add(mark);
+                myPan.add(cader);
+            }
+
+            JButton Confirm = new JButton();
+            Confirm.setBounds(130 ,110 + 30 * i , 490 , 25 );
+            Confirm.setOpaque(false);
+            Confirm.setContentAreaFilled(false);
+            Confirm.setBorderPainted(false);
+            Confirm.setFocusPainted(false);
+            Confirm.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            Confirm.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    Confirm_cader.setBackground(grey);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    Confirm_cader.setBackground(perpul);
+                }
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent e) {
+                    // إظهار نافذة التأكيد
+                    int reponse = JOptionPane.showConfirmDialog(null, 
+                            "Voulez-vous vraiment enregistrer les notes ?", 
+                            "Confirmation", 
+                            JOptionPane.YES_NO_OPTION, // أزرار نعم / لا
+                            JOptionPane.QUESTION_MESSAGE);
+
+                    // إذا ضغط المستخدم على Yes
+                    if (reponse == JOptionPane.YES_OPTION) {
+                        saveMarks(); // استدعاء دالة الحفظ التي أنشأناها سابقاً
+                    }
+                }
+            });
+
+            myPan.add(Confirm);
+
+            Confirm_cader = Functions.createCustomLabelWithBorder("Confirmé", 130 , 110 + 30 * i , 490 , 25, 5, 5, 5,5, perpul);
+            myPan.add(Confirm_cader);
+        }else{
+            JLabel text = Functions.creetLabel(200, 70, "Actuellement indisponible");
+            text.setFont(new Font("Arieal" , Font.BOLD , 30));
+            text.setBounds(210 , 70 ,  600 , 50);
+            myPan.add(text);
         }
+
+
         return myPan;
     }
 
@@ -454,6 +614,7 @@ public class Enseignant_notes extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
+                  Text = "Normal";
                     students.clear();
                     students = getListOfStudent(CourChoisse.getText() , true);
                     changeContent(fillPanel());
@@ -463,7 +624,7 @@ public class Enseignant_notes extends JPanel {
                     rat.setBackground(lightBleu);
                     norColor = perpul;
                     ratColor = lightBleu;
-                    Text = "Normal";
+                    
             }
         });
         nor.setVisible(false);
@@ -493,6 +654,7 @@ public class Enseignant_notes extends JPanel {
             }
             @Override
             public void mouseClicked(MouseEvent e) {
+                    Text = "Rattrappage";
                     students.clear();
                     students = getListOfStudent(CourChoisse.getText() , false);
                     changeContent(fillPanel());
@@ -502,7 +664,7 @@ public class Enseignant_notes extends JPanel {
                     nor.setBackground(lightBleu);
                     ratColor = perpul;
                     norColor = lightBleu;
-                    Text = "Rattrappage";
+                    
             }
         });
         rat.setVisible(false);

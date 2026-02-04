@@ -8,18 +8,22 @@ public class Connexion {
     private static Connection con = null;
 
     public static Connection getConnexion() {
-        if (con == null) {
-            try {
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                String url = "jdbc:mysql://localhost:3306/project_nqaty?serverTimezone=UTC";
-                String user = "root";
-                String password = "YASSine2002@";
+    // 1. هاد try كتحمي الكود كامل
+    try {
+        // con.isClosed() كتقدر دير Error، ولكن بما أنها وسط try، فهي محمية
+        if (con == null || con.isClosed()) { 
+            
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String url = "jdbc:mysql://localhost:3306/project_nqaty?serverTimezone=UTC";
+            String user = "root";
+            String password = "YASSine2002@";
 
-                con = DriverManager.getConnection(url, user, password);
-                System.out.println("Connexion réussie avec MySQL 9.x !");
-            } catch (ClassNotFoundException | SQLException e) {
-                System.out.println("Erreur de connexion : " + e.getMessage());
-            }
+            con = DriverManager.getConnection(url, user, password);
+            System.out.println("✅ Connexion (ré)ouverte avec succès !");
+        }
+        } catch (ClassNotFoundException | SQLException e) {
+            // 2. هاد catch هي اللي كتشد الخطأ إلا وقع (سواء فـ isClosed أو getConnection)
+            System.out.println("❌ Erreur de connexion : " + e.getMessage());
         }
         
         return con;

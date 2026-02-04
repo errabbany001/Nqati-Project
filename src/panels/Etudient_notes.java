@@ -114,7 +114,7 @@ public final class Etudient_notes extends JPanel {
     //==================================================================================================================================================
     //==================================================================================================================================================
 
-    public Note getMark(String cne, String idCour) {
+    public  Note getMark(String cne, String idCour) {
         Note no = new Note(); 
         Connection con = Connexion.getCon();
         
