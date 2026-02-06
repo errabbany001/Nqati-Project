@@ -1,6 +1,15 @@
 package element;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
+import tools.Connexion;
+import tools.Session;
 
 public class Etudiant {
     private String cne;
@@ -15,6 +24,7 @@ public class Etudiant {
     private String etu_class;
     private ArrayList<ArrayList<Note>> notes = new ArrayList<>();
     private ArrayList<Double> semsterNotes = new ArrayList<>();
+    
 
     public Etudiant() {
     }
@@ -29,6 +39,7 @@ public class Etudiant {
         this.filier = filier;
         this.niveau = niveau;
         this.semester = semester;
+        Session.setTheProfil(this.cne);
     }
 
 
@@ -46,7 +57,10 @@ public class Etudiant {
         this.filier = filier;
         this.niveau = niveau;
         this.semester = semester;
+        Session.setTheProfil(this.cne);
     }
+
+
 
 public void notesCheck() {
     semsterNotes.clear();
@@ -96,6 +110,7 @@ public void notesCheck() {
 
     public void setCne(String cne) {
         this.cne = cne;
+        Session.setTheProfil(this.cne);
     }
 
     public String getNom() {
@@ -204,6 +219,8 @@ public void notesCheck() {
         text += "size = " + notes.size();
         return text;
     }
+
+
     
 
 

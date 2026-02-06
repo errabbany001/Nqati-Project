@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -535,7 +536,7 @@ public class Enseignant_notes extends JPanel {
         }
 
         // Affichage du profil
-        JLabel profilIconMini = new JLabel(Etudient_profil.icon_2);
+        JLabel profilIconMini = new JLabel(new ImageIcon(Session.photo.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
         profilIconMini.setBounds(920, 48, 40, 40);
         this.add(profilIconMini);
 

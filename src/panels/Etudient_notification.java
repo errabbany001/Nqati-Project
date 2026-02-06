@@ -21,7 +21,6 @@ import tools.Functions;
 import tools.ScrollBarUI;
 import tools.Navigation;
 import tools.Session;
-import tools.Resources;
 
 public final class Etudient_notification extends JPanel {
 
@@ -33,7 +32,7 @@ public final class Etudient_notification extends JPanel {
     private ImageIcon net_new = new ImageIcon(new ImageIcon("data/netification_new.png").getImage().getScaledInstance(12, 12, Image.SCALE_SMOOTH));
     private ImageIcon delt = new ImageIcon(new ImageIcon("data/delete.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
     
-    private static ArrayList<String[]> notificationList = new ArrayList<>();
+    private ArrayList<String[]> notificationList = new ArrayList<>();
     private ArrayList<JLabel> readCheck = new ArrayList<>();
     private ArrayList<JLabel> caders = new ArrayList<>();
     private JLabel netifica_text , cdr;
@@ -99,7 +98,9 @@ public final class Etudient_notification extends JPanel {
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.addActionListener(e -> {
             if (index >= 0 && index < notificationList.size()) {
+                Functions.DropLine(true, notificationList.get(index)[3]);
                 notificationList.remove(index);
+                
             }
             rebuildNotifications(pan);
             pan.revalidate();
@@ -120,7 +121,8 @@ public final class Etudient_notification extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (index >= 0 && index < notificationList.size()) {
-                    notificationList.get(index)[2] = "readed";
+                    notificationList.get(index)[2] = "old";
+                    Functions.makeMessageOld(true, notificationList.get(index)[3]);
                     if (index >= 0 && index < readCheck.size()) {
                         readCheck.get(index).setVisible(false);
                     }
@@ -162,7 +164,7 @@ public final class Etudient_notification extends JPanel {
         this.setLayout(null); 
 
         // Affichage des informations de l'utilisateur (icône et nom)
-        JLabel profilIconMini = new JLabel(Etudient_profil.icon_2);
+        JLabel profilIconMini = new JLabel(new ImageIcon(Session.photo.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
         profilIconMini.setBounds(920,48 , 40, 40);
         this.add(profilIconMini);
     
@@ -172,17 +174,9 @@ public final class Etudient_notification extends JPanel {
 
         // Simulation de la base de données des notifications pour l'étudiant
         if(notificationList.isEmpty()) { 
-            notificationList.add(new String[]{"Emploi du temps", "Le planning détaillé des examens...", "new"});
-            notificationList.add(new String[]{"Bibliothèque", "Rappel : Le livre 'Java Programming' arrive à échéance...", "new"});
-            notificationList.add(new String[]{"Administration", "Votre demande de relevé de notes a été traitée...", "new"});
-            notificationList.add(new String[]{"Absence Professeur", "Le cours de M. Alami est annulé...", "new"});
-            notificationList.add(new String[]{"Bourse Universitaire", "Le virement de la bourse 'Minhaty' a été effectué...", "new"});
-            notificationList.add(new String[]{"Club Informatique", "Grande réunion de lancement pour le projet 'Nqati' !...", "new"});
-            notificationList.add(new String[]{"Maintenance Serveur", "Le site web sera inaccessible ce soir...", "new"});
-            notificationList.add(new String[]{"Note Disponible", "La note finale du module 'Structures de Données' est affichée...", "new"});
+            notificationList = Functions.getListOfNotifications(true, Session.getEtudiant().getCne());
         }
         numNet = notificationList.size();
-
         Color perpul = new Color(87, 107, 194);
 
         // Zone de texte détaillée pour l'affichage d'une notification sélectionnée

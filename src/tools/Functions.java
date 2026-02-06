@@ -18,6 +18,7 @@ import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.regex.Pattern;
 
@@ -363,5 +364,54 @@ public class Functions {
         }
 
         return false;
+    }
+
+    public static ArrayList<String[]> getListOfNotifications(boolean type , String id_user){
+        ArrayList<String[]> thelist = new ArrayList<>();
+        String sql1 = "SELECT titre, message , statu, id_not_etu FROM notification_etudiant where id_etudiant = ? ;";
+        String sql2 = "SELECT titre, message , statu, id_not_ens FROM notification_enseignant where id_enseignant = ? ;";
+        String sql = (type) ? sql1 : sql2;
+
+        Connection con = Connexion.getConnexion();
+        try(PreparedStatement pr = con.prepareStatement(sql)) {
+            pr.setString(1, id_user);
+            try(ResultSet rs = pr.executeQuery()) {
+                while(rs.next()){
+                    thelist.add(new String[] { rs.getString(1) , rs.getString(2) , rs.getString(3) , rs.getString(4)});
+                }
+            } catch (Exception e) {
+                System.err.println("Erur: " + e.getMessage());
+            }
+
+        } catch (Exception e) {
+            System.err.println("Erur: " + e.getMessage());
+        }
+        return thelist;
+    }
+    public static void makeMessageOld(boolean type , String id_not){
+        String sql1 = "UPDATE notification_etudiant SET statu = 'old' WHERE id_not_etu = ? ;";
+        String sql2 = "UPDATE notification_enseignant SET statu = 'old' WHERE id_not_ens = ? ;";
+        String sql  = type ? sql1 : sql2;
+        Connection con = Connexion.getConnexion();
+
+        try(PreparedStatement pr = con.prepareStatement(sql)) {
+            pr.setString(1,id_not );
+            int i = pr.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public static void DropLine(boolean type , String id_not){
+        String sql1 = "DELETE FROM notification_etudiant WHERE id_not_etu = ? ;";
+        String sql2 = "DELETE FROM notification_enseignant WHERE id_not_ens = ? ;";
+        String sql  = type ? sql1 : sql2;
+        Connection con = Connexion.getConnexion();
+
+        try(PreparedStatement pr = con.prepareStatement(sql)) {
+            pr.setString(1,id_not );
+            int i = pr.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

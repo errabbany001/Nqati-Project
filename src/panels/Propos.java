@@ -8,16 +8,16 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
 import tools.Functions;
-import tools.ScrollBarUI;
 import tools.Navigation;
-import tools.Session;
 import tools.Resources;
+import tools.ScrollBarUI;
+import tools.Session;
 
 public final class Propos extends JPanel {
 
@@ -34,7 +34,7 @@ public final class Propos extends JPanel {
         this.setLayout(null);
 
         // Affichage conditionnel des informations de profil utilisateur (icône et nom)
-        JLabel profilIconMini = new JLabel(Etudient_profil.icon_2);
+        JLabel profilIconMini = new JLabel(new ImageIcon(Session.photo.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
         profilIconMini.setBounds(920, 48, 40, 40);
         this.add(profilIconMini);
     

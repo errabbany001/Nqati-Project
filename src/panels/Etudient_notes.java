@@ -1,6 +1,5 @@
 package panels;
 
-import element.Note;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -13,10 +12,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import element.Note;
 import tools.Connexion;
 import tools.Functions;
 import tools.Navigation;
@@ -54,7 +56,7 @@ public final class Etudient_notes extends JPanel {
         semsInfo.clear();
         codes.clear();
         Session.getEtudiant().getNotes().clear();
-        Connection con = Connexion.getCon();
+        Connection con = Connexion.getConnexion();
 
         String sql1 = "SELECT nom_semester FROM etudiant e " +
                     "JOIN class s ON s.id_class = e.id_class " +
@@ -116,7 +118,7 @@ public final class Etudient_notes extends JPanel {
 
     public  Note getMark(String cne, String idCour) {
         Note no = new Note(); 
-        Connection con = Connexion.getCon();
+        Connection con = Connexion.getConnexion();
         
         String sql = "SELECT note_normal, note_rattrapage FROM note " +
                     "WHERE id_etudiant = ? AND id_cour = ?";
@@ -355,7 +357,7 @@ public final class Etudient_notes extends JPanel {
 
         
         // Affichage des informations de profil et configuration du layout
-        JLabel profilIconMini = new JLabel(Etudient_profil.icon_2);
+        JLabel profilIconMini = new JLabel(new ImageIcon(Session.photo.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
         profilIconMini.setBounds(920, 48, 40, 40);
         this.add(profilIconMini);
     

@@ -15,7 +15,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -56,7 +55,7 @@ public final class LoginEnseignant extends JPanel{
 
 
     public Enseignant getTheTeacher(  String ens_mail){
-        Connection con = Connexion.getCon();
+        Connection con = Connexion.getConnexion();
         Enseignant enseignant = new Enseignant();
         enseignant.setEmail(ens_mail);
 

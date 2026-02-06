@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -20,6 +21,7 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+
 import tools.Functions;
 import tools.Navigation;
 import tools.ScrollBarUI;
@@ -29,25 +31,25 @@ public final class Contact extends JPanel {
 
     // Déclaration et redimensionnement des icônes et des ressources d'interface
     private Image backgroundImage;
-    private ImageIcon cdr1 = new ImageIcon(new ImageIcon("data/contact_cader_1.png").getImage().getScaledInstance(200, 75, Image.SCALE_SMOOTH));
-    private ImageIcon inp1 = new ImageIcon(new ImageIcon("data/contact_input1.png").getImage().getScaledInstance(150, 31, Image.SCALE_SMOOTH));
-    private ImageIcon inp2 = new ImageIcon(new ImageIcon("data/contact_input2.png").getImage().getScaledInstance(200, 31, Image.SCALE_SMOOTH));
-    private ImageIcon inp3 = new ImageIcon(new ImageIcon("data/contact_input3.png").getImage().getScaledInstance(365, 31, Image.SCALE_SMOOTH));
-    private ImageIcon inp4 = new ImageIcon(new ImageIcon("data/contact_input4.png").getImage().getScaledInstance(365, 156, Image.SCALE_SMOOTH));
-    private ImageIcon env1 = new ImageIcon(new ImageIcon("data/envoyer_1.png").getImage().getScaledInstance(365, 31, Image.SCALE_SMOOTH));
-    private ImageIcon env2 = new ImageIcon(new ImageIcon("data/envoyer_2.png").getImage().getScaledInstance(365, 31, Image.SCALE_SMOOTH));
-    private ImageIcon mail = new ImageIcon(new ImageIcon("data/mail.png").getImage().getScaledInstance(30, 18, Image.SCALE_SMOOTH));
-    private ImageIcon phone = new ImageIcon(new ImageIcon("data/phone.png").getImage().getScaledInstance(30, 18, Image.SCALE_SMOOTH));
-    private ImageIcon localisation = new ImageIcon(new ImageIcon("data/localisation.png").getImage().getScaledInstance(30, 18, Image.SCALE_SMOOTH));
+    public static ImageIcon cdr1 = new ImageIcon(new ImageIcon("data/contact_cader_1.png").getImage().getScaledInstance(200, 75, Image.SCALE_SMOOTH));
+    public static ImageIcon inp1 = new ImageIcon(new ImageIcon("data/contact_input1.png").getImage().getScaledInstance(150, 31, Image.SCALE_SMOOTH));
+    public static ImageIcon inp2 = new ImageIcon(new ImageIcon("data/contact_input2.png").getImage().getScaledInstance(200, 31, Image.SCALE_SMOOTH));
+    public static ImageIcon inp3 = new ImageIcon(new ImageIcon("data/contact_input3.png").getImage().getScaledInstance(365, 31, Image.SCALE_SMOOTH));
+    public static ImageIcon inp4 = new ImageIcon(new ImageIcon("data/contact_input4.png").getImage().getScaledInstance(365, 156, Image.SCALE_SMOOTH));
+    public static ImageIcon env1 = new ImageIcon(new ImageIcon("data/envoyer_1.png").getImage().getScaledInstance(365, 31, Image.SCALE_SMOOTH));
+    public static ImageIcon env2 = new ImageIcon(new ImageIcon("data/envoyer_2.png").getImage().getScaledInstance(365, 31, Image.SCALE_SMOOTH));
+    public static ImageIcon mail = new ImageIcon(new ImageIcon("data/mail.png").getImage().getScaledInstance(30, 18, Image.SCALE_SMOOTH));
+    public static ImageIcon phone = new ImageIcon(new ImageIcon("data/phone.png").getImage().getScaledInstance(30, 18, Image.SCALE_SMOOTH));
+    public static ImageIcon localisation = new ImageIcon(new ImageIcon("data/localisation.png").getImage().getScaledInstance(30, 18, Image.SCALE_SMOOTH));
 
     // Méthodes utilitaires pour la création rapide de composants graphiques personnalisés
-    private JLabel cretInpCad(ImageIcon cader, int x, int y, int l, int h) {
+    public static  JLabel cretInpCad(ImageIcon cader, int x, int y, int l, int h) {
         JLabel inpCad1 = new JLabel(cader);
         inpCad1.setBounds(x, y, l, h);
         return inpCad1;
     }
 
-    private JTextField cretInp(int x, int y, int l, int h) {
+    public static JTextField cretInp(int x, int y, int l, int h) {
         JTextField InPut = new JTextField();
         InPut.setBounds(x, y, l, h);
         InPut.setOpaque(false);
@@ -57,7 +59,7 @@ public final class Contact extends JPanel {
         return InPut;
     }
 
-    private JLabel cretText(String text, int x, int y) {
+    public static JLabel cretText(String text, int x, int y) {
         JLabel myText = new JLabel(text);
         myText.setBounds(x, y, 200, 20);
         myText.setFont(Functions.getMyFont("", Font.BOLD, 15f));
@@ -92,7 +94,7 @@ public final class Contact extends JPanel {
         this.setLayout(null);
 
         // Affichage conditionnel des informations de profil utilisateur si connecté
-        JLabel profilIconMini = new JLabel(Etudient_profil.icon_2);
+        JLabel profilIconMini = new JLabel(new ImageIcon(Session.photo.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
         profilIconMini.setBounds(920, 48, 40, 40);
         this.add(profilIconMini);
 

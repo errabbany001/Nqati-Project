@@ -1,6 +1,5 @@
 package panels;
 
-import element.Etudiant;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -14,6 +13,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,6 +23,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+
+import element.Etudiant;
 import tools.Connexion;
 import tools.Functions;
 import tools.Navigation;
@@ -54,7 +56,7 @@ public final class LoginEtudient extends JPanel {
 
 
     public Etudiant getTheStudent(  String cne){
-        Connection con = Connexion.getCon();
+        
         Etudiant etudiant = new Etudiant();
         etudiant.setCne(cne);
 
@@ -66,8 +68,7 @@ public final class LoginEtudient extends JPanel {
                         "where Cne = ? ";
 
 
-
-        try(PreparedStatement ps = con.prepareStatement(sql)) {
+        try(Connection con = Connexion.getConnexion() ; PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, cne);
 
             try (ResultSet rs = ps.executeQuery()){
@@ -99,12 +100,12 @@ public final class LoginEtudient extends JPanel {
 
     public String getStudentCne( String email){
        
-        Connection con = Connexion.getCon();
+        
         String sql  = "select cne from etudiant where email = ?";
 
 
 
-        try(PreparedStatement ps = con.prepareStatement(sql)) {
+        try(Connection con = Connexion.getConnexion(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, email);
 
             try (ResultSet rs = ps.executeQuery()){

@@ -4,11 +4,14 @@ import panels.Accueil;
 import panels.Contact;
 import panels.Propos;
 import tools.Connexion;
+import tools.Session;
 
 public class Main {
 
     public static void main(String[] args) {
-
+ 
+        Session s = new Session();
+        Session.setTheProfil("");
         Propos p = new Propos();
         Contact c = new Contact();
         Connection con = Connexion.getConnexion();

@@ -33,7 +33,7 @@ public class Enseignant_notification extends JPanel {
     private ImageIcon net_new = new ImageIcon(new ImageIcon("data/netification_new.png").getImage().getScaledInstance(12, 12, Image.SCALE_SMOOTH));
     private ImageIcon delt = new ImageIcon(new ImageIcon("data/delete.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
     
-    private static ArrayList<String[]> notificationList = new ArrayList<>();
+    private ArrayList<String[]> notificationList = new ArrayList<>();
     private ArrayList<JLabel> readCheck = new ArrayList<>();
     private ArrayList<JLabel> caders = new ArrayList<>();
     private JLabel netifica_text, cdr;
@@ -99,6 +99,7 @@ public class Enseignant_notification extends JPanel {
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.addActionListener(e -> {
             if (index >= 0 && index < notificationList.size()) {
+                Functions.DropLine(false, notificationList.get(index)[3]);
                 notificationList.remove(index);
             }
             rebuildNotifications(pan);
@@ -120,7 +121,8 @@ public class Enseignant_notification extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (index >= 0 && index < notificationList.size()) {
-                    notificationList.get(index)[2] = "readed";
+                    notificationList.get(index)[2] = "old";
+                    Functions.makeMessageOld(true, notificationList.get(index)[3]);
                     if (index >= 0 && index < readCheck.size()) {
                         readCheck.get(index).setVisible(false);
                     }
@@ -170,14 +172,7 @@ public class Enseignant_notification extends JPanel {
       
         // Génération des données de notification fictives pour le corps enseignant
         if (notificationList.isEmpty()) { 
-            notificationList.add(new String[]{"Saisie des Notes", "Rappel : La date limite pour la saisie des notes du module 'Algorithmique Avancée'...", "new"});
-            notificationList.add(new String[]{"Réunion Département", "Le Chef de Département Informatique vous convie à la réunion mensuelle...", "new"});
-            notificationList.add(new String[]{"Encadrement PFE", "La liste préliminaire des étudiants affectés à votre encadrement pour les PFE...", "new"});
-            notificationList.add(new String[]{"Changement de Salle", "En raison d'une panne de projecteur en Amphi B, votre cours de demain est déplacé...", "new"});
-            notificationList.add(new String[]{"Situation Administrative", "Votre demande d'attestation de travail a été traitée par le service RH.", "new"});
-            notificationList.add(new String[]{"Planning Surveillances", "Le planning des surveillances pour les examens de rattrapage est en ligne.", "new"});
-            notificationList.add(new String[]{"Conférence Smart-Tech", "L'université organise la 3ème édition de la conférence sur l'IA et l'IoT.", "new"});
-            notificationList.add(new String[]{"Maintenance Moodle", "Attention : La plateforme e-learning (Moodle) sera en maintenance ce week-end.", "new"});
+          notificationList = Functions.getListOfNotifications(false, Session.getEtudiant().getCne());
         }
         numNet = notificationList.size();
         Color perpul = new Color(87, 107, 194);

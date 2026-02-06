@@ -63,11 +63,11 @@ public final class Etudient_profil extends JPanel {
         Color perpul = new Color(87, 107, 194);
 
         // Ajout des photos de profil (principale et miniature de la barre supérieure)
-        JLabel profilIcon = new JLabel(icon_1);
+        JLabel profilIcon = new JLabel(new ImageIcon(Session.photo.getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
         profilIcon.setBounds(250, 215, 150, 150);
         this.add(profilIcon);
 
-        JLabel profilIconMini = new JLabel(icon_2);
+        JLabel profilIconMini = new JLabel(new ImageIcon(Session.photo.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
         profilIconMini.setBounds(920, 48, 40, 40);
         this.add(profilIconMini);
 

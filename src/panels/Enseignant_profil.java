@@ -65,7 +65,7 @@ public class Enseignant_profil extends JPanel {
         profilIcon.setBounds(274, 215, 150, 150);
         this.add(profilIcon);
 
-        JLabel profilIconMini = new JLabel(icon_2);
+        JLabel profilIconMini = new JLabel(new ImageIcon(Session.photo.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
         profilIconMini.setBounds(920, 48, 40, 40);
         this.add(profilIconMini);
 
