@@ -153,10 +153,13 @@ public class Functions {
             switch (target.toLowerCase()) {
                 case "notes_etd": nextPanel = new Etudient_notes(); break;
                 case "notes_ens": nextPanel = new Enseignant_notes(); break;
+
                 case "profil_etd": nextPanel = new Etudient_profil(); break;
                 case "profil_ens": nextPanel = new Enseignant_profil(); break;
+
                 case "settings_etd": nextPanel = new Etudient_settings(); break;
                 case "settings_ens": nextPanel = new Enseignant_settings(); break;
+
                 case "notification_etd": nextPanel = new Etudient_notification(); break;
                 case "notification_ens": nextPanel = new Enseignant_notification(); break;
             }
@@ -164,7 +167,10 @@ public class Functions {
             if (nextPanel != null) {
                 frame.setContentPane(nextPanel);
                 frame.revalidate(); 
-                frame.repaint();   
+                frame.repaint();     
+               
+            }else{
+                System.out.print("Erure");
             }
         });
 
@@ -372,8 +378,8 @@ public class Functions {
         String sql2 = "SELECT titre, message , statu, id_not_ens FROM notification_enseignant where id_enseignant = ? ;";
         String sql = (type) ? sql1 : sql2;
 
-        Connection con = Connexion.getConnexion();
-        try(PreparedStatement pr = con.prepareStatement(sql)) {
+        
+        try(Connection con = Connexion.getConnexion(); PreparedStatement pr = con.prepareStatement(sql)) {
             pr.setString(1, id_user);
             try(ResultSet rs = pr.executeQuery()) {
                 while(rs.next()){
@@ -392,9 +398,9 @@ public class Functions {
         String sql1 = "UPDATE notification_etudiant SET statu = 'old' WHERE id_not_etu = ? ;";
         String sql2 = "UPDATE notification_enseignant SET statu = 'old' WHERE id_not_ens = ? ;";
         String sql  = type ? sql1 : sql2;
-        Connection con = Connexion.getConnexion();
+        
 
-        try(PreparedStatement pr = con.prepareStatement(sql)) {
+        try(Connection con = Connexion.getConnexion();PreparedStatement pr = con.prepareStatement(sql)) {
             pr.setString(1,id_not );
             int i = pr.executeUpdate();
         } catch (Exception e) {
@@ -405,9 +411,9 @@ public class Functions {
         String sql1 = "DELETE FROM notification_etudiant WHERE id_not_etu = ? ;";
         String sql2 = "DELETE FROM notification_enseignant WHERE id_not_ens = ? ;";
         String sql  = type ? sql1 : sql2;
-        Connection con = Connexion.getConnexion();
+        
 
-        try(PreparedStatement pr = con.prepareStatement(sql)) {
+        try(Connection con = Connexion.getConnexion();PreparedStatement pr = con.prepareStatement(sql)) {
             pr.setString(1,id_not );
             int i = pr.executeUpdate();
         } catch (Exception e) {

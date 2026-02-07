@@ -61,7 +61,7 @@ public class Enseignant_profil extends JPanel {
         Session.userName = fullName;
 
         // Affichage des images de profil (avatar principal et icône de la barre supérieure)
-        JLabel profilIcon = new JLabel(icon_1);
+        JLabel profilIcon = new JLabel(new ImageIcon(Session.photo.getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
         profilIcon.setBounds(274, 215, 150, 150);
         this.add(profilIcon);
 

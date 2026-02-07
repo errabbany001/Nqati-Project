@@ -26,15 +26,18 @@ public class Session {
     private static Enseignant enseignant;
 
 
-    public static void setTheProfil(String cne) {
-        String sql = "SELECT photo_profil FROM etudiant WHERE cne = ?";
+    public static void setTheProfil(String id_ , boolean table) {
+        String sql1 = "SELECT photo_profil FROM etudiant WHERE cne = ?";
+        String sql2 = "SELECT photo_profil FROM enseignant WHERE id_enseignant = ?";
+        String sql = table ? sql1 : sql2;
+
         Session.photo = null; // Reset first
 
         // 1. Try to load from Database
         try (Connection conn = Connexion.getConnexion(); 
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
-            pstmt.setString(1, cne);
+            pstmt.setString(1, id_);
             
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -48,7 +51,7 @@ public class Session {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error loading from DB for CNE: " + cne);
+            System.err.println("Error loading from DB for id_: " + id_);
         }
 
         // 2. FALLBACK: If photo is still null, load default

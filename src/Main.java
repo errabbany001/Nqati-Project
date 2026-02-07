@@ -1,5 +1,7 @@
 import java.sql.Connection;
+
 import javax.swing.JFrame;
+
 import panels.Accueil;
 import panels.Contact;
 import panels.Propos;
@@ -11,7 +13,7 @@ public class Main {
     public static void main(String[] args) {
  
         Session s = new Session();
-        Session.setTheProfil("");
+        Session.setTheProfil("" , true);
         Propos p = new Propos();
         Contact c = new Contact();
         Connection con = Connexion.getConnexion();

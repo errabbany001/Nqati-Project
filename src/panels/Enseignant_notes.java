@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -32,6 +33,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
+
 import tools.Connexion;
 import tools.Functions;
 import tools.Navigation;
@@ -47,7 +49,6 @@ public class Enseignant_notes extends JPanel {
     private int switcher = 0;
     private String Text = "";
     private JScrollPane sp;
-    private JPanel conPan;
     private JButton CourChoisse;
     private Color col = new Color(77, 149, 247);
     private Color grey = new Color(122, 145, 176);
@@ -190,7 +191,7 @@ public class Enseignant_notes extends JPanel {
         JPanel myPan = new JPanel();
         myPan.setOpaque(false);
         myPan.setLayout(null);
-        // ضعه في أول سطر في fillPanel
+
         try (Connection con = Connexion.getConnexion();
             java.sql.Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT DATABASE()")) {
@@ -407,6 +408,7 @@ public class Enseignant_notes extends JPanel {
     }
 
     public void changeContent(JPanel newPan) {
+        sp.setVisible(true);
         sp.setViewportView(newPan);
         
         if (students.size() * 30 + 140 > 392) {
@@ -688,6 +690,9 @@ public class Enseignant_notes extends JPanel {
                     info.setText( "<html><div>"+lib.getText() + " : " + cours.get(idx)[1] + "<br>" + cours.get(idx)[2] + " : " + cours.get(idx)[3] + "-" + cours.get(idx)[4] + "</html></div>");
                     rat.setVisible(true);
                     nor.setVisible(true);
+                    sp.setVisible(false);
+                    rat.setBackground(lightBleu);
+                    nor.setBackground(lightBleu);
                 }
             });
             lib.setVisible(false);

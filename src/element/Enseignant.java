@@ -1,6 +1,7 @@
 package element;
 
 import java.util.ArrayList;
+import tools.Session;
 
 public class Enseignant {
     private String id_ens;
@@ -27,6 +28,7 @@ public class Enseignant {
         this.depatement = depatement;
         this.dateDeNaissance = dateDeNaissance;
         this.gener = gener;
+        Session.setTheProfil(id_ens, false);
     }
 
 
@@ -35,6 +37,7 @@ public class Enseignant {
     }
     public void setId_ens(String id_ens) {
         this.id_ens = id_ens;
+        Session.setTheProfil(id_ens, false);
     }
     public String getNom() {
         return nom;

@@ -172,7 +172,7 @@ public class Enseignant_notification extends JPanel {
       
         // Génération des données de notification fictives pour le corps enseignant
         if (notificationList.isEmpty()) { 
-          notificationList = Functions.getListOfNotifications(false, Session.getEtudiant().getCne());
+          notificationList = Functions.getListOfNotifications(false, Session.getEnseignant().getId_ens());
         }
         numNet = notificationList.size();
         Color perpul = new Color(87, 107, 194);

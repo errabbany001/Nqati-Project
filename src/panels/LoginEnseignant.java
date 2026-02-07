@@ -1,6 +1,5 @@
 package panels;
 
-import element.Enseignant;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -15,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -24,6 +24,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+
+import element.Enseignant;
 import tools.Connexion;
 import tools.Functions;
 import tools.Navigation;
@@ -54,41 +56,55 @@ public final class LoginEnseignant extends JPanel{
     }
 
 
-    public Enseignant getTheTeacher(  String ens_mail){
-        Connection con = Connexion.getConnexion();
-        Enseignant enseignant = new Enseignant();
-        enseignant.setEmail(ens_mail);
+   public Enseignant getTheTeacher(String ens_mail) {
+    Enseignant enseignant = new Enseignant();
+    enseignant.setEmail(ens_mail);
 
-        String sql  = "select id_enseignant ,nom , prenom , dateDeNaissance , genre, d.nom_departement from enseignant e " +
-                      "join departement d  on d.id_departement = e.id_departement "
-                      +"where email = ? ;";
+    String sql = "select id_enseignant, nom, prenom, dateDeNaissance, genre, d.nom_departement " +
+                 "from enseignant e " +
+                 "join departement d on d.id_departement = e.id_departement " +
+                 "where email = ?;";
 
+    try (Connection con = Connexion.getConnexion(); 
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        
+        ps.setString(1, ens_mail);
 
-
-        try(PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, ens_mail);
-
-            try (ResultSet rs = ps.executeQuery()){
-               if(rs.next()) {
-                    enseignant.setId_ens(rs.getString(1));
-                    enseignant.setNom(rs.getString(2));
-                    enseignant.setPrenom(rs.getString(3));
-                    enseignant.setDateDeNaissance(rs.getString(4));
-                    enseignant.setGener(rs.getString(5));
-                    enseignant.setDepatement(rs.getString(5));
-                    enseignant.setCours(getCours(rs.getString(1)));
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                // 1. Extract data to local variables FIRST (Before calling other queries)
+                String id = rs.getString(1);
+                String nom = rs.getString(2);
+                String prenom = rs.getString(3);
+                String ddn = rs.getString(4);
+                String genre = rs.getString(5);
+                String dept = rs.getString(6);
                 
-               }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+                // 2. Now you can safely call setters (even if they trigger DB calls)
+                enseignant.setId_ens(id);
+                enseignant.setNom(nom);
+                enseignant.setPrenom(prenom);
+                enseignant.setDateDeNaissance(ddn);
+                enseignant.setGener(genre);
+                enseignant.setDepatement(dept);
+                
+                // 3. Call getCours using the variable 'id', not 'rs'
+                enseignant.setCours(getCours(id));
+
+                // 4. Print using variables, NOT 'rs'
+                System.out.println(id + " " + nom + " " + prenom + " " + ddn + " " + genre + " " + dept);
             }
-            
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error reading result set: " + e.getMessage());
+            e.printStackTrace();
         }
 
-        return enseignant;
+    } catch (Exception e) {
+        System.out.println("Database error: " + e.getMessage());
     }
+
+    return enseignant;
+}
 
 
     public ArrayList<String[]> getCours(String id_ens){
@@ -284,30 +300,42 @@ public final class LoginEnseignant extends JPanel{
             }
         });
 
-        loginBtn.addActionListener(e -> {
+            loginBtn.addActionListener(e -> {
             java.awt.Window window = SwingUtilities.getWindowAncestor(LoginEnseignant.this);
             if (window instanceof javax.swing.JFrame) {
                 char[] input = passWord.getPassword();
                 String passString = new String(input);
 
-                if(Functions.checkUser(con, "enseignant",mail.getText().toLowerCase().trim() ,passString )){
-                Enseignant ens = getTheTeacher(mail.getText().toLowerCase().trim());
-                ens.setEmail(mail.getText().toLowerCase().trim());
+                // 1. كنتأكدوا من المعلومات
+                if(Functions.checkUser(con, "enseignant", mail.getText().toLowerCase().trim(), passString)){
+                    
+                    // 2. كنجيبو المعلومات (بلا تصويرة، حيت الدالة getTheTeacher القديمة ديالك كافية)
+                    Enseignant ens = getTheTeacher(mail.getText().toLowerCase().trim());
+                    ens.setEmail(mail.getText().toLowerCase().trim());
 
-                Session.setEnseignant(ens);
-                
+                    // 3. كنحطو الأستاذ فـ Session
+                    Session.setEnseignant(ens);
+                    
+                    // 4. === [هنا الحل] ===
+                    // كنعيطو للدالة ديالك باش تجيب التصويرة وتحطها فـ Session.photo
+                    // false = كتعني "Enseignant" (على حساب اللوجيك ديالك: table ? student : teacher)
+                    Session.setTheProfil(ens.getId_ens(), false);
 
-                javax.swing.JFrame frame = (javax.swing.JFrame) window;
-                Session.isLoggedIn = 1;
-                Navigation.addToHistory(LoginEnseignant.class); 
-                Enseignant_profil panelMdp = new Enseignant_profil();
-                frame.setContentPane(panelMdp);
-                frame.revalidate();
-                frame.repaint();
-                }else{
-                  erur.setText("Email ou mot de passe incorrect");  
+                    // 5. كنكملو عادي
+                    javax.swing.JFrame frame = (javax.swing.JFrame) window;
+                    Session.isLoggedIn = 1;
+                    Session.getEnseignant().setPassword(Functions.hashPassword(passString));
+                    Navigation.addToHistory(LoginEnseignant.class);
+                    
+                    // دابا Session.photo عامرة، ماغاديش يوقع Crash
+                    Enseignant_profil panelMdp = new Enseignant_profil();
+                    frame.setContentPane(panelMdp);
+                    frame.revalidate();
+                    frame.repaint();
+
+                } else {
+                    erur.setText("Email ou mot de passe incorrect");  
                 }
-
             }
         });
         this.add(loginBtn);

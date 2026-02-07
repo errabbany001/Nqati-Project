@@ -66,7 +66,7 @@ public final class LoginEtudient extends JPanel {
                         "join filiere f on f.id_filiere = c.id_filiere " + 
                         "join niveau n on n.id_niveau = f.id_niveau " + 
                         "where Cne = ? ";
-
+ 
 
         try(Connection con = Connexion.getConnexion() ; PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, cne);

@@ -16,16 +16,16 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-
 import tools.Connexion;
 import tools.Functions;
 import tools.Navigation;
@@ -38,8 +38,7 @@ public final class Etudient_settings extends JPanel {
     JLabel Profil;
     Color perpul = new Color(87, 107, 194) , lightPerpul = new Color(78, 94, 241);
 
-    
-    static ImageIcon icon_profil = new ImageIcon(new ImageIcon("data/default_profil.png").getImage().getScaledInstance(80, 80 ,Image.SCALE_SMOOTH));
+    JLabel ErurMail,ErurPass;
     // Top of class
     public static BufferedImage control_picture;
 
@@ -59,12 +58,7 @@ public final class Etudient_settings extends JPanel {
         }
     }
 
-    /**
-     * Apply frame mask:
-     * - transparent in control => transparent output
-     * - (almost) white in control => user's photo pixel
-     * - otherwise => control pixel (frame)
-     */
+
     public static BufferedImage applyPhotoFrame(BufferedImage sourceImage) {
         if (control_picture == null || sourceImage == null) return sourceImage;
 
@@ -113,6 +107,51 @@ public final class Etudient_settings extends JPanel {
 
         return finalImage;
     }
+
+    public void saveMail(String mail1 , String mail2){
+        Connection con = Connexion.getConnexion();
+        String sql = "update etudiant set email = ? where email = ?";
+        try(PreparedStatement pr = con.prepareStatement(sql)) {
+            pr.setString(1, mail1);
+            pr.setString(2, mail2);
+            int num = pr.executeUpdate();
+            
+        } catch (Exception e) {
+             System.err.println(e.getMessage());
+        }
+    }
+    public void savePass(String pass){
+        Connection con = Connexion.getConnexion();
+        String sql = "update etudiant set password = ? where cne = ?";
+        try(PreparedStatement pr = con.prepareStatement(sql)) {
+            pr.setString(1, pass);
+            pr.setString(2, Session.getEtudiant().getCne());
+            int num = pr.executeUpdate();
+            
+        } catch (Exception e) {
+             System.err.println(e.getMessage());
+        }
+    }
+
+    public boolean checkMail(String mail){
+        Connection con = Connexion.getConnexion();
+        String sql = "Select cne from etudiant where email = ?";
+        try(PreparedStatement pr = con.prepareStatement(sql)) {
+            pr.setString(1, mail);
+            try (ResultSet rs = pr.executeQuery()){
+                if(rs.next()){
+                    return true;
+                }
+                
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+            
+        } catch (Exception e) {
+             System.err.println(e.getMessage());
+        }
+        return false;
+    }   
 
 
 
@@ -251,6 +290,8 @@ public final class Etudient_settings extends JPanel {
                         // 3. Display
                         Image scaled = finalImage.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
                         Profil.setIcon(new ImageIcon(scaled));
+                        profilIconMini.setIcon(new ImageIcon(finalImage.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+                        
                         
                         
                         // updateDatabase(bytesForDB);
@@ -270,7 +311,7 @@ public final class Etudient_settings extends JPanel {
         this.add(Profil);
 
         //=============
-        Session.getEtudiant().setEmail("yassine.errabbany@gmail.com");
+        Session.getEtudiant().setEmail(Session.getEtudiant().getEmail());
 
         JLabel text2 =  Contact.cretText(" Changer Email ", 180, 350);
         text2.setForeground(lightPerpul);
@@ -309,10 +350,60 @@ public final class Etudient_settings extends JPanel {
             public void mouseExited(MouseEvent e) {
                 confiremEmail.setBackground(perpul);
             }
-        
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String etud_mail = neuvelleMail.getText().trim();
+                if (etud_mail.isEmpty()) {
+                    ErurMail.setText("Remplire le neuveille email");
+                } else if (!Functions.isValidEmail(etud_mail)) {
+                    ErurMail.setText("donner un frome mail corecte");
+                } else if (checkMail(etud_mail)) {
+                    ErurMail.setText("Email deja utiliser");
+                }else{
+                    Color ciel = new Color(193, 221, 240);
+                    JPanel mainPanel = new JPanel(new java.awt.BorderLayout(10, 10));
+                    mainPanel.setBackground(ciel);
+                    mainPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 20, 10, 20)); 
+
+                    JLabel label = new JLabel("<html>Êtes-vous sûr de vouloir changer votre adresse e-mail pour :<br/><b>" + etud_mail + "</b> ?</html>");
+                    label.setFont(new Font("Arial", Font.PLAIN, 14));
+                    label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                    mainPanel.add(label, java.awt.BorderLayout.CENTER);
+
+                    // 3. Set Global UI Colors just for this Dialog
+                    javax.swing.UIManager.put("OptionPane.background", ciel);
+                    javax.swing.UIManager.put("Panel.background", ciel);
+
+                    // 4. Show the Styled Dialog
+                    int answer = JOptionPane.showConfirmDialog(
+                        Etudient_settings.this, // Use the panel instance as parent
+                        mainPanel, 
+                        "Confirmation changement", 
+                        javax.swing.JOptionPane.YES_NO_OPTION, 
+                        javax.swing.JOptionPane.PLAIN_MESSAGE
+                    );
+
+                    if(answer == JOptionPane.YES_OPTION){
+                        Session.getEtudiant().setEmail(etud_mail);
+                        saveMail(etud_mail, emailActeuil.getText());
+
+                    }
+                }
+                
+            }
+
         });
         this.add(confiremEmail);
 
+
+        ErurMail = new JLabel();
+        ErurMail.setForeground(Color.red);
+        ErurMail.setFont(new Font("Arial", Font.BOLD, 12));
+        ErurMail.setBounds(260, 440, 440, 25);
+        ErurMail.setHorizontalAlignment(JLabel.CENTER);
+        this.add(ErurMail);
+        System.out.print(Session.getEtudiant().getPassword());
         //===========================
         JLabel text3 =  Contact.cretText(" Changer Mot De Passe ", 0, 0);
         text3.setBounds(180 , 490 , 300 , 20);
@@ -357,20 +448,120 @@ public final class Etudient_settings extends JPanel {
 
         
 
-        JLabel confirmPass = Functions.createCustomLabelWithBorder("Confirmer", 780, 540, 100, 25, 7, 7, 7,7, perpul);
-        confirmPass.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        // N'oublie pas l'import si ce n'est pas déjà fait :
+
+// ...
+
+        JLabel confirmPass = Functions.createCustomLabelWithBorder(
+                "Confirmer", 780, 540, 100, 25, 7, 7, 7, 7, perpul
+        );
+        confirmPass.setCursor(new Cursor(Cursor.HAND_CURSOR));      // Couleur initiale
+
         confirmPass.addMouseListener(new java.awt.event.MouseAdapter() {
+
             @Override
             public void mouseEntered(MouseEvent e) {
                 confirmPass.setBackground(grey);
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
                 confirmPass.setBackground(perpul);
             }
-        
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                // 0) Vérifier session
+                if (Session.getEtudiant() == null) {
+                    JOptionPane.showMessageDialog(null, "Session expirée. Veuillez vous reconnecter.");
+                    return;
+                }
+
+                String inputActuel = new String(passActuel.getPassword());
+                String nouveau = new String(passNeuvelle.getPassword());
+                String confirmation = new String(passConfirm.getPassword());
+
+                // Reset erreur au début
+                ErurPass.setText("");
+
+                // 1) Champs vides
+                if (inputActuel.isEmpty() || nouveau.isEmpty() || confirmation.isEmpty()) {
+                    ErurPass.setText("Tous les champs doivent être remplis.");
+                    return;
+                }
+
+                // 2) Longueur min 8
+                if (nouveau.length() < 8) {
+                    ErurPass.setText("Le nouveau mot de passe doit contenir au moins 8 caractères.");
+                    return;
+                }
+
+                // 3) Nouveau = ancien (interdit)
+                if (nouveau.equals(inputActuel)) {
+                    ErurPass.setText("Le nouveau mot de passe doit être différent de l'ancien.");
+                    return;
+                }
+
+                // 4) Vérifier mot de passe actuel (hash)
+                String hashSaisieActuelle = Functions.hashPassword(inputActuel);
+                String hashStocke = Session.getEtudiant().getPassword();
+
+                if (hashStocke == null || !hashSaisieActuelle.equals(hashStocke)) {
+                    ErurPass.setText("Le mot de passe actuel est incorrect.");
+                    return;
+                }
+
+                // 5) Confirmation identique
+                if (!nouveau.equals(confirmation)) {
+                    ErurPass.setText("La confirmation ne correspond pas au nouveau mot de passe.");
+                    return;
+                }
+
+                // 6) Demande de confirmation (JDialog)
+                int choix = JOptionPane.showConfirmDialog(
+                        null,
+                        "Êtes-vous sûr de vouloir changer votre mot de passe ?",
+                        "Confirmation",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (choix != JOptionPane.YES_OPTION) {
+                    ErurPass.setText("Changement annulé.");
+                    return;
+                }
+
+                // 7) Mise à jour BD
+                try {
+                    String hashNouveau = Functions.hashPassword(nouveau);
+
+                    Session.getEtudiant().setPassword(hashNouveau);
+                    savePass(hashNouveau);
+
+                    JOptionPane.showMessageDialog(null, "Mot de passe modifié avec succès !");
+
+                    // Reset champs + erreur
+                    passActuel.setText("");
+                    passNeuvelle.setText("");
+                    passConfirm.setText("");
+                    ErurPass.setText("");
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Erreur : " + ex.getMessage());
+                }
+            }
         });
+
         this.add(confirmPass);
+
+
+        ErurPass = new JLabel();
+        ErurPass.setForeground(Color.red);
+        ErurPass.setFont(new Font("Arial", Font.BOLD, 12));
+        ErurPass.setBounds(260, 580, 440, 25);
+        ErurPass.setHorizontalAlignment(JLabel.CENTER);
+        this.add(ErurPass);
+        System.out.print(Session.getEtudiant().getPassword());
 
 
 

@@ -39,7 +39,7 @@ public class Etudiant {
         this.filier = filier;
         this.niveau = niveau;
         this.semester = semester;
-        Session.setTheProfil(this.cne);
+        Session.setTheProfil(this.cne , true);
     }
 
 
@@ -57,7 +57,7 @@ public class Etudiant {
         this.filier = filier;
         this.niveau = niveau;
         this.semester = semester;
-        Session.setTheProfil(this.cne);
+        Session.setTheProfil(this.cne , true);
     }
 
 
@@ -110,7 +110,7 @@ public void notesCheck() {
 
     public void setCne(String cne) {
         this.cne = cne;
-        Session.setTheProfil(this.cne);
+        Session.setTheProfil(this.cne , true);
     }
 
     public String getNom() {
