@@ -109,8 +109,6 @@ public final class Etudient_notes extends JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Debug
-        System.out.println("Notes chargées : " + Session.getEtudiant());
     }
 
     //==================================================================================================================================================

@@ -51,8 +51,6 @@ public class Enseignant_settings extends JPanel{
             File f = new File("data/control_photo.png");
             if (f.exists()) {
                 control_picture = ImageIO.read(f);
-                System.out.println("Control photo loaded: "
-                        + control_picture.getWidth() + "x" + control_picture.getHeight());
             } else {
                 System.err.println("ERROR: not found: data/contorl_photo.png");
             }
@@ -181,8 +179,6 @@ public class Enseignant_settings extends JPanel{
             
             if (rows > 0) {
                 System.out.println("Photo saved successfully for id_enseignant: " + cne);
-                // Optional: Show success message
-                // JOptionPane.showMessageDialog(null, "Photo de profil mise à jour !");
             } else {
                 System.err.println("Error: id_enseignatn not found: " + cne);
             }
@@ -409,7 +405,6 @@ public class Enseignant_settings extends JPanel{
         ErurMail.setBounds(260, 440, 440, 25);
         ErurMail.setHorizontalAlignment(JLabel.CENTER);
         this.add(ErurMail);
-        System.out.print(Session.getEnseignant().getPassword());
 
         //===========================
 
@@ -418,7 +413,7 @@ public class Enseignant_settings extends JPanel{
         text3.setForeground(lightPerpul);
         this.add(text3);
 
-         JLabel Icon_pass = new JLabel(icon_2);
+        JLabel Icon_pass = new JLabel(icon_2);
         Icon_pass.setBounds(190 , 520 , 50 , 50);
         this.add(Icon_pass);
 
@@ -505,7 +500,6 @@ public class Enseignant_settings extends JPanel{
                 // 4) Vérifier mot de passe actuel (hash)
                 String hashSaisieActuelle = Functions.hashPassword(inputActuel);
                 String hashStocke = Session.getEnseignant().getPassword();
-                System.out.println(hashStocke);
 
                 if (hashStocke == null || !hashSaisieActuelle.equals(hashStocke)) {
                     ErurPass.setText("Le mot de passe actuel est incorrect.");
@@ -576,7 +570,6 @@ public class Enseignant_settings extends JPanel{
         ErurPass.setBounds(260, 580, 440, 25);
         ErurPass.setHorizontalAlignment(JLabel.CENTER);
         this.add(ErurPass);
-        System.out.print(Session.getEnseignant().getPassword());
 
 
 

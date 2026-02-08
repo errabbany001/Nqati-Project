@@ -37,6 +37,8 @@ public final class Etudient_settings extends JPanel {
     private Image backgroundImage;
     JLabel Profil;
     Color perpul = new Color(87, 107, 194) , lightPerpul = new Color(78, 94, 241);
+    ImageIcon icon_1 = new ImageIcon(new ImageIcon("data/mail_icon.png").getImage().getScaledInstance(50 , 50, Image.SCALE_SMOOTH));
+    ImageIcon icon_2 = new ImageIcon(new ImageIcon("data/luck_icon.png").getImage().getScaledInstance(50 , 50, Image.SCALE_SMOOTH));
 
     JLabel ErurMail,ErurPass;
     // Top of class
@@ -156,6 +158,7 @@ public final class Etudient_settings extends JPanel {
 
 
     public void savePhoto(String cne, byte[] photoBytes) {
+
     
 
         // 2. The SQL Update Query
@@ -260,6 +263,12 @@ public final class Etudient_settings extends JPanel {
 
         //===========
         Color grey = new Color(144 , 159 , 250);
+        JLabel Icon_mail = new JLabel(icon_1);
+        Icon_mail.setBounds(190 , 380 , 50 , 50);
+        this.add(Icon_mail);
+        JLabel Icon_pass = new JLabel(icon_2);
+        Icon_pass.setBounds(190 , 520 , 50 , 50);
+        this.add(Icon_pass);
 
         JLabel text1 =  Contact.cretText(" Changer Profil ", 180, 200);
         text1.setForeground(lightPerpul);
@@ -403,7 +412,6 @@ public final class Etudient_settings extends JPanel {
         ErurMail.setBounds(260, 440, 440, 25);
         ErurMail.setHorizontalAlignment(JLabel.CENTER);
         this.add(ErurMail);
-        System.out.print(Session.getEtudiant().getPassword());
         //===========================
         JLabel text3 =  Contact.cretText(" Changer Mot De Passe ", 0, 0);
         text3.setBounds(180 , 490 , 300 , 20);
@@ -561,7 +569,6 @@ public final class Etudient_settings extends JPanel {
         ErurPass.setBounds(260, 580, 440, 25);
         ErurPass.setHorizontalAlignment(JLabel.CENTER);
         this.add(ErurPass);
-        System.out.print(Session.getEtudiant().getPassword());
 
 
 

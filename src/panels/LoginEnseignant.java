@@ -91,8 +91,6 @@ public final class LoginEnseignant extends JPanel{
                 // 3. Call getCours using the variable 'id', not 'rs'
                 enseignant.setCours(getCours(id));
 
-                // 4. Print using variables, NOT 'rs'
-                System.out.println(id + " " + nom + " " + prenom + " " + ddn + " " + genre + " " + dept);
             }
         } catch (Exception e) {
             System.out.println("Error reading result set: " + e.getMessage());

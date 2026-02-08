@@ -34,6 +34,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
 
+import element.Note;
 import tools.Connexion;
 import tools.Functions;
 import tools.Navigation;
@@ -77,10 +78,10 @@ public class Enseignant_notes extends JPanel {
     public void saveToCSV(ArrayList<String[]> dataList, String filePath) {
     try (FileWriter writer = new FileWriter(filePath)) {
         
-        writer.append("Nom Complet,CNE,Note\n");
+        writer.append("Nom , Prenom ,CNE,Note\n");
 
         for (String[] row : dataList) {
-            writer.append(row[0]+" " + row[1]).append(","); // Nom Complet
+            writer.append(row[0]+" ," + row[1]).append(","); // Nom Complet
             writer.append(row[2]).append("\n"); // CNE
         }
         writer.flush();
@@ -107,9 +108,9 @@ public class Enseignant_notes extends JPanel {
     //-----------------------
     public void changeMarks(){
         for (String[] elem : importedStudents) {
-            int note_indx = getIndexByCne(elem[1]);
+            int note_indx = getIndexByCne(elem[2]);
             if (note_indx != -1){
-                listOfNotes.get(note_indx).setText(elem[2]);
+                listOfNotes.get(note_indx).setText(elem[3]);
             }
         }
     }
@@ -195,9 +196,7 @@ public class Enseignant_notes extends JPanel {
         try (Connection con = Connexion.getConnexion();
             java.sql.Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT DATABASE()")) {
-            if (rs.next()) {
-                System.out.println("Connection avec la DataBase: " + rs.getString(1));
-            }
+            
         } catch (Exception e) { e.printStackTrace(); }
         if(!students.isEmpty()){
             myPan.setPreferredSize(new Dimension(784, students.size() * 30 + 140));
@@ -245,7 +244,7 @@ public class Enseignant_notes extends JPanel {
             myPan.add(btnDownload);
             //-------------------------------------------
             JButton btnUploadList = new JButton();
-            btnUploadList.setBounds(380, 15, 240, 25); // بلاصة جديدة
+            btnUploadList.setBounds(380, 15, 240, 25); 
             btnUploadList.setOpaque(false);
             btnUploadList.setContentAreaFilled(false);
             btnUploadList.setBorderPainted(false);
@@ -273,13 +272,7 @@ public class Enseignant_notes extends JPanel {
                     File file = chooser.getSelectedFile();
                     
                     loadStudentsToArrayList(file);
-                    
-                    System.out.println("List Size: " + importedStudents.size());
-                    for (String[] elem : importedStudents) {
-                            System.err.println(elem[0] + " "+ elem[2]);
-                    }
-                    changeMarks();
-                
+
                 }
             });
             myPan.add(btnUploadList);
@@ -448,7 +441,7 @@ public class Enseignant_notes extends JPanel {
     try (BufferedReader br = new BufferedReader(new FileReader(file))) {
         String line;
         
-
+        br.readLine();
         while ((line = br.readLine()) != null) {
             // Skip empty lines to avoid errors
             if (line.trim().isEmpty()) {
@@ -457,12 +450,14 @@ public class Enseignant_notes extends JPanel {
 
             String[] data = line.split(",");
             
-            if (data.length >= 3) {
-                String col1 = data[0].trim(); // Nom
-                String col2 = data[1].trim(); // CNE
-                String col3 = data[2].trim(); // Note
+            if (data.length >= 4) {
                 
-                importedStudents.add(new String[]{col1, col2 , col3});
+                String col1 = data[0].trim();
+                String col2 = data[1].trim();
+                String col3 = data[2].trim(); // CNE
+                String col4 = data[3].trim(); // Note
+                
+                importedStudents.add(new String[]{col1, col2 , col3 , col4});
             } 
         }
         
@@ -470,6 +465,9 @@ public class Enseignant_notes extends JPanel {
             JOptionPane.showMessageDialog(null, "⚠️ Le fichier est vide ou le format est incorrect.", "Attention", JOptionPane.WARNING_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, "✅ Importation réussie : " + importedStudents.size() + " étudiants chargés.");
+            
+            // IMPORTANT: Call changeMarks() AFTER the text fields have been created
+            changeMarks();
             
         }
 

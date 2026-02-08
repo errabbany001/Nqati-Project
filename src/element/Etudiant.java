@@ -24,6 +24,8 @@ public class Etudiant {
     private String etu_class;
     private ArrayList<ArrayList<Note>> notes = new ArrayList<>();
     private ArrayList<Double> semsterNotes = new ArrayList<>();
+    private String DiplomSituation;
+    private double noteFinal;
     
 
     public Etudiant() {
@@ -62,12 +64,12 @@ public class Etudiant {
 
 
 
-public void notesCheck() {
+    public void notesCheck() {
     semsterNotes.clear();
 
     for (ArrayList<Note> list : notes) {
 
-       
+        
         if (list == null || list.isEmpty()) {
             semsterNotes.add(-1.0);
             continue;
@@ -93,7 +95,7 @@ public void notesCheck() {
             semsterNotes.add(avg);
         }
     }
-}
+    }
 
 
 
@@ -218,6 +220,14 @@ public void notesCheck() {
         }
         text += "size = " + notes.size();
         return text;
+    }
+
+    public double getNoteFinal() {
+        return noteFinal;
+    }
+
+    public void setNoteFinal(double noteFinal) {
+        this.noteFinal = noteFinal;
     }
 
 

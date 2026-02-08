@@ -29,6 +29,5 @@ public class Main {
         frame.setContentPane(accueil);
         frame.setVisible(true);
         
-        System.out.println("Application Démarrée avec succès !");
     }
 }
