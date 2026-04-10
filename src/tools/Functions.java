@@ -18,6 +18,7 @@ import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.regex.Pattern;
@@ -345,6 +346,57 @@ public class Functions {
         }
     }
     
+    
+    public static String verifierUtilisateur(String nom, String prenom, String email, String cne) {
+
+        // ── Vérifier etudiant ────────────────────────────────
+        String sqlEtudiant = "SELECT 1 FROM etudiant WHERE nom=? AND prenom=? AND email=? AND Cne=? LIMIT 1";
+        try (Connection con = Connexion.getConnexion();
+             PreparedStatement ps = con.prepareStatement(sqlEtudiant)) { 
+            ps.setString(1, nom);
+            ps.setString(2, prenom);
+            ps.setString(3, email);
+            ps.setString(4, cne);
+            if (ps.executeQuery().next()) return "etudiant";
+        } catch (SQLException e) { e.printStackTrace(); }
+
+        // ── Vérifier enseignant ──────────────────────────────
+        // (utilise id_enseignant à la place du CNE)
+        String sqlEnseignant = "SELECT 1 FROM enseignant WHERE nom=? AND prenom=? AND email=? AND id_enseignant=? LIMIT 1";
+        try (Connection con = Connexion.getConnexion();
+             PreparedStatement ps = con.prepareStatement(sqlEnseignant)) {
+            ps.setString(1, nom);
+            ps.setString(2, prenom);
+            ps.setString(3, email);
+            ps.setString(4, cne); // même champ utilisé pour id_enseignant
+            if (ps.executeQuery().next()) return "enseignant";
+        } catch (SQLException e) { e.printStackTrace(); }
+
+        return null;
+    }
+    
+    public static boolean mettreAJourMotDePasse(String identifiant, String hashHex, String type) {
+
+        String sql;
+
+        if (type.equals("etudiant")) {
+            // ✅ colonne = password  |  clé = Cne
+            sql = "UPDATE etudiant SET password = ? WHERE Cne = ?";
+        } else {
+            // ✅ colonne = password  |  clé = id_enseignant
+            sql = "UPDATE enseignant SET password = ? WHERE id_enseignant = ?";
+        }
+
+        try (Connection con = Connexion.getConnexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, hashHex);
+            ps.setString(2, identifiant);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     
     //verification de utilisateur dans la base des donnees
     public static boolean checkUser(Connection con , String tableu , String mail  , String pass){

@@ -12,9 +12,9 @@ public class Connexion {
         if (con == null || con.isClosed()) { 
             
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/project_nqaty?serverTimezone=UTC";
-            String user = "root";
-            String password = "YASSine2002@";
+            String url = "jdbc:mysql://127.0.0.1:3306/project_nqaty?serverTimezone=UTC";
+            String user = "Kaddouri";
+            String password = "MOHAtonic@2";
 
             con = DriverManager.getConnection(url, user, password);
         }
